@@ -1,0 +1,35 @@
+on:
+    push:
+      branches:
+        - main
+        - feat/*
+    
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+  
+        - name: Cache Frontend Node.js modules
+          uses: actions/cache@v3
+          with:
+            path: ./Frontend/ITG-frontend/node_modules
+            key: ${{ runner.os }}-node-${{ hashFiles('./Frontend/ITG-frontend/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-node-
+  
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '20'
+  
+        - name: Install frontend dependencies
+          run: npm install
+          working-directory: ./Frontend/ITG-frontend
+  
+        - name: Build Frontend
+          run: npm run build
+          working-directory: ./Frontend/ITG-frontend
+  
