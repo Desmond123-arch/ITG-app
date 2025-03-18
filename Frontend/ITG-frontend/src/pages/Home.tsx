@@ -1,12 +1,11 @@
-import { Button } from "@/components/ui/button";
-
+import Header from "@/components/Header";
 
 import React from "react";
 
 const Home: React.FC = () => {
   return (
     <div>
-      <Button className="">Hello</Button>
+      <Header/>
     </div>
   );
 };

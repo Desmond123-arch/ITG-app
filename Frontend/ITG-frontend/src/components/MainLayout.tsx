@@ -1,18 +1,23 @@
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
 import Footer from "./Footer";
 import { Suspense } from "react";
+import CustomSidebar from "./ui/CustomSidebar/CustomSidebar";
+import CustomLoader from "./ui/CustomLoader";
+import Header from "./Header";
 
 const MainLayout = () => {
     return (
         <>
-            <Header />
-            <main>
-                <Suspense>
-                    <Outlet />
-                </Suspense>
-            </main>
-            <Footer />
+            <div className="flex">
+                <CustomSidebar/>
+                <main className="py-3 px-4">
+                    <Header/>
+                    <Suspense fallback={<CustomLoader/>}>
+                        <Outlet />
+                    </Suspense>
+                </main>
+                <Footer />
+            </div>
         </>
     );
 }
