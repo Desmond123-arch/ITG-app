@@ -1,7 +1,8 @@
 
 const pathConstants = {
     Home: "/",
-    About: "about"
+    About: "about",
+    JobDescription:"job"
 }
 
 export default pathConstants;
