@@ -29,9 +29,9 @@ const jobDetail = {
 
 const JobDescription = () => {
     return (
-        <div className="flex justify-between ">
+        <div className="flex justify-between md:flex-row flex-col">
             {/* JOB DETAIL */}
-            <div className='w-[68%] flex flex-col gap-5'>
+            <div className='w-[90%] mx-auto md:w-[68%] flex flex-col gap-5'>
                 <div className="flex  bg-white rounded-md px-5 py-2 gap-6 items-center">
 
                     <div className=" w-max ">
