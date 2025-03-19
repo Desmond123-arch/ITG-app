@@ -53,7 +53,7 @@ const CustomSidebar: React.FC = () => {
     <nav className="bg-[#110d59] h-screen w-[240px] py-3 px-4 text-white">
       <div className="flex gap-3 items-center mb-5">
         <Settings />
-        <h1 className="text-3xl font-bold">ITG</h1>
+        <h1 className="text-2xl font-semibold">ITG</h1>
       </div>
       <ul className="flex flex-col gap-2">
         {items.map((item, index) => (

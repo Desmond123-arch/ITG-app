@@ -10,13 +10,15 @@ const MainLayout = () => {
         <>
             <div className="flex">
                 <CustomSidebar/>
-                <main className="py-3 px-4">
-                    <Header/>
-                    <Suspense fallback={<CustomLoader/>}>
-                        <Outlet />
-                    </Suspense>
-                </main>
-                <Footer />
+                <div className="w-full">
+                    <main className="py-3 px-4 bg-[#f1f2f4]">
+                        <Header/>
+                        <Suspense fallback={<CustomLoader/>}>
+                            <Outlet />
+                        </Suspense>
+                    </main>
+                    <Footer />
+                </div>
             </div>
         </>
     );
