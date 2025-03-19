@@ -22,17 +22,17 @@ const JobItem: React.FC<Props> = ({job}) => {
         </div>
         <p className='text-gray-800 text-[16px]'>{job.description}</p>
         <div className='flex justify-between'>
-            <div className='flex gap-5'>
-                <div className='flex items-center gap-1'>
-                    <UsersRound size={15} className='text-black/50'/>
+            <div className='flex gap-2'>
+                <div className='flex items-center gap-[2px]'>
+                    <UsersRound size={20} className='text-black/50'/>
                     <span className='text-sm'>{job.status}</span>
                 </div>
                 <div className='flex items-center gap-1'>
-                    <MapPin size={15} className='text-black/50'/>
+                    <MapPin size={20} className='text-black/50'/>
                     <span className='text-sm'>{job.location}</span>
                 </div>
             </div>
-            <Bookmark size={15} className='text-black/50'/>
+            <Bookmark size={20} className='text-black/50'/>
         </div>
     </Link>
   )
