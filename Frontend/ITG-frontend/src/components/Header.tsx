@@ -20,16 +20,19 @@ const Header = () => {
     };
 
     return (
-        <div className="flex md:flex-row flex-col justify-between w-full mb-10 md:items-center gap-2">
-            <div className="flex gap-2 items-center">
-                <div onClick={changeMenu} className='md:hidden text-black cursor-pointer relative top-[2px]'>
-                    {
-                    showSidebar ? <X/> : <Menu/>
-                    }
+        <div className="flex md:flex-row flex-col justify-between w-full mb-5 md:mb-10 md:items-center gap-2">
+            <div className="flex justify-between items-center">
+                <div className="flex gap-2 items-center">
+                    <div onClick={changeMenu} className='md:hidden text-black cursor-pointer relative top-[2px]'>
+                        {
+                        showSidebar ? <X/> : <Menu/>
+                        }
+                    </div>
+                    <h1 className="text-2xl font-semibold">{pageName}</h1>
                 </div>
-                <h1 className="text-2xl font-semibold">{pageName}</h1>
+                <div className="cursor-pointer md:hidden block"><Bell size={20}/></div>
             </div>
-            <div className="flex gap-5 items-center justify-between">
+            <div className="gap-5 items-center justify-between hidden md:flex">
                 <div className="group focus-within:border-black/50 bg-white flex h-9 gap-2 items-center overflow-hidden rounded-md border-black/50 px-1">
                     <Search className="text-black/50"/>
                     <Input className="shadow-none outline-none p-0 border-none focus-visible:ring-0" type="text" placeholder="Search anything..."/>

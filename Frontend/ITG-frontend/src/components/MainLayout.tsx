@@ -29,7 +29,7 @@ const MainLayout = () => {
                     <Suspense fallback={<CustomLoader />}>
                         <Outlet />
                     </Suspense>
-                    <footer className="absolute bottom-0"><Footer /></footer>
+                    <Footer />
                 </main>
             </div>
         </div>

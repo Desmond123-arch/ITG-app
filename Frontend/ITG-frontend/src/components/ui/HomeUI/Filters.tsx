@@ -53,9 +53,9 @@ const Filters: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <h1 className="text-xl font-semibold">Filter</h1>
-      <div className="rounded-md bg-white shadow-md px-5 py-3 w-[200px]">
+    <div className="flex-col gap-3 md:flex">
+      <h1 className="text-xl font-semibold hidden md:block">Filter</h1>
+      <div className="rounded-md bg-white md:shadow-md px-5 py-3 w-full md:w-[200px]">
         <FilterSection title="Location">
           <Input
             value={filters.location}
@@ -75,7 +75,7 @@ const Filters: React.FC = () => {
             </SelectContent>
           </Select>
         </FilterSection>
-        <FilterSection title="Remote Worker">
+        <FilterSection title="Remote Worker" className="flex !flex-row justify-between">
           <Switch
             checked={filters.remoteWorker}
             onCheckedChange={(checked) => handleChange("remoteWorker", checked)}
