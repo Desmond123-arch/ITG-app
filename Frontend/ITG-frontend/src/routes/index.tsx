@@ -7,6 +7,7 @@ import Company from "@/pages/Company";
 const Home = React.lazy(() => import("../pages/Home"))
 const About = React.lazy(() => import("../pages/About"))
 const JobDescription = React.lazy(() => import("../pages/Job"))
+
 const routes:RouteObject[] =  [
     {path: pathConstants.Home, element: <Home/>},
     {path: "/home", element: <Home/>},

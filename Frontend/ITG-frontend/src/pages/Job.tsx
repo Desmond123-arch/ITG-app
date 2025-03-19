@@ -1,6 +1,7 @@
 import { ItgIcon } from '@/assets/images'
 import { Button } from '@/components/ui/button';
 import JobItem from '@/components/ui/HomeUI/JobItem';
+import jobs from '@/data/JobsData';
 import { Bookmark } from 'lucide-react';
 
 const jobDetail = {
@@ -29,26 +30,27 @@ const jobDetail = {
 
 const JobDescription = () => {
     return (
-        <div className="flex justify-between md:flex-row flex-col">
+        <div className="flex justify-between lg:flex-row flex-col">
             {/* JOB DETAIL */}
-            <div className='w-[90%] mx-auto md:w-[68%] flex flex-col gap-5'>
-                <div className="flex  bg-white rounded-md px-5 py-2 gap-6 items-center">
-
-                    <div className=" w-max ">
-                        <img src={ItgIcon} className='w-14 h-14 rounded-full object-center object-cover' />
+            <div className='w-full md:w-[90%] mx-auto lg:w-[68%] flex flex-col gap-5'>
+                <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-start">
+                    <div className='flex items-center gap-4'>
+                        <div className="w-14 h-14 flex-shrink-0">
+                            <img src={ItgIcon || "/placeholder.svg"} className="w-full h-full rounded-full object-center object-cover" />
+                        </div>
+                        <div className='flex flex-col'>
+                            <h2 className='text-2xl font-semibold mb-2'>{jobDetail.title}</h2>
+                            <ul className='flex gap-x-3 text-sm flex-wrap'>
+                                <li>Omicron</li>
+                                <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.location}</li>
+                                <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.jobType}</li>
+                                <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.experience}</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div className='flex flex-col'>
-                        <h2 className='text-2xl font-semibold mb-2'>{jobDetail.title}</h2>
-                        <ul className='flex gap-2 text-sm flex-1'>
-                            <li>Omicron</li>
-                            <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.location}</li>
-                            <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.jobType}</li>
-                            <li className='flex items-center h-max gap-1'><span className='bg-slate-600 h-1 w-1 rounded-full '></span>{jobDetail.experience}</li>
-                        </ul>
-                    </div>
-                    <div className='ml-auto flex items-center gap-2'>
-                        <Bookmark color='gray' size={25} className='hover:cursor-pointer' />
-                        <Button className='p-5'>Apply</Button>
+                    <div className='ml-auto flex items-center gap-2 w-[90%] md:w-[20%]'>
+                        <Bookmark color='gray' size={25} className='hover:cursor-pointer md: order-1 sm:order-2' />
+                        <Button className='p-5 w-[80%] md:order-2 sm:order-1'>Apply</Button>
                     </div>
                 </div>
                 <div className='bg-white rounded-md p-5 flex flex-col gap-4'>
@@ -92,11 +94,13 @@ const JobDescription = () => {
             </div>
 
             {/* RELATED JOBS */}
-            <div className="flex flex-col w-[30%] gap-3">
-                <h3 className='text-md font-bold text-gray-700 mt-4'>Related jobs</h3>
-                {Array.from({ length:3 }).map((_job, index) => (
-                    <JobItem key={index} />
-                ))}
+            <div className='lg:mr-1 lg:w-[30%] w-full'>
+                <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline ml-4 md:ml-0'>Related jobs</h3>
+                <div className="grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1  gap-3 mt-3 mx-auto md:w-full place-items-center">
+                    {jobs.slice(0, 3).map((job, index) => (
+                        <JobItem key={index} job={job} />
+                    ))}
+                </div>
             </div>
         </div>
     );
