@@ -1,6 +1,6 @@
 import { Bell, Menu, Play, Search, X } from "lucide-react";
 import { Input } from "./ui/input";
-import { ItgIcon } from "@/assets/images";
+import { ProfilePic } from "@/assets/images";
 import { useLocation } from "react-router-dom";
 import toTitle from "@/utils/ToTitle";
 import { RootState, AppDispatch } from "@/store";
@@ -37,7 +37,7 @@ const Header = () => {
                 <div className="flex gap-2 items-center">
                     <div className="cursor-pointer"><Bell size={20}/></div>
                     <div className="rounded-full overflow-hidden w-7 h-7">
-                        <img className="w-full h-full object-cover" src={ItgIcon} alt="Profile Picture" />
+                        <img className="w-full h-full object-cover" src={ProfilePic} alt="Profile Picture" />
                     </div>
                     <h1 className="font-semibold text-sm">John Doe</h1>
                     <div className="rotate-90 cursor-pointer text-gray-500"><Play size={20}/></div>
