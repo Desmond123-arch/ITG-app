@@ -3,7 +3,7 @@ import JobItem from './JobItem'
 
 const JobsGrid: React.FC = () => {
   return (
-    <div className='flex flex-wrap gap-3'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'>
       {
         Array.from({length: 12}).map((_job, index) => (
             <JobItem key={index}/>

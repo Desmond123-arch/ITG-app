@@ -19,14 +19,14 @@ const LinkItem: React.FC<Props> = ({item}) => {
                 classNames(
                   "flex items-center gap-3 font-normal leading-5 rounded-md p-2 transition-colors",
                   {
-                    "bg-white text-[#110d59] font-semibold": isActive,
-                    "hover:bg-white/20": !isActive
+                    "bg-white text-[#110d59]": isActive,
+                    "hover:bg-white/20 text-white/80": !isActive
                   }
                 )
               }
             >
-              <item.icon />
-              <span className='text-sm'>{item.title}</span>
+              <item.icon/>
+              <span className='text-sm font-semibold'>{item.title}</span>
             </NavLink>
           </li>
   )
