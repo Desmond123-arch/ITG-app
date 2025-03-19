@@ -1,11 +1,17 @@
 import { Bell, Play, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { ItgIcon } from "@/assets/images";
+import { useLocation } from "react-router-dom";
+import toTitle from "@/utils/ToTitle";
 
 const Header = () => {
+    const location = useLocation();
+    
+    const pageName = location.pathname === "/" ? "Home" : toTitle(location.pathname)
+
     return (
         <div className="flex md:flex-row flex-col justify-between w-full mb-10 md:items-center gap-2">
-            <h1 className="text-2xl font-semibold">Home</h1>
+            <h1 className="text-2xl font-semibold md:left-0 relative left-5">{pageName}</h1>
             <div className="flex gap-5 items-center justify-between">
                 <div className="group focus-within:border-black/50 bg-white flex h-9 gap-2 items-center overflow-hidden rounded-md border-black/50 px-1">
                     <Search className="text-black/50"/>
