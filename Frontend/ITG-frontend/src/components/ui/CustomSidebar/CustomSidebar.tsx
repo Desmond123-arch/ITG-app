@@ -3,20 +3,21 @@ import {
   Briefcase, 
   Calendar, 
   Clock, 
-  LucideArrowDown, 
+  LayoutDashboard, 
   MessageCircle, 
   Settings, 
-  Ticket 
+  Ticket,
 } from 'lucide-react';
 import LinkItem from './LinkItem';
-import { ItgLogo, ItgTransparent } from '@/assets/images';
+import { ItgLogo } from '@/assets/images';
 
 const CustomSidebar: React.FC = () => {
+
   const items = [
     {
       title: "Home",
       url: "/",
-      icon: LucideArrowDown
+      icon: LayoutDashboard
     },
     {
       title: "Event",
@@ -51,7 +52,7 @@ const CustomSidebar: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-[#110d59] h-screen w-[270px] py-3 px-4 text-white">
+    <nav className="bg-[#110d59] relative h-screen w-[270px] py-3 px-4 text-white">
       <div className="flex gap-3 items-center mb-5">
         <img src={ItgLogo} className='h-10' alt="ITG Logo" />
       </div>

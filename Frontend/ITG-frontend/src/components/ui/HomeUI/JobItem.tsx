@@ -1,34 +1,40 @@
 import { ItgIcon } from '@/assets/images'
+import { Job } from '@/types/Job'
 import { Bookmark, MapPin, UsersRound } from 'lucide-react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const JobItem: React.FC = () => {
+interface Props{
+    job: Job
+}
+
+const JobItem: React.FC<Props> = ({job}) => {
   return (
-    <div className='rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 max-w-[285px]'>
+    <Link to={`/job/${job.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 max-w-[285px] hover:shadow-lg transition-all justify-between'>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
                 <img className='w-full h-full object-cover' src={ItgIcon} alt="Job Image" />
             </div>
             <div className='flex flex-col'>
-                <h1 className='font-semibold'>3D Illustrator</h1>
-                <p className='text-gray-500 text-sm'>Gojek</p>
+                <h1 className='font-semibold group-hover:text-blue-600 transition-colors'>{job.title}</h1>
+                <p className='text-gray-500 text-sm'>{job.employerId}</p>
             </div>
         </div>
-        <p className='text-gray-800 text-[16px]'>We're looking for top illustrators proficient in Cinema 4D</p>
+        <p className='text-gray-800 text-[16px]'>{job.description}</p>
         <div className='flex justify-between'>
             <div className='flex gap-5'>
                 <div className='flex items-center gap-1'>
                     <UsersRound size={15} className='text-black/50'/>
-                    <span className='text-sm'>120</span>
+                    <span className='text-sm'>{job.status}</span>
                 </div>
                 <div className='flex items-center gap-1'>
                     <MapPin size={15} className='text-black/50'/>
-                    <span className='text-sm'>Singapore</span>
+                    <span className='text-sm'>{job.location}</span>
                 </div>
             </div>
             <Bookmark size={15} className='text-black/50'/>
         </div>
-    </div>
+    </Link>
   )
 }
 

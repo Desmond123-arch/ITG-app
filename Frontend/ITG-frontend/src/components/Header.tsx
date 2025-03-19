@@ -1,11 +1,34 @@
-import { Bell, Play, Search } from "lucide-react";
+import { Bell, Menu, Play, Search, X } from "lucide-react";
 import { Input } from "./ui/input";
 import { ItgIcon } from "@/assets/images";
+import { useLocation } from "react-router-dom";
+import toTitle from "@/utils/ToTitle";
+import { RootState, AppDispatch } from "@/store";
+import { toggleSidebar } from "@/store/sidebarSlice";
+import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from "react-redux";
+const useAppDispatch = () => useReduxDispatch<AppDispatch>();
+const useAppSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
 const Header = () => {
+    const location = useLocation();
+    const pageName = location.pathname === "/" ? "Home" : toTitle(location.pathname)
+
+    const showSidebar = useAppSelector((state) => state.sidebar.showSidebar);
+    const dispatch = useAppDispatch();
+    const changeMenu = () => {
+        dispatch(toggleSidebar());
+    };
+
     return (
         <div className="flex md:flex-row flex-col justify-between w-full mb-10 md:items-center gap-2">
-            <h1 className="text-2xl font-semibold">Home</h1>
+            <div className="flex gap-2 items-center">
+                <div onClick={changeMenu} className='md:hidden text-black cursor-pointer relative top-[2px]'>
+                    {
+                    showSidebar ? <X/> : <Menu/>
+                    }
+                </div>
+                <h1 className="text-2xl font-semibold">{pageName}</h1>
+            </div>
             <div className="flex gap-5 items-center justify-between">
                 <div className="group focus-within:border-black/50 bg-white flex h-9 gap-2 items-center overflow-hidden rounded-md border-black/50 px-1">
                     <Search className="text-black/50"/>
