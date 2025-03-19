@@ -26,7 +26,7 @@ const LinkItem: React.FC<Props> = ({item}) => {
               }
             >
               <item.icon />
-              <span>{item.title}</span>
+              <span className='text-sm'>{item.title}</span>
             </NavLink>
           </li>
   )

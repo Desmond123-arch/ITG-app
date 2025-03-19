@@ -18,12 +18,12 @@ const Filters: React.FC = () => {
       <div className='rounded-md bg-white shadow-md px-5 py-3 w-[200px]'>
         <div className='flex flex-col gap-1 border-b pb-4'>
           <FilterTitle title='Location'/>
-          <Input placeholder='City'/>
+          <Input placeholder='City' className='bg-[#f1f2f4]/70'/>
         </div>
         <div className='flex flex-col gap-1 border-b py-4'>
           <FilterTitle title='Show By'/>
           <Select>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-[#f1f2f4]/70">
               <SelectValue placeholder="Relevant"/>
             </SelectTrigger>
             <SelectContent>
@@ -34,7 +34,7 @@ const Filters: React.FC = () => {
         </div>
         <div className='py-4 border-b items-center flex justify-between'>
           <FilterTitle title='Remote Worker'/>
-          <Switch className='bg-green-500'/>
+          <Switch className='data-[state=checked]:bg-green-500'/>
         </div>
         <div className='py-4 border-b flex flex-col gap-2'>
           <FilterTitle title='Type Works'/>

@@ -8,16 +8,16 @@ import Header from "./Header";
 const MainLayout = () => {
     return (
         <>
-            <div className="flex">
+            <div className="flex h-screen">
                 <CustomSidebar/>
-                <div className="w-full">
-                    <main className="py-3 px-4 bg-[#f1f2f4]">
+                <div className="w-full flex flex-col h-screen">
+                    <main className="py-3 px-4 bg-[#f1f2f4] overflow-y-scroll">
                         <Header/>
                         <Suspense fallback={<CustomLoader/>}>
                             <Outlet />
                         </Suspense>
+                        <Footer />
                     </main>
-                    <Footer />
                 </div>
             </div>
         </>

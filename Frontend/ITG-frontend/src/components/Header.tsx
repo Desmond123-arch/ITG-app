@@ -1,10 +1,10 @@
-import { ArrowDown, Bell, Search } from "lucide-react";
+import { Bell, Play, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { ItgIcon } from "@/assets/images";
 
 const Header = () => {
     return (
-        <div className="flex justify-between w-full mb-10">
+        <div className="flex justify-between w-full mb-10 items-center">
             <h1 className="text-2xl font-semibold">Home</h1>
             <div className="flex gap-5 items-center">
                 <div className="group focus-within:border-black/50 bg-white flex h-9 gap-2 items-center overflow-hidden rounded-md border-black/50 px-1">
@@ -12,12 +12,12 @@ const Header = () => {
                     <Input className="shadow-none outline-none p-0 border-none focus-visible:ring-0" type="text" placeholder="Search anything..."/>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <Bell/>
+                    <div className="cursor-pointer"><Bell size={20}/></div>
                     <div className="rounded-full overflow-hidden w-7 h-7">
-                        <img src={ItgIcon} alt="Profile Picture" />
+                        <img className="rounded-full w-7 h-7" src={ItgIcon} alt="Profile Picture" />
                     </div>
-                    <h1>John Doe</h1>
-                    <ArrowDown/>
+                    <h1 className="font-semibold text-sm">John Doe</h1>
+                    <div className="rotate-90 cursor-pointer text-gray-500"><Play size={20}/></div>
                 </div>
             </div>
         </div>
