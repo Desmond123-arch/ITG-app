@@ -16,7 +16,7 @@ const FilterDrawer: React.FC = () => {
     return (
         <Drawer>
             <DrawerTrigger>
-                <Button className="md:hidden bg-white text-black hover:bg-white/30 flex items-center gap-2">
+                <Button className="bg-white text-black hover:bg-white/30 flex items-center gap-2">
                     <SlidersHorizontal />
                     <span>Filter</span>
                 </Button>

@@ -30,7 +30,10 @@ const Header = () => {
                     </div>
                     <h1 className="text-2xl font-semibold">{pageName}</h1>
                 </div>
-                <div className="cursor-pointer md:hidden block"><Bell size={20}/></div>
+                <div className="cursor-pointer relative md:hidden block">
+                    <Bell size={20}/>
+                    <div className="absolute top-[-3px] right-[-1px] w-3 h-3 border-2 border-[#f1f2f4] bg-green-700 rounded-full"></div>
+                </div>
             </div>
             <div className="gap-5 items-center justify-between hidden md:flex">
                 <div className="group focus-within:border-black/50 bg-white flex h-9 gap-2 items-center overflow-hidden rounded-md border-black/50 px-1">
@@ -38,7 +41,10 @@ const Header = () => {
                     <Input className="shadow-none outline-none p-0 border-none focus-visible:ring-0" type="text" placeholder="Search anything..."/>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <div className="cursor-pointer"><Bell size={20}/></div>
+                    <div className="cursor-pointer relative">
+                        <Bell size={20}/>
+                        <div className="absolute top-[-3px] right-[-1px] w-3 h-3 border-2 border-[#f1f2f4] bg-green-700 rounded-full"></div>
+                    </div>
                     <div className="rounded-full overflow-hidden w-7 h-7">
                         <img className="w-full h-full object-cover" src={ProfilePic} alt="Profile Picture" />
                     </div>

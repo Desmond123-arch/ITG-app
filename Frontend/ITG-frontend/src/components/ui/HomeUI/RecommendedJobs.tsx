@@ -5,10 +5,12 @@ import FilterDrawer from './FilterDrawer'
 const RecommendedJobs: React.FC = () => {
     return (
         <div className='flex flex-col gap-3 w-full'>
-            <div className='flex justify-between'>
+            <div className='flex justify-between items-center'>
                 <h1 className='text-xl font-semibold'>Recommended Job</h1>
                 <h1 className='text-sm hidden md:block'>Remote Worker, Internship, Fresh graduate, Relevance</h1>
-                <FilterDrawer/>
+                <div className='sm:hidden'>
+                    <FilterDrawer/>
+                </div>
             </div>
             <JobsGrid/>
         </div>
