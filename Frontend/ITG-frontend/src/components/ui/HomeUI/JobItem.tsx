@@ -7,7 +7,7 @@ const JobItem: React.FC = () => {
     <div className='rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 max-w-[285px]'>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
-                <img src={ItgIcon} alt="Job Image" />
+                <img className='w-full h-full object-cover' src={ItgIcon} alt="Job Image" />
             </div>
             <div className='flex flex-col'>
                 <h1 className='font-semibold'>3D Illustrator</h1>

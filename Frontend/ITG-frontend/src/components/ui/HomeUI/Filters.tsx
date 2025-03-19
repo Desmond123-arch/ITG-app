@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/select"
 
 const Filters: React.FC = () => {
+  const filters: Array<string> = ["Intership", "Part-Time", "Freelance", "Full-Time"]
+  const experiences: Array<string> = ["Fresh Graduate", "1 - 3 years", "3 - 5 years", "5 - 10 years", "10+ years"]
+
   return (
     <div className='flex flex-col gap-3'>
       <h1 className='text-xl font-semibold'>Filter</h1>
@@ -40,10 +43,10 @@ const Filters: React.FC = () => {
           <FilterTitle title='Type Works'/>
           <div>
             {
-              Array.from({length: 4}).map((_item, index) => (
+              filters.map((filter, index) => (
                 <div key={index} className='flex items-center gap-2'>
-                  <Checkbox/>
-                  <span>Intenship</span>
+                  <Checkbox className="border-black/50"/>
+                  <span>{filter}</span>
                 </div>
               ))
             }
@@ -53,10 +56,10 @@ const Filters: React.FC = () => {
         <FilterTitle title='Experience'/>
           <div>
             {
-              Array.from({length: 4}).map((_item, index) => (
+              experiences.map((experience, index) => (
                 <div key={index} className='flex items-center gap-2'>
-                  <Checkbox/>
-                  <span>Fresh Graduate</span>
+                  <Checkbox className="border-black/50"/>
+                  <span>{experience}</span>
                 </div>
               ))
             }
