@@ -52,7 +52,7 @@ const CustomSidebar: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-[#110d59] relative h-screen w-[270px] py-3 px-4 text-white">
+    <nav className="bg-[#110d59] relative h-screen lg:w-[230px] w-[270px] py-3 px-4 text-white">
       <div className="flex gap-3 items-center mb-5">
         <img src={ItgLogo} className='h-10' alt="ITG Logo" />
       </div>
