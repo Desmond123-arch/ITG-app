@@ -22,7 +22,7 @@ const MainLayout = () => {
 
     return (
         <div className="flex h-screen">
-            {(!isTablet || showSidebar) && <CustomSidebar />}
+            {(!isTablet || showSidebar) && <div><CustomSidebar /></div>}
             <div className="w-full flex flex-col h-screen">
                 <main className="py-3 px-4 overflow-x-hidden bg-[#f1f2f4] text-[#2b283d] overflow-y-scroll min-h-screen">
                     <Header />
