@@ -25,7 +25,7 @@ const Home: React.FC = () => {
         </div>
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
-      <div className="flex gap-5 sm:flex-col md:flex-row">
+      <div className="flex gap-5 sm:flex-col lg:flex-row">
         <FiltersDesktop/>
         <RecommendedJobs/>
       </div>

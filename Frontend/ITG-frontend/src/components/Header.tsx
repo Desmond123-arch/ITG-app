@@ -23,7 +23,7 @@ const Header = () => {
         <div className="flex md:flex-row flex-col justify-between w-full mb-5 md:mb-10 md:items-center gap-2">
             <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
-                    <div onClick={changeMenu} className='md:hidden text-black cursor-pointer relative top-[2px]'>
+                    <div onClick={changeMenu} className='lg:hidden text-black cursor-pointer relative top-[2px]'>
                         {
                         showSidebar ? <X/> : <Menu/>
                         }

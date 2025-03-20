@@ -3,7 +3,7 @@ import Filters from './Filters'
 
 const FiltersDesktop: React.FC = () => {
   return (
-    <div className='hidden sm:block'><Filters/></div>
+    <div className='hidden md:block'><Filters/></div>
   )
 }
 

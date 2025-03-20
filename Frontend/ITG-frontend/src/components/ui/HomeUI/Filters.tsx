@@ -55,14 +55,14 @@ const Filters: React.FC = () => {
   return (
     <div className="flex-col gap-3 sm:flex">
       <h1 className="text-xl font-semibold hidden sm:block">Filter</h1>
-      <div className="rounded-md bg-white md:shadow-md px-5 py-3 w-full md:w-[200px] md:block sm:flex gap-10">
+      <div className="rounded-md bg-white md:shadow-md px-5 py-3 w-full lg:w-[200px] lg:block sm:flex gap-10">
         <div>
           <FilterSection title="Location">
             <Input
               value={filters.location}
               onChange={(e) => handleChange("location", e.target.value)}
               placeholder="City"
-              className="bg-[#f1f2f4]/70 sm:w-[200px] md:w-full"
+              className="bg-[#f1f2f4]/70 sm:w-[200px] lg:w-full"
             />
           </FilterSection>
           <FilterSection title="Show By">
