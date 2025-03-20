@@ -7,7 +7,7 @@ import Company from "@/pages/Company";
 const Home = React.lazy(() => import("../pages/Home"))
 const About = React.lazy(() => import("../pages/About"))
 const JobDescription = React.lazy(() => import("../pages/Job"))
-
+const SignUp = React.lazy(() => import("../pages/SignUp"))
 const routes:RouteObject[] =  [
     {path: pathConstants.Home, element: <Home/>},
     {path: "/home", element: <Home/>},
@@ -15,6 +15,10 @@ const routes:RouteObject[] =  [
     {path: "/settings", element: <Settings/>},
     {path:pathConstants.JobDescription, element: <JobDescription/>},
     {path: pathConstants.About,  element: <About/>}
+]
+
+export const landingRoutes:RouteObject[] = [
+    {path: pathConstants.SignUp, element:<SignUp/>},
 ]
 
 export default routes;

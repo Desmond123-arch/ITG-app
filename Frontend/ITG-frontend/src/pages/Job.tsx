@@ -86,7 +86,7 @@ const JobDescription = () => {
 
                     {/* About Company */}
                     <section>
-                        <h3 className='text-md font-semibold text-gray-700 mt-4' A>About Company</h3>
+                        <h3 className='text-md font-semibold text-gray-700 mt-4'>About Company</h3>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore non amet reprehenderit asperiores accusantium hic, veritatis, pariatur ipsam minus omnis explicabo beatae recusandae aperiam, assumenda iure quaerat? Odio, quae obcaecati?
                         Fuga voluptatibus dolore numquam mollitia aperiam assumenda libero? Ipsam pariatur eos dolor tempora quisquam officia incidunt voluptatem debitis, accusantium repudiandae quia quasi quas itaque odit esse a neque aspernatur ullam.
                     </section>
