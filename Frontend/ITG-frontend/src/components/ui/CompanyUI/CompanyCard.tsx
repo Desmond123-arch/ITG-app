@@ -9,7 +9,7 @@ interface Props{
 }
 const CompanyCard: React.FC<Props> = ({company}) => {
   return (
-    <Link to={`/company/${company.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 w-[260px] min-h-[170px] max-w-[285px] hover:shadow-lg transition-all justify-between'>
+    <Link to={`/company/${company.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 w-full min-h-[170px] hover:shadow-lg transition-all justify-between'>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
                 <img className='w-full h-full object-cover' src={ItgIcon} alt="company Image" />

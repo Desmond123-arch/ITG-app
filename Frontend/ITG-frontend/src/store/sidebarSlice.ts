@@ -4,7 +4,7 @@ interface SidebarState {
     showSidebar: boolean;
 }
 const initialState: SidebarState = {
-    showSidebar: true,
+    showSidebar: false,
 };
 
 export const sidebarSlice = createSlice({

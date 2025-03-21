@@ -53,53 +53,57 @@ const Filters: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <h1 className="text-xl font-semibold">Filter</h1>
-      <div className="rounded-md bg-white shadow-md px-5 py-3 w-[200px]">
-        <FilterSection title="Location">
-          <Input
-            value={filters.location}
-            onChange={(e) => handleChange("location", e.target.value)}
-            placeholder="City"
-            className="bg-[#f1f2f4]/70"
+    <div className="flex-col gap-3 sm:flex">
+      <h1 className="text-xl font-semibold hidden sm:block">Filter</h1>
+      <div className="rounded-md bg-white md:shadow-md px-5 py-3 w-full lg:w-[200px] lg:block sm:flex gap-10">
+        <div>
+          <FilterSection title="Location">
+            <Input
+              value={filters.location}
+              onChange={(e) => handleChange("location", e.target.value)}
+              placeholder="City"
+              className="bg-[#f1f2f4]/70 sm:w-[200px] lg:w-full"
+            />
+          </FilterSection>
+          <FilterSection title="Show By">
+            <Select onValueChange={(value) => handleChange("showBy", value)}>
+              <SelectTrigger className="w-full bg-[#f1f2f4]/70">
+                <SelectValue placeholder="Relevant" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="latest">Latest</SelectItem>
+                <SelectItem value="oldest">Oldest</SelectItem>
+              </SelectContent>
+            </Select>
+          </FilterSection>
+          <FilterSection title="Remote Worker" className="flex !flex-row justify-between">
+            <Switch
+              checked={filters.remoteWorker}
+              onCheckedChange={(checked) => handleChange("remoteWorker", checked)}
+              className="data-[state=checked]:bg-green-500"
+            />
+          </FilterSection>
+        </div>
+        <div>
+          <FilterCheckboxGroup
+            title="Type Works"
+            options={workTypes}
+            selected={filters.workTypes}
+            onChange={(value) => handleCheckboxChange("workTypes", value)}
           />
-        </FilterSection>
-        <FilterSection title="Show By">
-          <Select onValueChange={(value) => handleChange("showBy", value)}>
-            <SelectTrigger className="w-full bg-[#f1f2f4]/70">
-              <SelectValue placeholder="Relevant" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="latest">Latest</SelectItem>
-              <SelectItem value="oldest">Oldest</SelectItem>
-            </SelectContent>
-          </Select>
-        </FilterSection>
-        <FilterSection title="Remote Worker">
-          <Switch
-            checked={filters.remoteWorker}
-            onCheckedChange={(checked) => handleChange("remoteWorker", checked)}
-            className="data-[state=checked]:bg-green-500"
+          <FilterCheckboxGroup
+            title="Experience"
+            options={experiences}
+            selected={filters.experience}
+            onChange={(value) => handleCheckboxChange("experience", value)}
           />
-        </FilterSection>
-        <FilterCheckboxGroup
-          title="Type Works"
-          options={workTypes}
-          selected={filters.workTypes}
-          onChange={(value) => handleCheckboxChange("workTypes", value)}
-        />
-        <FilterCheckboxGroup
-          title="Experience"
-          options={experiences}
-          selected={filters.experience}
-          onChange={(value) => handleCheckboxChange("experience", value)}
-        />
-        <Button
-          onClick={handleSubmit}
-          className="w-full mt-3 bg-[#0B5FAE] text-white py-2 rounded-md"
-        >
-          Apply Filters
-        </Button>
+          <Button
+            onClick={handleSubmit}
+            className="w-full mt-3 bg-[#0B5FAE] text-white py-2 rounded-md"
+          >
+            Apply Filters
+          </Button>
+        </div>
       </div>
     </div>
   );

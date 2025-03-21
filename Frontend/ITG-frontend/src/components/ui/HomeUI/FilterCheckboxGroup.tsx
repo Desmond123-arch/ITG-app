@@ -15,7 +15,7 @@ interface FilterCheckboxGroupProps {
     onChange,
   }) => {
     return (
-      <FilterSection title={title}>
+      <FilterSection title={title} checkboxStyles="flex !flex-row flex-wrap gap-x-5">
         {options.map((option, index) => (
           <div key={index} className="flex items-center gap-2">
             <Checkbox
