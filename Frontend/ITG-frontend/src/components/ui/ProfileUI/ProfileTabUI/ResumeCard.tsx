@@ -19,11 +19,11 @@ const ResumeCard = () => (
                 <PopoverTrigger>
                     <Ellipsis />
                 </PopoverTrigger>
-                <PopoverContent>
-                    <h1>Preview</h1>
-                    <h1>Change</h1>
-                    <h1>Download</h1>
-                    <h1 className="text-red-500">Delete</h1>
+                <PopoverContent className='bg-white border flex flex-col gap-1 rounded-md p-1'>
+                    <h1 className='rounded-sm px-2 py-1 hover:bg-gray-100 cursor-pointer'>Preview</h1>
+                    <h1 className='rounded-sm px-2 py-1 hover:bg-gray-100 cursor-pointer'>Change</h1>
+                    <h1 className='rounded-sm px-2 py-1 hover:bg-gray-100 cursor-pointer'>Download</h1>
+                    <h1 className='rounded-sm px-2 py-1 hover:bg-red-200 text-red-600 cursor-pointer '>Delete</h1>
                 </PopoverContent>
             </Popover>
         </div>
