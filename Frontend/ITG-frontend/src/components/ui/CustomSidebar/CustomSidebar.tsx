@@ -20,6 +20,11 @@ const CustomSidebar: React.FC = () => {
       icon: LayoutDashboard
     },
     {
+      title: "Company",
+      url: "/company",
+      icon: Briefcase
+    },
+    {
       title: "Profile",
       url: "/profile",
       icon: CircleUserRound
@@ -33,11 +38,6 @@ const CustomSidebar: React.FC = () => {
       title: "History",
       url: "/history",
       icon: Clock
-    },
-    {
-      title: "Company",
-      url: "/company",
-      icon: Briefcase
     },
     {
       title: "Messages",

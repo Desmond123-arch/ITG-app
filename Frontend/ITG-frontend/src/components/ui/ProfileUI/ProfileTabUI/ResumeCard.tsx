@@ -2,7 +2,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover
 import { FileBadge, Eye, Ellipsis } from 'lucide-react';
 
 const ResumeCard = () => (
-    <div className="border rounded-md flex p-5 w-max gap-5">
+    <div className="border rounded-md grid grid-cols-[20px_1fr_20px] p-5 w-max gap-5 min-w-[450px]">
         <div className="relative top-1">
             <FileBadge />
         </div>
