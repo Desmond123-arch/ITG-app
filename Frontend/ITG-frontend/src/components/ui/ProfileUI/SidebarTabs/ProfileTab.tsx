@@ -1,80 +1,60 @@
-import { Ellipsis, Eye, FileBadge, Pencil } from 'lucide-react'
-import React from 'react'
-import { Button } from '../../button'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { Pencil } from 'lucide-react';
+import React from 'react';
+import { Button } from '../../button';
+import InfoItem from './InfoItem';
+import ProfileSection from '../ProfileTabUI/ProfileSection';
+import ResumeCard from '../ProfileTabUI/ResumeCard';
+import TagList from '../ProfileTabUI/TagList';
 
 const ProfileTab: React.FC = () => {
     return (
-        <div className='bg-white shadow-sm rounded-md'>
-            <header className='flex justify-between items-center px-5 py-3 border-b-[1px]'>
-                <h1 className='font-semibold text-xl'>Personal Information</h1>
-                <Button><Pencil/> Edit</Button>
-            </header>
-            <main className='flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5'>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>First Name</h2>
-                    <h1 className='text-[18px] text-black'>John</h1>
-                </div>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>Last Name</h2>
-                    <h1 className='text-[18px] text-black'>John</h1>
-                </div>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>Location</h2>
-                    <h1 className='text-[18px] text-black'>Accra, Ghana</h1>
-                </div>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>Employment Status</h2>
-                    <h1 className='text-[18px] text-black'>Unemployed</h1>
-                </div>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>University or College</h2>
-                    <h1 className='text-[18px] text-black'>Dropout</h1>
-                </div>
-                <div className='flex flex-col'>
-                    <h2 className='text-sm'>Degree Type</h2>
-                    <h1 className='text-[18px] text-black'>---</h1>
-                </div>
-            </main>
-            <div className='flex flex-col w-full gap-6 px-5 py-3'>
-                <h1 className='font-semibold text-xl'>My Resume</h1>
+        <div className="bg-white shadow-sm rounded-md">
+            <section>
+                <header className="flex justify-between items-center px-5 py-3 border-b-[1px]">
+                    <h1 className="font-semibold text-xl">Personal Information</h1>
+                    <Button><Pencil /> Edit</Button>
+                </header>
+                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+                    <InfoItem title="First Name" value="John" />
+                    <InfoItem title="Last Name" value="John" />
+                    <InfoItem title="Email" value="johndoeagain@gmail.com" />
+                    <InfoItem title="Phone Number" value="0123456789" />
+                    <InfoItem title="Disability Type" value="Something" />
+                    <InfoItem title="Location" value="Accra, Ghana" />
+                </main>
+            </section>
+            <section>
+                <header className="px-5 py-3">
+                    <h1 className="font-semibold text-xl">Education & Employment</h1>
+                </header>
+                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+                    <InfoItem title="Employment Status" value="Unemployed" />
+                    <InfoItem title="University or College" value="Dropout" />
+                    <InfoItem title="Degree Type" value="---" />
+                </main>
+            </section>
+            <section>
+                <header className="px-5 py-3">
+                    <h1 className="font-semibold text-xl">Job Preferences & Skills</h1>
+                </header>
+                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+            <ProfileSection title="Job Location Preference">
+                <TagList items={["Remote", "Accra"]} />
+            </ProfileSection>
+            
+            <ProfileSection title="Skills">
+                <TagList items={["Construction", "Programming"]} />
+            </ProfileSection>
+        </main>
+            </section>
+            <section className="flex flex-col w-full gap-6 px-5 py-3">
+                <h1 className="font-semibold text-xl">My Resume</h1>
                 <p>Pre-fill job applications when you add a resume.</p>
-                <p>Your resume can be visible to hiring employers or you can keep it hidden</p>
-                <div className='border rounded-md flex p-5 w-max gap-5'>
-                    <div className='relative top-1'>
-                        <FileBadge/>
-                    </div>
-                    <div className='flex flex-col'>
-                        <h1 className='font-semibold text-black text-xl'>
-                            John Doe Resume.pdf
-                        </h1>
-                        <p>Date added: 12/1/2024</p>
-                        <div className='flex gap-2'>
-                            <Eye/>
-                            <p>Visible to hiring employers</p>
-                        </div>
-                    </div>
-                    <div>
-                        <Popover>
-                            <PopoverTrigger>
-                                <Ellipsis/>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                                <h1>Preview</h1>
-                                <h1>Change</h1>
-                                <h1>Download</h1>
-                                <h1 className='text-red-500'>Delete</h1>
-                            </PopoverContent>
-                        </Popover>
-                    </div>
-                </div>
-            </div>
+                <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
+                <ResumeCard />
+            </section>
         </div>
-    )
-}
+    );
+};
 
-export default ProfileTab
+export default ProfileTab;
