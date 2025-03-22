@@ -12,7 +12,7 @@ const ProfileSidebar: React.FC<Props> = ({currentTab, setCurrentTab}) => {
     const tabs = ["Profile", "Job activity", "Notifications", "Account Settings"]
 
     return (
-        <div className='rounded-md h-full shadow-md px-5 py-3 flex w-full flex-col gap-3 bg-white'>
+        <div className='rounded-md h-full shadow-sm px-5 py-3 flex w-full flex-col gap-3 bg-white'>
             <section className='flex flex-col gap-3 border-b-[1.5px] pb-5'>
                 <div className='relative'>
                     <div className='relative w-[130px] shadow-[0_5px_5px_#00000060,0_-1px_5px_#00000030]  h-[130px] rounded-full overflow-hidden'>
