@@ -2,11 +2,11 @@ import React from 'react';
 import { 
   Briefcase, 
   Calendar, 
+  CircleUserRound, 
   Clock, 
   LayoutDashboard, 
   MessageCircle, 
   Settings, 
-  Ticket,
 } from 'lucide-react';
 import LinkItem from './LinkItem';
 import { ItgLogo } from '@/assets/images';
@@ -20,9 +20,9 @@ const CustomSidebar: React.FC = () => {
       icon: LayoutDashboard
     },
     {
-      title: "Event",
-      url: "/event",
-      icon: Ticket
+      title: "Profile",
+      url: "/profile",
+      icon: CircleUserRound
     },
     {
       title: "Schedule",
