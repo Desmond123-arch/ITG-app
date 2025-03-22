@@ -10,7 +10,7 @@ import {
 const ProfileTab: React.FC = () => {
     return (
         <div className='bg-white shadow-sm rounded-md'>
-            <header className='flex justify-between items-center px-5 py-3 border-b-[1px] pb-5'>
+            <header className='flex justify-between items-center px-5 py-3 border-b-[1px]'>
                 <h1 className='font-semibold text-xl'>Personal Information</h1>
                 <Button><Pencil/> Edit</Button>
             </header>
