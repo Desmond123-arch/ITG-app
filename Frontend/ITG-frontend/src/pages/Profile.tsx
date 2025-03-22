@@ -1,7 +1,9 @@
-import JobActivityTab from '@/components/ui/ProfileUI/JobActivityTab'
+import JobActivityTab from '@/components/ui/ProfileUI/SidebarTabs/JobActivityTab'
 import ProfileSidebar from '@/components/ui/ProfileUI/ProfileSidebar'
-import ProfileTab from '@/components/ui/ProfileUI/ProfileTab'
+import ProfileTab from '@/components/ui/ProfileUI/SidebarTabs/ProfileTab'
 import React, { useState } from 'react'
+import NotificationsTab from '@/components/ui/ProfileUI/SidebarTabs/NotificationsTab'
+import AccountSettings from '@/components/ui/ProfileUI/SidebarTabs/AccountSettings'
 
 const Profile: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>("Profile")
@@ -11,7 +13,8 @@ const Profile: React.FC = () => {
       <ProfileSidebar currentTab={currentTab} setCurrentTab={setCurrentTab}/>
       {
         currentTab == "Profile" ? <ProfileTab/> :
-        currentTab == "Job activity" ? <JobActivityTab/> : <JobActivityTab/>
+        currentTab == "Job activity" ? <JobActivityTab/> :
+        currentTab == "Notifications" ? <NotificationsTab/> : <AccountSettings/>
       }
     </div>
   )

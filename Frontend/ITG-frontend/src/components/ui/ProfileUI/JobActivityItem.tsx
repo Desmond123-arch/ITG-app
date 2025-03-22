@@ -24,7 +24,7 @@ const JobActivityItem: React.FC<Props> = ({isSaved, isApplied}) => {
             </Link>
             {
               isApplied ?
-                <Button disabled={true} className='mt-2'>Applied</Button>:
+                <Button disabled={true} variant={"secondary"} className='mt-2'>Applied</Button>:
                 <Button className='mt-2'>Apply Now</Button>
             }
             

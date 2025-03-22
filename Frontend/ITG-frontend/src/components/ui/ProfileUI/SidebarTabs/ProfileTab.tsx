@@ -1,6 +1,6 @@
 import { Ellipsis, Eye, FileBadge, Pencil } from 'lucide-react'
 import React from 'react'
-import { Button } from '../button'
+import { Button } from '../../button'
 import {
     Popover,
     PopoverContent,

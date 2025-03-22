@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
-import SavedJobs from './SavedJobs'
-import AppliedJobs from './AppliedJobs'
+import SavedJobs from '../SavedJobs'
+import AppliedJobs from '../AppliedJobs'
 
 const JobActivityTab: React.FC = () => {
     const tabs = ["Saved", "Applied"]
