@@ -6,17 +6,27 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "../button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
+import { useState, ChangeEvent } from "react";
 
 
 const formSchema = z
     .object({
-        name: z.string().optional(), // type fixing
-        email: z.string().email("Invalid email address entered").optional(),
+        // name: z.string().optional(), // type fixing
+        // email: z.string().email("Invalid email address entered").optional(),
         company_name: z.string({ required_error: "Company name is required" }),
         company_email: z.string().email("Invalid email address entered"),
         company_description: z.string().min(2, "More details is required"),
         company_web_url: z.string().url(),
-
+        company_logo: z
+            .any()
+            .refine((file) => file instanceof File, "Logo file is required")
+            .refine((file) => file?.size <= 5 * 1024 * 1024, "File must be under 5MB") // 5MB limit
+            .refine(
+                (file) =>
+                    ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
+                "Only JPG, JPEG, or PNG images are allowed"
+            ).optional(),
         //second stage
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
@@ -35,9 +45,27 @@ const formSchema = z
 
 
 export function MultiStepViewer({ form }: { form: any }) {
+    const [logoName, setLogoName] = useState("");
+    const [isLogoUploaded, setIsLogoUploaded] = useState(false);
+
+    const handleLogoChange = (
+        e: ChangeEvent<HTMLInputElement>,
+        onChange: (file: File | null) => void
+    ) => {
+        const file = e.target.files?.[0] || null;
+        onChange(file);
+        if (file) {
+            setLogoName(file.name);
+            setIsLogoUploaded(true);
+        } else {
+            setLogoName("");
+            setIsLogoUploaded(false);
+        }
+    };
+
     const stepFormElements: { [key: number]: JSX.Element } = {
         0: <>
-        <h3 className="text-lg font-bold">Company General Info</h3>
+            <h3 className="text-lg font-bold">Company General Info</h3>
             <FormField
                 control={form.control}
                 name="company_name"
@@ -102,6 +130,67 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="company_logo"
+                render={({ field: { value, onChange, ...rest } }) => (
+                    <FormItem className="p-4 border border-dashed rounded-md">
+                        <FormLabel>Company Logo</FormLabel>
+                        <FormControl>
+                            <div className="relative w-full h-32 flex flex-col items-center justify-center">
+                                <div
+                                    className={`relative w-full h-full border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-2 transition-all ${isLogoUploaded
+                                        ? "bg-primary/10 border-primary"
+                                        : "hover:bg-muted/50 border-muted-foreground/25"
+                                        }`}
+                                >
+                                    {isLogoUploaded ? (
+                                        <>
+                                            <CheckCircleIcon className="h-8 w-8 text-primary" />
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <FileIcon className="h-4 w-4 text-muted-foreground" />
+                                                <span className="text-sm font-medium truncate max-w-[250px]">
+                                                    {logoName}
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <UploadIcon className="h-8 w-8 text-muted-foreground" />
+                                            <p className="text-sm text-muted-foreground text-center">
+                                                Drag and drop or click to upload logo
+                                            </p>
+                                        </>
+                                    )}
+                                    <Input
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png"
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        onChange={(e) => handleLogoChange(e, onChange)}
+                                        {...rest}
+                                    />
+                                </div>
+                                {isLogoUploaded && (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="mt-2 text-xs"
+                                        onClick={() => {
+                                            setLogoName("");
+                                            setIsLogoUploaded(false);
+                                            onChange(null); // Clear file from form state
+                                        }}
+                                    >
+                                        Change Logo
+                                    </Button>
+                                )}
+                            </div>
+                        </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -120,6 +209,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -135,6 +225,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -152,6 +243,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -168,6 +260,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
+                         <FormMessage />
                     </FormItem>
                 )}
             />
@@ -241,15 +334,16 @@ const EmployerSignUp = () => {
             phone: '',
             password: '',
             confirm_password: '',
-            name: "",
-            email: ""
+
         }
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
-        //to match database
-        values["name"] = values["company_name"]
-        values["email"] = values["company_email"]
-        console.log(values)
+        const updatedValues = {
+            ...values,
+            name:  values.company_name,
+            email:values.company_email,
+        };
+        console.log(updatedValues)
     }
 
     return (

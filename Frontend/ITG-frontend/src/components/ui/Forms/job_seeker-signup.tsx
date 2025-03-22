@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MultiSelect } from "../multi-select";
 import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
+import { programmingSkills } from "@/store/options";
 const formSchema = z
     .object({
         firstname: z.string({ required_error: "First name is required" }).max(50),
@@ -245,16 +246,11 @@ export function MultiStepViewer({ form }: { form: any }) {
                 control={form.control}
                 name="skills"
                 render={({ field }) => {
-                    const options = [
-                        { value: '1', label: 'Option 1' },
-                        { value: '2', label: 'Option 2' },
-                        { value: '3', label: 'Option 3' },
-                    ]
                     return (
                         <FormItem className="w-full">
                             <FormLabel>Skills</FormLabel> *
                             <MultiSelect
-                                options={options}
+                                options={programmingSkills}
                                 onValueChange={(selected) => field.onChange(selected)}
                                 defaultValue={[]}
                                 placeholder="Select frameworks"
