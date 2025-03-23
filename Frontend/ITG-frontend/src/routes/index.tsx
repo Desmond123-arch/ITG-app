@@ -12,7 +12,7 @@ const Login = React.lazy(() => import("../pages/Login"))
 const routes: RouteObject[] = [
     { path: pathConstants.Home, element: <Home /> },
     { path: "/home", element: <Home /> },
-    { path: "/company", element: <Company /> },
+    { path: "/company/:id", element: <Company /> },
     { path: "/settings", element: <Settings /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> }

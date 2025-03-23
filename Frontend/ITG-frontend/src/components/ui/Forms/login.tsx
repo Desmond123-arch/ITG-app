@@ -1,18 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form } from "react-router";
 import { z } from "zod";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../form";
 import { Input } from "../input";
 import { Button } from "../button";
 
 const formSchema = z.object({
     email: z.string().email("A valid email is required"),
-    password: z.string({ required_error: "A password is required" })
+    password: z.string({ required_error: "A password is required" }).min(3, "A valid password is required")
 })
-
-
-
 export const LoginForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -24,9 +20,11 @@ export const LoginForm = () => {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
     }
+
     return (
-        <Form {...form} className="bg-slate-200 shadow-md rounded-md w-[60%] md:w-[40%] px-2 py-3 h-max">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}  className="flex flex-col gap-6 bg-slate-50 border-2 shadow-lg rounded-md w-[60%] md:w-[30%] px-2 py-5 mx-auto">
+                <h2 className="text-center text-2xl underline underline-offset-1">Login into your account</h2>
                 <FormField
                     control={form.control}
                     name="email"
@@ -51,7 +49,7 @@ export const LoginForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem className="w-full">
-                            <FormLabel>Confirm Password</FormLabel> *
+                            <FormLabel>Password</FormLabel> *
                             <FormControl>
                                 <Input
                                     {...field}
