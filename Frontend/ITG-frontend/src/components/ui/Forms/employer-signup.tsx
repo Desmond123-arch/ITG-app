@@ -17,7 +17,7 @@ const formSchema = z
         company_name: z.string({ required_error: "Company name is required" }),
         company_email: z.string().email("Invalid email address entered"),
         company_description: z.string().min(2, "More details is required"),
-        company_web_url: z.string().url(),
+        company_web_url: z.string().url().optional(),
         company_logo: z
             .any()
             .refine((file) => file instanceof File, "Logo file is required")

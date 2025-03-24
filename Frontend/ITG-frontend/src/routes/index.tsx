@@ -9,10 +9,13 @@ const JobDescription = React.lazy(() => import("../pages/Job"))
 const SignUp = React.lazy(() => import("../pages/SignUp"))
 const Settings = React.lazy(() => import("../pages/Settings"))
 const Login = React.lazy(() => import("../pages/Login"))
+const CompanyAbout = React.lazy(() => import("../pages/CompanyAbout"))
+
 const routes: RouteObject[] = [
     { path: pathConstants.Home, element: <Home /> },
     { path: "/home", element: <Home /> },
-    { path: "/company/:id", element: <Company /> },
+    { path: "/company/", element: <Company /> },
+    { path: "/company/:id", element: <CompanyAbout /> },
     { path: "/settings", element: <Settings /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> }
