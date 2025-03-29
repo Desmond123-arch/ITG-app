@@ -14,18 +14,20 @@ const ProfileSidebar: React.FC<Props> = ({currentTab, setCurrentTab}) => {
 
     return (
         <div className='rounded-md shadow-sm px-5 py-3 flex w-full flex-col gap-3 bg-white h-min'>
-            <section className='flex flex-col gap-3 border-b-[1.5px] pb-5'>
+            <section className='flex md:flex-col gap-4 md:gap-3 border-b-[1.5px] pb-5'>
                 <div className='relative grid place-items-center'>
-                    <Avatar className='w-[130px] shadow-[0_5px_5px_#00000060,0_-1px_5px_#00000030]  h-[130px] rounded-full overflow-hidden'>
+                    <Avatar className='md:w-[130px] md:h-[130px] shadow-[0_5px_5px_#00000060,0_-1px_5px_#00000030] rounded-full overflow-hidden'>
                         <AvatarImage src={ProfilePic} />
                         <AvatarFallback>JD</AvatarFallback>
                     </Avatar>
-                    <button className='absolute bottom-0 hover:shadow-md left-[135px] p-[6px] border shadow-md rounded-full bg-white'>
-                        <Pencil size={20}/>
+                    <button className='absolute bottom-0 hover:shadow-md left-[25px] md:left-[135px] p-[6px] border shadow-md rounded-full bg-white'>
+                        <Pencil className='w-3 h-3 md:w-6 md:h-6'/>
                     </button>
                 </div>
-                <h1 className='font-semibold text-2xl'>John Doe</h1>
-                <p>Student at Some University</p>
+                <div className='flex flex-col'>
+                    <h1 className='font-semibold text-2xl'>John Doe</h1>
+                    <p>Student at Some University</p>
+                </div>
             </section>
             <section className='flex flex-col gap-3 border-b-[1.5px] pb-5'>
                 <ul className='flex flex-col w-full gap-2'>
