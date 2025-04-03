@@ -26,6 +26,7 @@ const formSchema = z
         confirm_password: z.string().min(1, "Confirm password to proceed"),
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
+        
         disability_type: z.string().min(1, "Disability is required"),
         preferred_location: z.string().min(1, "Preferred location is required"),
         skills: z.array(z.string()).min(1, "At least one skill is required"),

@@ -8,13 +8,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
 import { useState, ChangeEvent } from "react";
+import { programmingSkills } from "@/store/options";
+import { MultiSelect } from "../multi-select";
 
 
 const formSchema = z
     .object({
         // name: z.string().optional(), // type fixing
         // email: z.string().email("Invalid email address entered").optional(),
-        company_name: z.string({ required_error: "Company name is required" }),
+        company_name: z.string().min(2, "Company name is required"),
         company_email: z.string().email("Invalid email address entered"),
         company_description: z.string().min(2, "More details is required"),
         company_web_url: z.string().url().optional(),
@@ -26,10 +28,13 @@ const formSchema = z
                 (file) =>
                     ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
                 "Only JPG, JPEG, or PNG images are allowed"
-            ).optional(),
+            ),
         //second stage
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
+        founded: z.string().min(1, "Date founded is required"),
+        specialties: z.array(z.string()).min(1, "At least one specialty is required"),
+        industry: z.string().min(1, "Industry is required"),
         password: z.string()
             .min(8, "Password must be at least 8 characters long")
             .max(50, "Password must not exceed 50 characters")
@@ -71,7 +76,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="company_name"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Company name</FormLabel>
+                        <FormLabel>Company name</FormLabel> *
                         <FormControl>
                             <Input
                                 placeholder="Enter your company name"
@@ -88,7 +93,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="company_email"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Company email</FormLabel>
+                        <FormLabel>Company email</FormLabel> *
                         <FormControl>
                             <Input
                                 placeholder="Enter your email"
@@ -105,8 +110,8 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="company_description"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Company Description</FormLabel>
-                        <FormControl>
+                        <FormLabel>Company Description</FormLabel> *
+                        <FormControl> 
                             <textarea
                                 {...field}
                                 placeholder="Short summary of your company"
@@ -202,7 +207,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="phone"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Company Phone Number</FormLabel>
+                        <FormLabel>Company Phone Number</FormLabel> *
                         <FormControl>
                             <Input
                                 placeholder="Company Phone Number"
@@ -218,7 +223,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="address"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Company Address</FormLabel>
+                        <FormLabel>Company Head Quatres</FormLabel> *
                         <FormControl>
                             <Input
                                 placeholder="Region, Country"
@@ -229,13 +234,50 @@ export function MultiStepViewer({ form }: { form: any }) {
                     </FormItem>
                 )}
             />
+            <FormField
+                control={form.control}
+                name="industry"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Company Industry</FormLabel> *
+                        <FormControl>
+                            <Input
+                                placeholder="Health, Fintech"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="specialties"
+                render={({ field }) => {
+                    return (
+                        <FormItem className="w-full">
+                            <FormLabel>Specialties</FormLabel> *
+                            <MultiSelect
+                                options={programmingSkills}
+                                onValueChange={(selected) => field.onChange(selected)}
+                                defaultValue={[]}
+                                placeholder="Select frameworks"
+                                variant="inverted"
+                                // animation={2}
+                                maxCount={3}
+                            />
+                            <FormMessage />
+                        </FormItem>
+                    )
+                }}
+            />
 
             <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>Password</FormLabel>*
                         <FormControl>
                             <Input
                                 type="password"
@@ -252,7 +294,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="confirm_password"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Confirm Password</FormLabel>
+                        <FormLabel>Confirm Password</FormLabel> *
                         <FormControl>
                             <Input
                                 type="password"
@@ -260,7 +302,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                             />
                         </FormControl>
-                         <FormMessage />
+                        <FormMessage />
                     </FormItem>
                 )}
             />
@@ -278,7 +320,7 @@ export function MultiStepViewer({ form }: { form: any }) {
         initialSteps: steps,
         onStepValidation: async () => {
             const stepFields: { [key: number]: string[] } = {
-                0: ["company_name", "company_email", "company_description", "company_web_url"],
+                0: ["company_name", "company_email", "company_description"],
                 1: ["phone", "address", "password", "confirm_password"]
             }
             const fieldsToValidate = stepFields[currentStep - 1]
@@ -340,8 +382,8 @@ const EmployerSignUp = () => {
     function onSubmit(values: z.infer<typeof formSchema>) {
         const updatedValues = {
             ...values,
-            name:  values.company_name,
-            email:values.company_email,
+            name: values.company_name,
+            email: values.company_email,
         };
         console.log(updatedValues)
     }
