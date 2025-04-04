@@ -33,6 +33,7 @@ export const LoginForm = () => {
             const {status, data} = response.data
             if(status === 'success'){
                 const {user, accessToken} = data
+                console.log(user)
                 dispatch(login({user, token:accessToken}))
                 axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
                 navigate('/')

@@ -3,6 +3,9 @@ import { ProfilePic } from '@/assets/images'
 import { LogOut, Pencil } from 'lucide-react'
 import classNames from 'classnames'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { RootState } from '@/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '@/store/authSlice'
 
 interface Props{
     currentTab: string
@@ -10,7 +13,13 @@ interface Props{
 }
 
 const ProfileSidebar: React.FC<Props> = ({currentTab, setCurrentTab}) => {
+    const user = useSelector((state: RootState) => state.auth.user)
     const tabs = ["Profile", "Job activity", "Notifications", "Account Settings"]
+    const dispatch = useDispatch()
+
+    const logoutUser = () => {
+        dispatch(logout())
+    }
 
     return (
         <div className='rounded-md shadow-sm px-5 py-3 flex w-full flex-col gap-3 bg-white h-min'>
@@ -25,7 +34,7 @@ const ProfileSidebar: React.FC<Props> = ({currentTab, setCurrentTab}) => {
                     </button>
                 </div>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold text-2xl'>John Doe</h1>
+                    <h1 className='font-semibold text-2xl'>{user?.name}</h1>
                     <p>Student at Some University</p>
                 </div>
             </section>
@@ -46,9 +55,9 @@ const ProfileSidebar: React.FC<Props> = ({currentTab, setCurrentTab}) => {
                     }
                 </ul>
             </section>
-            <div className='flex justify-between items-center cursor-pointer'>
-                <p>Sign out</p>
-                <LogOut size={20}/>
+            <div className='flex justify-between items-center'>
+                <p onClick={logoutUser} className='cursor-pointer'>Sign out</p>
+                <LogOut onClick={logoutUser} className='cursor-pointer' size={20}/>
             </div>
         </div>
     )

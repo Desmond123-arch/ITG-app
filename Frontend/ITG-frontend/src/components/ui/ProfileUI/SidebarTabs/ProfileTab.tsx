@@ -5,8 +5,12 @@ import InfoItem from './InfoItem';
 import ProfileSection from '../ProfileTabUI/ProfileSection';
 import ResumeCard from '../ProfileTabUI/ResumeCard';
 import TagList from '../ProfileTabUI/TagList';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 const ProfileTab: React.FC = () => {
+    const user = useSelector((state: RootState) => state.auth.user)
+
     return (
         <div className="bg-white shadow-sm rounded-md">
             <section>
@@ -15,10 +19,10 @@ const ProfileTab: React.FC = () => {
                     <Button><Pencil /> Edit</Button>
                 </header>
                 <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <InfoItem title="First Name" value="John" />
-                    <InfoItem title="Last Name" value="John" />
-                    <InfoItem title="Email" value="johndoeagain@gmail.com" />
-                    <InfoItem title="Phone Number" value="0123456789" />
+                    <InfoItem title="First Name" value={user?.name?.split(' ')[0] || ''} />
+                    <InfoItem title="Last Name" value={user?.name?.split(' ')[1] || ''} />
+                    <InfoItem title="Email" value={user?.email!} />
+                    <InfoItem title="Phone Number" value={user?.phone!} />
                     <InfoItem title="Disability Type" value="Something" />
                     <InfoItem title="Location" value="Accra, Ghana" />
                 </main>
