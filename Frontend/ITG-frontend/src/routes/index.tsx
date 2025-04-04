@@ -10,6 +10,7 @@ const JobDescription = React.lazy(() => import("../pages/Job"))
 const SignUp = React.lazy(() => import("../pages/SignUp"))
 const Settings = React.lazy(() => import("../pages/Settings"))
 const Login = React.lazy(() => import("../pages/Login"))
+const Profile = React.lazy(() => import("../pages/Profile"))
 const CompanyAbout = React.lazy(() => import("../pages/CompanyAbout"))
 
 const protectedRoutes: RouteObject[] = [
@@ -18,6 +19,7 @@ const protectedRoutes: RouteObject[] = [
     { path: "/company/", element: <Company /> },
     { path: "/company/:id", element: <CompanyAbout /> },
     { path: "/settings", element: <Settings /> },
+    { path: "/profile", element: <Profile /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> }
 ];

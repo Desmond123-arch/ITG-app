@@ -5,12 +5,13 @@ import { Link, useLocation } from "react-router-dom";
 import toTitle from "@/utils/ToTitle";
 import { RootState, AppDispatch } from "@/store";
 import { toggleSidebar } from "@/store/sidebarSlice";
-import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from "react-redux";
+import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector, useSelector } from "react-redux";
 const useAppDispatch = () => useReduxDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
 const Header = () => {
     const location = useLocation();
+    const user = useSelector((state: RootState) => state.auth.user)
     const pageName = location.pathname === "/" ? "Home" : toTitle(location.pathname)
 
     const showSidebar = useAppSelector((state) => state.sidebar.showSidebar);
@@ -48,7 +49,7 @@ const Header = () => {
                     <Link to="/sign-up" className="rounded-full overflow-hidden w-7 h-7">
                         <img className="w-full h-full object-cover" src={ProfilePic} alt="Profile Picture" />
                     </Link>
-                    <h1 className="font-semibold text-sm">John Doe</h1>
+                    <h1 className="font-semibold text-sm">{user?.name}</h1>
                     <div className="rotate-90 cursor-pointer text-gray-500"><Play size={20}/></div>
                 </div>
             </div>
