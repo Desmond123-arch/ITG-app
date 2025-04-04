@@ -4,7 +4,7 @@ import EmployerSignUp from "@/components/ui/Forms/employer-signup";
 
 const SignUp = () => {
     return (
-        <div className="bg-gray-100 w-full h-full">
+        <div className="bg-gray-100 w-full h-max pb-10">
             <div className="mt-7 w-full h-max mx-auto flex justify-center">
                 <Tabs defaultValue="job_seekers" className="w-full flex items-center flex-col" >
                     <div>

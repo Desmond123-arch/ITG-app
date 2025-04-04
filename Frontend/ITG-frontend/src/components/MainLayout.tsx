@@ -28,8 +28,8 @@ const MainLayout = () => {
                     <Header />
                     <Suspense fallback={<CustomLoader />}>
                         <Outlet />
+                        <Footer />
                     </Suspense>
-                    <Footer />
                 </main>
             </div>
         </div>

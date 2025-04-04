@@ -10,6 +10,8 @@ import { MultiSelect } from "../multi-select";
 import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { programmingSkills } from "@/store/options";
+import axios from 'axios'
+
 const formSchema = z
     .object({
         firstname: z.string({ required_error: "First name is required" }).max(50),
@@ -22,7 +24,7 @@ const formSchema = z
             .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
             .regex(/[a-z]/, "Password must contain at least one lowercase letter")
             .regex(/[0-9]/, "Password must contain at least one number")
-            .regex(/[@$!%*?&]/, "Password must contain at least one special character (@$!%*?&)"),
+            .regex(/[@$!%*?&#]/, "Password must contain at least one special character (@$!%*?&#)"),
         confirm_password: z.string().min(1, "Confirm password to proceed"),
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
@@ -172,7 +174,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                     }
                 />
             </>,
-        1: <div><h3 className="text-lg font-bold">Personal Info</h3>
+        1: <><h3 className="text-lg font-bold">Personal Info</h3>
             <FormField
                 control={form.control}
                 name="disability_type"
@@ -348,7 +350,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 }}
             />
 
-        </div>
+        </>
     }
     const steps = Object.keys(stepFormElements).map(Number);
     const {
@@ -427,10 +429,44 @@ const JobSeekerSignUp: React.FC = () => {
             name: ""
         },
     });
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        values["name"] = `${values.firstname} ${values.lastname}`
-        console.log(values)
-    }
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            console.log('submitting')
+            values["name"] = `${values.firstname} ${values.lastname}`;
+            console.log(values)
+    
+            const formData = new FormData();
+            formData.append("name", values.name);
+            formData.append("email", values.email);
+            formData.append("password", values.password);
+            formData.append("confirmPassword", values.confirm_password);
+            formData.append("phone", values.phone);
+            formData.append("address", values.address);
+            formData.append("role", "job_seeker");
+            formData.append("disability_type", values.disability_type);
+            formData.append("preferred_location", values.preferred_location);
+            formData.append("resume", values.resume); // This is the file
+    
+            // Append each skill (if API expects array via multiple values)
+            values.skills.forEach(skill => {
+                formData.append("skills[]", skill);
+            });
+            console.log('form data: ', formData)
+    
+            const response = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
+            console.log("submitted: ", response.data);
+        } catch (error) {
+            console.error("error:", error);
+        }
+    }    
 
     return (
         <div>
