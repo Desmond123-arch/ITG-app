@@ -10,7 +10,8 @@ import { MultiSelect } from "../multi-select";
 import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { programmingSkills } from "@/store/options";
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z
     .object({
@@ -29,8 +30,8 @@ const formSchema = z
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
         
-        disability_type: z.string().min(1, "Disability is required"),
-        preferred_location: z.string().min(1, "Preferred location is required"),
+        disabilityType: z.string().min(1, "Disability is required"),
+        preferredLocation: z.string().min(1, "Preferred location is required"),
         skills: z.array(z.string()).min(1, "At least one skill is required"),
         resume: z
             .instanceof(File, { message: "File is required" })
@@ -177,7 +178,7 @@ export function MultiStepViewer({ form }: { form: any }) {
         1: <><h3 className="text-lg font-bold">Personal Info</h3>
             <FormField
                 control={form.control}
-                name="disability_type"
+                name="disabilityType"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>Disability Type</FormLabel> *
@@ -268,7 +269,7 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="preferred_location"
+                name="preferredLocation"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>Preferred Location</FormLabel> *
@@ -365,7 +366,7 @@ export function MultiStepViewer({ form }: { form: any }) {
             // Define the fields that should be validated at each step
             const stepFields: { [key: number]: string[] } = {
                 0: ["firstname", "lastname", "email", "password", "confirm_password"],
-                1: ["disability_type", "address", "phone", "preferred_location"]
+                1: ["disabilityType", "address", "phone", "preferredLocation"]
             };
             // Get the fields for the current step
             const fieldsToValidate = stepFields[currentStep - 1];
@@ -413,6 +414,7 @@ export function MultiStepViewer({ form }: { form: any }) {
 }
 
 const JobSeekerSignUp: React.FC = () => {
+    const navigate = useNavigate()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -423,8 +425,8 @@ const JobSeekerSignUp: React.FC = () => {
             confirm_password: "",
             phone: "",
             address: "",
-            disability_type: "",
-            preferred_location: "",
+            disabilityType: "",
+            preferredLocation: "",
             skills: [],
             name: ""
         },
@@ -443,8 +445,8 @@ const JobSeekerSignUp: React.FC = () => {
             formData.append("phone", values.phone);
             formData.append("address", values.address);
             formData.append("role", "job_seeker");
-            formData.append("disability_type", values.disability_type);
-            formData.append("preferred_location", values.preferred_location);
+            formData.append("disabilityType", values.disabilityType);
+            formData.append("preferredLocation", values.preferredLocation);
             formData.append("resume", values.resume); // This is the file
     
             // Append each skill (if API expects array via multiple values)
@@ -463,8 +465,10 @@ const JobSeekerSignUp: React.FC = () => {
                 }
             );
             console.log("submitted: ", response.data);
-        } catch (error) {
-            console.error("error:", error);
+            localStorage.setItem('data', response.data)
+            navigate('/')
+        } catch (error: any) {
+            console.error("error:", error.response.data);
         }
     }    
 

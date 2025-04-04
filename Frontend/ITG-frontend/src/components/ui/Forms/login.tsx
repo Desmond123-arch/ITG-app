@@ -4,12 +4,21 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../form";
 import { Input } from "../input";
 import { Button } from "../button";
+import {useState} from 'react'
+import axios from 'axios'
+import { login } from "@/store/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
     email: z.string().email("A valid email is required"),
     password: z.string({ required_error: "A password is required" }).min(3, "A valid password is required")
 })
+
 export const LoginForm = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [error, setError] = useState<string>('')
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -17,8 +26,21 @@ export const LoginForm = () => {
             password: ''
         }
     })
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try{
+            console.log(values)
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, values)
+            const {status, data} = response.data
+            if(status === 'success'){
+                const {user, accessToken} = data
+                dispatch(login({user, token:accessToken}))
+                axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+                navigate('/')
+            }
+        }catch(error: any){
+            setError(error.response.data.message)
+            console.error(error.response.data)
+        }
     }
 
     return (
@@ -62,6 +84,9 @@ export const LoginForm = () => {
                     )
                     }
                 />
+                {
+                    error && <h1 className="text-red-600">{error}</h1>
+                }
                 <Button type="submit" className="w-full"> Log in</Button>
             </form>
         </Form>
