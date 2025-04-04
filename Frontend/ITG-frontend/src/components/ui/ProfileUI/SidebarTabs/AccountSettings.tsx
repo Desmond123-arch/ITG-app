@@ -1,4 +1,4 @@
-import { Pencil, StopCircle } from 'lucide-react';
+import { Pencil, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../../button';
 import InfoItem from './InfoItem';
@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 type FormDataType = z.infer<typeof editAccountSettingSchema>
 
 const AccountSettings: React.FC = () => {
-    const [editData, setEditData] = useState<boolean>(true)
+    const [editData, setEditData] = useState<boolean>(false)
     const [userData, setTempUserData] = useState<{email:string, password: string}>({
         email:'johndoeagain@gmail.com',
         password: 'someone'
@@ -38,17 +38,13 @@ const AccountSettings: React.FC = () => {
                 <h1 className="font-semibold text-xl">Account Settings</h1>
                 {
                     editData
-                    ?<Button variant={'destructive'} onClick={() => {setEditData(false)}}><StopCircle /> Cancel</Button>
+                    ?<Button variant={'destructive'} onClick={() => {setEditData(false)}}><X /> Cancel</Button>
                     :<Button onClick={() => {setEditData(true)}}><Pencil /> Edit</Button>
                 }
             </header>
             {
                 editData ? 
                 <form onSubmit={onSubmit} className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">email</label>
-                        <input {...register('email')} className='border rounded-sm px-2 py-1' placeholder='enter email' value={tempData.email}/>
-                    </div>
                     <FormItem label='Email' value={tempData.email} type='text' placeholder='JohnDoe@gmail.com'/>
                     <FormItem label='Confirm Password' value={tempData.confirmPassword} type='password' placeholder='Confirm password'/>
                     <FormItem label='New Password' value={tempData.newPassword} type='password' placeholder='New password'/>

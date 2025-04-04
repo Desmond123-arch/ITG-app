@@ -6,7 +6,7 @@ import NotificationsTab from '@/components/ui/ProfileUI/SidebarTabs/Notification
 import AccountSettings from '@/components/ui/ProfileUI/SidebarTabs/AccountSettings'
 
 const Profile: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<string>("a")
+  const [currentTab, setCurrentTab] = useState<string>("Profile")
 
   return (
     <div className='md:grid flex flex-col gap-5 grid-cols-[250px_auto]'>
