@@ -5,23 +5,25 @@ import { RouteObject } from "react-router-dom";
 const Home = React.lazy(() => import("../pages/Home"))
 const Company = React.lazy(() => import("../pages/Company"))
 const About = React.lazy(() => import("../pages/About"))
-const Settings = React.lazy(() => import("../pages/Settings"))
-const Profile = React.lazy(() => import("../pages/Profile"))
-
 const JobDescription = React.lazy(() => import("../pages/Job"))
 const SignUp = React.lazy(() => import("../pages/SignUp"))
-const routes:RouteObject[] =  [
-    {path: pathConstants.Home, element: <Home/>},
-    {path: "/home", element: <Home/>},
-    {path: "/profile", element: <Profile/>},
-    {path: "/company", element: <Company/>},
-    {path: "/settings", element: <Settings/>},
-    {path:pathConstants.JobDescription, element: <JobDescription/>},
-    {path: pathConstants.About,  element: <About/>}
+const Settings = React.lazy(() => import("../pages/Settings"))
+const Login = React.lazy(() => import("../pages/Login"))
+const CompanyAbout = React.lazy(() => import("../pages/CompanyAbout"))
+
+const routes: RouteObject[] = [
+    { path: pathConstants.Home, element: <Home /> },
+    { path: "/home", element: <Home /> },
+    { path: "/company/", element: <Company /> },
+    { path: "/company/:id", element: <CompanyAbout /> },
+    { path: "/settings", element: <Settings /> },
+    { path: pathConstants.JobDescription, element: <JobDescription /> },
+    { path: pathConstants.About, element: <About /> }
 ]
 
-export const landingRoutes:RouteObject[] = [
-    {path: pathConstants.SignUp, element:<SignUp/>},
+export const landingPageRoutes: RouteObject[] = [
+    { path: pathConstants.SignUp, element: <SignUp /> },
+    { path: pathConstants.Login, element: <Login /> }
 ]
 
 export default routes;

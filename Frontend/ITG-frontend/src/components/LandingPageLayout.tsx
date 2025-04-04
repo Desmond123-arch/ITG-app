@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const LandingPageLayout = () => {
     return (
-        <div className="flex h-screen w-full">
+        <div className="flex w-full h-screen">
             <Suspense fallback={<CustomLoader />}>
                 <Outlet />
             </Suspense>
