@@ -2,7 +2,7 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MainLayout from './components/MainLayout';
 import Error404Page from './pages/page404';
-import routes, { landingRoutes } from './routes';
+import routes, { landingPageRoutes } from './routes';
 import LandingPageLayout from './components/LandingPageLayout';
 
 
@@ -16,7 +16,7 @@ function App() {
     {
       element: <LandingPageLayout/>,
       errorElement: <Error404Page/>,
-      children: landingRoutes
+      children: landingPageRoutes
     }
   ])
 

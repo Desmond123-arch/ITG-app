@@ -58,8 +58,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700'>Job Descriptions</h3>
                         <ul className='list-disc ml-4 mt-3' role='list'>
-                            {jobDetail.description.map(job => (
-                                <li className='flex items-center h-max gap-2'><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
+                            {jobDetail.description.map((job, idx) => (
+                                <li className='flex items-center h-max gap-2' key={idx}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
                             ))}
                         </ul>
                     </section>
@@ -68,8 +68,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mb-3 mt-3'>Skills</h3>
                         <ul className='flex gap-2 ml-2' role='list'>
-                            {jobDetail.skills.map(skill => (
-                                <li className='bg-blue-200 rounded-md p-1 px-2 text-[#28246F]'>{skill}</li>
+                            {jobDetail.skills.map((skill, idx) => (
+                                <li className='bg-blue-200 rounded-md p-1 px-2 text-[#28246F]' key={idx}>{skill}</li>
                             ))}
                         </ul>
                     </section>
@@ -78,8 +78,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mt-4'>Requirements</h3>
                         <ul className='list-disc ml-4 mt-3'>
-                            {jobDetail.description.map(job => (
-                                <li className='flex items-center h-max gap-2'><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
+                            {jobDetail.description.map((job, idx) => (
+                                <li className='flex items-center h-max gap-2' key={idx}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
                             ))}
                         </ul>
                     </section>

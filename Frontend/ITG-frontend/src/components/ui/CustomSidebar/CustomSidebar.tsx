@@ -2,11 +2,11 @@ import React from 'react';
 import { 
   Briefcase, 
   Calendar, 
+  CircleUserRound, 
   Clock, 
   LayoutDashboard, 
   MessageCircle, 
   Settings, 
-  Ticket,
 } from 'lucide-react';
 import LinkItem from './LinkItem';
 import { ItgLogo } from '@/assets/images';
@@ -20,9 +20,14 @@ const CustomSidebar: React.FC = () => {
       icon: LayoutDashboard
     },
     {
-      title: "Event",
-      url: "/event",
-      icon: Ticket
+      title: "Company",
+      url: "/company",
+      icon: Briefcase
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: CircleUserRound
     },
     {
       title: "Schedule",
@@ -33,11 +38,6 @@ const CustomSidebar: React.FC = () => {
       title: "History",
       url: "/history",
       icon: Clock
-    },
-    {
-      title: "Company",
-      url: "/company",
-      icon: Briefcase
     },
     {
       title: "Messages",
@@ -52,7 +52,7 @@ const CustomSidebar: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-[#110d59] relative h-screen w-[270px] py-3 px-4 text-white">
+    <nav className="bg-[#110d59] relative h-screen lg:w-[230px] w-[270px] py-3 px-4 text-white">
       <div className="flex gap-3 items-center mb-5">
         <img src={ItgLogo} className='h-10' alt="ITG Logo" />
       </div>

@@ -10,13 +10,13 @@ interface Props{
 
 const JobItem: React.FC<Props> = ({job}) => {
   return (
-    <Link to={`/job/${job.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[285px] hover:shadow-lg transition-all justify-between'>
+    <Link to={`/job/${job.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] lg:w-[calc(33.33333%-12px)] hover:shadow-lg transition-all justify-between'>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
                 <img className='w-full h-full object-cover' src={ItgIcon} alt="Job Image" />
             </div>
             <div className='flex flex-col'>
-                <h1 className='font-semibold group-hover:text-blue-600 transition-colors'>{job.title}</h1>
+                <h1 className='font-semibold group-hover:text-blue-600 transition-colors leading-4'>{job.title}</h1>
                 <p className='text-gray-500 text-sm'>{job.employerId}</p>
             </div>
         </div>

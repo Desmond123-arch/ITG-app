@@ -8,7 +8,7 @@ const CompaniesGrid: React.FC = () => {
             <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
                 <h1 className='text-xl font-semibold'>Companies</h1>
             </div>
-            <div className='flex flex-wrap gap-3'>
+            <div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-3'>
                 {
                     companies.map((company, index) => (
                         <CompanyCard company={company} key={index}/>
