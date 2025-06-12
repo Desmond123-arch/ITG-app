@@ -261,7 +261,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 options={programmingSkills}
                                 onValueChange={(selected) => field.onChange(selected)}
                                 defaultValue={[]}
-                                placeholder="Select frameworks"
+                                placeholder="Select Skills"
                                 variant="inverted"
                                 // animation={2}
                                 maxCount={3}

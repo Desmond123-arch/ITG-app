@@ -257,7 +257,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 options={programmingSkills}
                                 onValueChange={(selected) => field.onChange(selected)}
                                 defaultValue={[]}
-                                placeholder="Select frameworks"
+                                placeholder="Select Skills"
                                 variant="inverted"
                                 // animation={2}
                                 maxCount={3}
@@ -437,7 +437,7 @@ const JobSeekerSignUp: React.FC = () => {
             values["name"] = `${values.firstname} ${values.lastname}`;
             console.log(values)
     
-            const formData = new FormData();
+            /*const formData = new FormData();
             formData.append("name", values.name);
             formData.append("email", values.email);
             formData.append("password", values.password);
@@ -455,15 +455,28 @@ const JobSeekerSignUp: React.FC = () => {
             });
             console.log('form data: ', formData)
     
+*/
+
+            const jsonData = {
+                    name: values.name,
+                email: values.email,
+                password: values.password,
+                confirmPassword: values.confirm_password,
+                phone: values.phone,
+                address: values.address,
+                role: "job_seeker",
+                disabilityType: values.disabilityType,
+                preferredLocation: values.preferredLocation,
+                skills: values.skills, // Array of skills
+                resume: "Hello" //to be fixed later
+            };
+
             const response = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                }
+                jsonData
             );
+            
+            
             console.log("submitted: ", response.data);
             localStorage.setItem('data', response.data)
             navigate('/')
