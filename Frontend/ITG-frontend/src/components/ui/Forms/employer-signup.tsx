@@ -18,7 +18,9 @@ const formSchema = z
         // email: z.string().email("Invalid email address entered").optional(),
         company_name: z.string().min(2, "Company name is required"),
         company_email: z.string().email("Invalid email address entered"),
-        company_description: z.string().min(2, "More details is required"),
+        company_product: z.string().min(2, "More details is required"),
+        company_mission: z.string().min(2, "More details is required"),
+        company_culture: z.string().min(2, "More details is required"),
         company_web_url: z.string().url().optional(),
         company_logo: z
             .any()
@@ -31,7 +33,9 @@ const formSchema = z
             ),
         //second stage
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
-        address: z.string().min(1, "Address is required"),
+        // address: z.string().min(1, "Address is required"),
+        region: z.string().min(1, "Region is required"),
+        country: z.string().min(1, "Country is required"),
         founded: z.string().min(1, "Date founded is required"),
         specialties: z.array(z.string()).min(1, "At least one specialty is required"),
         industry: z.string().min(1, "Industry is required"),
@@ -107,14 +111,49 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="company_description"
+                name="company_product"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Company Description</FormLabel> *
-                        <FormControl> 
+                        <FormLabel>What does your company do?</FormLabel> *
+                        <FormControl>
                             <textarea
                                 {...field}
-                                placeholder="Short summary of your company"
+                                placeholder="E.g., your main product or service, industry, who you serve."
+                                className="w-full rounded-md border px-3 py-2"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="company_mission"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>What’s your company’s mission or vision?</FormLabel> *
+                        <FormControl>
+                            <textarea
+                                {...field}
+                                placeholder="What are you trying to achieve in the long term?"
+                                className="w-full rounded-md border px-3 py-2"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="company_culture"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>What’s your team or company culture like?
+                        </FormLabel> *
+                        <FormControl>
+                            <textarea
+                                {...field}
+                                placeholder="E.g., values, work environment, collaboration style."
                                 className="w-full rounded-md border px-3 py-2"
                             />
                         </FormControl>
@@ -220,13 +259,29 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="address"
+                name="region"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Company Head Quatres</FormLabel> *
+                        <FormLabel>City, Region</FormLabel> *
                         <FormControl>
                             <Input
                                 placeholder="Region, Country"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Country</FormLabel> *
+                        <FormControl>
+                            <Input
+                                placeholder="Country"
                                 {...field}
                             />
                         </FormControl>
@@ -242,7 +297,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                         <FormLabel>Company Industry</FormLabel> *
                         <FormControl>
                             <Input
-                                placeholder="Health, Fintech"
+                                placeholder="Eg. Health, Fintech"
                                 {...field}
                             />
                         </FormControl>
@@ -320,11 +375,19 @@ export function MultiStepViewer({ form }: { form: any }) {
         initialSteps: steps,
         onStepValidation: async () => {
             const stepFields: { [key: number]: string[] } = {
-                0: ["company_name", "company_email", "company_description"],
-                1: ["phone", "address", "password", "confirm_password"]
+                0: ["company_name", "company_email", "company_culture", "company_mission", "company_product"],
+                1: ["phone", "region", "country","password", "confirm_password"]
             }
             const fieldsToValidate = stepFields[currentStep - 1]
             const isValid = await form.trigger(fieldsToValidate);
+            if (!isValid) {
+                fieldsToValidate.forEach((field) => {
+                    const state = form.getFieldState(field);
+                    if (state.invalid) {
+                        console.warn(`Field "${field}" failed validation`, state);
+                    }
+                });
+            }
             return isValid;
         }
     });
@@ -370,9 +433,12 @@ const EmployerSignUp = () => {
         defaultValues: {
             company_name: '',
             company_email: '',
-            company_description: '',
+            company_culture: '',
+            company_mission: '',
+            company_product: '',
             company_web_url: '',
-            address: '',
+            region: '',
+            country: '',
             phone: '',
             password: '',
             confirm_password: '',
@@ -380,10 +446,14 @@ const EmployerSignUp = () => {
         }
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
+        const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
+        const address = `${values.region}, ${values.country}`
         const updatedValues = {
             ...values,
             name: values.company_name,
             email: values.company_email,
+
+            description: description
         };
         console.log(updatedValues)
     }
