@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "../button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
+import { CheckCircleIcon, Eye, EyeOff, FileIcon, UploadIcon } from "lucide-react";
 import { useState, ChangeEvent } from "react";
 import { programmingSkills } from "@/store/options";
 import { MultiSelect } from "../multi-select";
@@ -21,14 +21,22 @@ const formSchema = z
         company_product: z.string().min(2, "More details is required"),
         company_mission: z.string().min(2, "More details is required"),
         company_culture: z.string().min(2, "More details is required"),
-        company_web_url: z.string().url().optional(),
+        company_web_url: z.union([z.literal(""), z.string().trim().url()]),
         company_logo: z
             .any()
-            .refine((file) => file instanceof File, "Logo file is required")
-            .refine((file) => file?.size <= 5 * 1024 * 1024, "File must be under 5MB") // 5MB limit
+            .optional()
+            .refine(
+                (file) => file == null || file instanceof File,
+                "Invalid file"
+            )
+            .refine(
+                (file) => file == null || file.size <= 5 * 1024 * 1024,
+                "File must be under 5MB"
+            )
             .refine(
                 (file) =>
-                    ["image/jpeg", "image/png", "image/jpg"].includes(file?.type),
+                    file == null ||
+                    ["image/jpeg", "image/png", "image/jpg"].includes(file.type),
                 "Only JPG, JPEG, or PNG images are allowed"
             ),
         //second stage
@@ -38,7 +46,6 @@ const formSchema = z
         country: z.string().min(1, "Country is required"),
         founded: z.string().min(1, "Date founded is required"),
         specialties: z.array(z.string()).min(1, "At least one specialty is required"),
-        industry: z.string().min(1, "Industry is required"),
         password: z.string()
             .min(8, "Password must be at least 8 characters long")
             .max(50, "Password must not exceed 50 characters")
@@ -56,7 +63,10 @@ const formSchema = z
 export function MultiStepViewer({ form }: { form: any }) {
     const [logoName, setLogoName] = useState("");
     const [isLogoUploaded, setIsLogoUploaded] = useState(false);
-
+    const [showPassword, setShowPassword] = useState({
+        password: false,
+        confirm_password: false,
+    });
     const handleLogoChange = (
         e: ChangeEvent<HTMLInputElement>,
         onChange: (file: File | null) => void
@@ -155,6 +165,22 @@ export function MultiStepViewer({ form }: { form: any }) {
                                 {...field}
                                 placeholder="E.g., values, work environment, collaboration style."
                                 className="w-full rounded-md border px-3 py-2"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="founded"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Company Founding Date</FormLabel> *
+                        <FormControl>
+                            <Input
+                                placeholder="What year your company founded?"
+                                {...field}
                             />
                         </FormControl>
                         <FormMessage />
@@ -291,22 +317,6 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="industry"
-                render={({ field }) => (
-                    <FormItem className="w-full">
-                        <FormLabel>Company Industry</FormLabel> *
-                        <FormControl>
-                            <Input
-                                placeholder="Eg. Health, Fintech"
-                                {...field}
-                            />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
                 name="specialties"
                 render={({ field }) => {
                     return (
@@ -334,11 +344,24 @@ export function MultiStepViewer({ form }: { form: any }) {
                     <FormItem className="w-full">
                         <FormLabel>Password</FormLabel>*
                         <FormControl>
-                            <Input
-                                type="password"
-                                placeholder="Password"
-                                {...field}
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={showPassword.password ? "text" : "password"}
+                                    placeholder="Password"
+                                    {...field}
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => { setShowPassword({ ...showPassword, password: !showPassword.password }) }}
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword.password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                </Button>
+                            </div>
+
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -351,11 +374,23 @@ export function MultiStepViewer({ form }: { form: any }) {
                     <FormItem className="w-full">
                         <FormLabel>Confirm Password</FormLabel> *
                         <FormControl>
-                            <Input
-                                type="password"
-                                placeholder="Confirm your password"
-                                {...field}
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={showPassword.confirm_password ? "text" : "password"}
+                                    placeholder="Confirm your password"
+                                    {...field}
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => { setShowPassword({ ...showPassword, confirm_password: !showPassword.confirm_password }) }}
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword.confirm_password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                </Button>
+                            </div>
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -376,7 +411,7 @@ export function MultiStepViewer({ form }: { form: any }) {
         onStepValidation: async () => {
             const stepFields: { [key: number]: string[] } = {
                 0: ["company_name", "company_email", "company_culture", "company_mission", "company_product"],
-                1: ["phone", "region", "country","password", "confirm_password"]
+                1: ["phone", "region", "country", "password", "confirm_password"]
             }
             const fieldsToValidate = stepFields[currentStep - 1]
             const isValid = await form.trigger(fieldsToValidate);
@@ -416,11 +451,12 @@ export function MultiStepViewer({ form }: { form: any }) {
             <div className="w-full flex justify-between">
                 <Button onClick={goToPrevious} disabled={isFirstStep}>Previous</Button>
                 {isLastStep ? (
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit"
+                    >Submit</Button>
                 ) : (
-                    <Button onClick={(e) => {
+                    <Button onClick={async (e) => {
                         e.preventDefault()
-                        goToNext()
+                        await goToNext()
                     }} type="button">Next</Button>
                 )}
             </div>
@@ -437,23 +473,26 @@ const EmployerSignUp = () => {
             company_mission: '',
             company_product: '',
             company_web_url: '',
+            founded: '',
             region: '',
             country: '',
             phone: '',
             password: '',
             confirm_password: '',
 
-        }
+        },
+        shouldUnregister: false
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("Success")
         const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
         const address = `${values.region}, ${values.country}`
         const updatedValues = {
             ...values,
             name: values.company_name,
             email: values.company_email,
-
-            description: description
+            address,
+            description,
         };
         console.log(updatedValues)
     }
@@ -461,7 +500,13 @@ const EmployerSignUp = () => {
     return (
         <div>
             <Form {...form}>
-                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={(e) => {
+                    form.handleSubmit(onSubmit)(e);
+                }} onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault(); // stops default form submit
+                    }
+                }} >
                     <MultiStepViewer form={form} />
                 </form>
             </Form>
