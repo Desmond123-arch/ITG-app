@@ -7,7 +7,7 @@ import { useMultiStepForm } from "@/hooks/use-multistep";
 import { Button } from "../button";
 import { motion, AnimatePresence } from 'framer-motion'
 import { MultiSelect } from "../multi-select";
-import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
+import { CheckCircleIcon, Eye, EyeOff, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { programmingSkills } from "@/store/options";
 import axios, { AxiosError } from 'axios'
@@ -49,6 +49,11 @@ const formSchema = z
 export function MultiStepViewer({ form }: { form: any }) {
     const [fileName, setFileName] = useState("");
     const [isFileUploaded, setisFileUploaded] = useState(false);
+
+    const [showPassword, setShowPassword] = useState({
+        password: false,
+        confirm_password: false,
+    });
 
     const handleFileUpload = (
         e: ChangeEvent<HTMLInputElement>,
@@ -136,44 +141,65 @@ export function MultiStepViewer({ form }: { form: any }) {
                     }
                 />
 
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel>Password</FormLabel> *
-                            <FormControl>
+            <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Password</FormLabel>*
+                        <FormControl>
+                            <div className="relative">
                                 <Input
+                                    type={showPassword.password ? "text" : "password"}
+                                    placeholder="Password"
                                     {...field}
-                                    placeholder="Enter your password"
-                                    type="password"
                                 />
-                            </FormControl>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => { setShowPassword({ ...showPassword, password: !showPassword.password }) }}
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword.password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                </Button>
+                            </div>
 
-                            <FormMessage />
-                        </FormItem>
-                    )
-                    }
-                />
-                <FormField
-                    control={form.control}
-                    name="confirm_password"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel>Confirm Password</FormLabel> *
-                            <FormControl>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="confirm_password"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Confirm Password</FormLabel> *
+                        <FormControl>
+                            <div className="relative">
                                 <Input
+                                    type={showPassword.confirm_password ? "text" : "password"}
+                                    placeholder="Confirm your password"
                                     {...field}
-                                    placeholder="Enter your password"
-                                    type="password"
                                 />
-                            </FormControl>
-
-                            <FormMessage />
-                        </FormItem>
-                    )
-                    }
-                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => { setShowPassword({ ...showPassword, confirm_password: !showPassword.confirm_password }) }}
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword.confirm_password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                </Button>
+                            </div>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
             </>,
         1: <><h3 className="text-lg font-bold">Personal Info</h3>
             <FormField
