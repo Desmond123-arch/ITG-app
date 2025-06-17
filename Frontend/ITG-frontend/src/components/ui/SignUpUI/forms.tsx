@@ -6,9 +6,20 @@ import { Input } from "../input";
 import { Button } from "../button";
 import { CheckCircleIcon, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
+import { MultiSelect } from "../ multi-select";
+import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 
+const skills = [
+    { value: "react", label: "React", icon: Turtle },
+    { value: "angular", label: "Angular", icon: Cat },
+    { value: "vue", label: "Vue", icon: Dog },
+    { value: "svelte", label: "Svelte", icon: Rabbit },
+    { value: "ember", label: "Ember", icon: Fish },
+  ];
 
 export const JobSeekerForms = () => {
+    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
     const formSchema = z.object({
         name: z.string().min(15, "Name is required").max(50),
         email: z.string().email("Invalid email address entered"),
@@ -52,8 +63,7 @@ export const JobSeekerForms = () => {
 
     })
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+
         console.log(values)
     }
     const [fileName, setFileName] = useState("")
@@ -172,6 +182,27 @@ export const JobSeekerForms = () => {
                             <FormLabel>Preferred Location</FormLabel>
                             <FormControl>
                                 <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="skills"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Skills</FormLabel>
+                            <FormControl>
+                                <MultiSelect
+                                    options={skills}
+                                    onValueChange={setSelectedSkills}
+                                    defaultValue={selectedSkills}
+                                    placeholder="Select skills"
+                                    variant="inverted"
+                                    animation={2}
+                                    maxCount={3}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

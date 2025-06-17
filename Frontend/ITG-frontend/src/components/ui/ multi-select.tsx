@@ -58,7 +58,7 @@ const multiSelectVariants = cva(
  */
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof multiSelectVariants> {
+    VariantProps<typeof multiSelectVariants> {
   /**
    * An array of option objects to be displayed in the multi-select component.
    * Each option object has a label, value, and an optional icon.
@@ -143,7 +143,7 @@ export const MultiSelect = React.forwardRef<
       React.useState<string[]>(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);
-    const [inputValue, setInputValue] = React.useState("");
+
     const handleInputKeyDown = (
       event: React.KeyboardEvent<HTMLInputElement>
     ) => {
@@ -288,8 +288,6 @@ export const MultiSelect = React.forwardRef<
           <Command>
             <CommandInput
               placeholder="Search..."
-              value={inputValue}
-              onValueChange={setInputValue}
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>
@@ -337,27 +335,6 @@ export const MultiSelect = React.forwardRef<
                     </CommandItem>
                   );
                 })}
-                {inputValue &&
-                  !options.some((option) =>
-                    option.label.toLowerCase() === inputValue.toLowerCase()
-                  ) && (
-                    <CommandItem
-                      onSelect={() => {
-                        const newOption = {
-                          value: inputValue.toLowerCase().replace(/\s+/g, "-"),
-                          label: inputValue,
-                        };
-                        options.push(newOption)
-                        toggleOption(newOption.value);
-                        setInputValue(""); // Clear input
-                        setIsPopoverOpen(false); // Close popover
-                      }}
-                      className="cursor-pointer font-semibold text-primary"
-                    >
-                      ➕ Add “{inputValue}”
-                    </CommandItem>
-                  )}
-
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup>

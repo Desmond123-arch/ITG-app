@@ -31,6 +31,7 @@ export function useMultiStepForm({
     const steps = initialSteps;
     const [currentStep, setCurrentStep] = useState(1);
     const goToNext = useCallback(async () => {
+        
         const currentStepData = initialSteps[currentStep - 1];
 
         if (onStepValidation) {
