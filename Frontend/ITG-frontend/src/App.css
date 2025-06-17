@@ -18,3 +18,12 @@
 .tab.active::after {
     width: 100%;
 }
+
+
+.hidden_scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
