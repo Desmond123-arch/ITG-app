@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../form";
 import { Input } from "../input";
+
 import { useMultiStepForm } from "@/hooks/use-multistep";
 import { Button } from "../button";
 import { motion, AnimatePresence } from 'framer-motion'
@@ -12,6 +13,7 @@ import { ChangeEvent, useState } from "react";
 import { programmingSkills } from "@/store/options";
 import axios, { AxiosError } from 'axios'
 import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
 
 const formSchema = z
     .object({
@@ -29,7 +31,7 @@ const formSchema = z
         confirm_password: z.string().min(1, "Confirm password to proceed"),
         phone: z.string().regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Must be 10 digits and can start with +"),
         address: z.string().min(1, "Address is required"),
-        
+        region: z.string().min(1, "Region is required"),
         disabilityType: z.string().min(1, "Disability is required"),
         preferredLocation: z.string().min(1, "Preferred location is required"),
         skills: z.array(z.string()).min(1, "At least one skill is required"),
@@ -141,65 +143,65 @@ export function MultiStepViewer({ form }: { form: any }) {
                     }
                 />
 
-            <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                    <FormItem className="w-full">
-                        <FormLabel>Password</FormLabel>*
-                        <FormControl>
-                            <div className="relative">
-                                <Input
-                                    type={showPassword.password ? "text" : "password"}
-                                    placeholder="Password"
-                                    {...field}
-                                />
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => { setShowPassword({ ...showPassword, password: !showPassword.password }) }}
-                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                                    tabIndex={-1}
-                                >
-                                    {showPassword.password ? <Eye size={16} /> : <EyeOff size={16} />}
-                                </Button>
-                            </div>
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Password</FormLabel>*
+                            <FormControl>
+                                <div className="relative">
+                                    <Input
+                                        type={showPassword.password ? "text" : "password"}
+                                        placeholder="Password"
+                                        {...field}
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => { setShowPassword({ ...showPassword, password: !showPassword.password }) }}
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                        tabIndex={-1}
+                                    >
+                                        {showPassword.password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                    </Button>
+                                </div>
 
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="confirm_password"
-                render={({ field }) => (
-                    <FormItem className="w-full">
-                        <FormLabel>Confirm Password</FormLabel> *
-                        <FormControl>
-                            <div className="relative">
-                                <Input
-                                    type={showPassword.confirm_password ? "text" : "password"}
-                                    placeholder="Confirm your password"
-                                    {...field}
-                                />
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => { setShowPassword({ ...showPassword, confirm_password: !showPassword.confirm_password }) }}
-                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                                    tabIndex={-1}
-                                >
-                                    {showPassword.confirm_password ? <Eye size={16} /> : <EyeOff size={16} />}
-                                </Button>
-                            </div>
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="confirm_password"
+                    render={({ field }) => (
+                        <FormItem className="w-full">
+                            <FormLabel>Confirm Password</FormLabel> *
+                            <FormControl>
+                                <div className="relative">
+                                    <Input
+                                        type={showPassword.confirm_password ? "text" : "password"}
+                                        placeholder="Confirm your password"
+                                        {...field}
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => { setShowPassword({ ...showPassword, confirm_password: !showPassword.confirm_password }) }}
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                        tabIndex={-1}
+                                    >
+                                        {showPassword.confirm_password ? <Eye size={16} /> : <EyeOff size={16} />}
+                                    </Button>
+                                </div>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
             </>,
         1: <><h3 className="text-lg font-bold">Personal Info</h3>
             <FormField
@@ -208,32 +210,90 @@ export function MultiStepViewer({ form }: { form: any }) {
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>Disability Type</FormLabel> *
+
                         <FormControl>
-                            <Input
-                                placeholder="disability eg. Blind, Deaf"
-                                type={"text"}
-                                value={field.value}
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    field.onChange(val);
-                                }}
-                            />
+                            <>
+                                <Select
+                                    value={["Low vision", "Blind", "Deaf", "Mobility", "Autism Spectrum Disorders", "Dyslexia", "Other"].includes(field.value) ? field.value : "Other"}
+                                    onValueChange={(val) => {
+                                        if (val !== "Other") {
+                                            field.onChange(val);
+                                        } else {
+                                            // Keep the custom value as-is (don't override)
+                                            field.onChange("");
+                                        }
+                                    }}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select or enter your own" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Low vision">Low vision</SelectItem>
+                                        <SelectItem value="Blind">Blind</SelectItem>
+                                        <SelectItem value="Deaf">Deaf</SelectItem>
+                                        <SelectItem value="Mobility">Mobility</SelectItem>
+                                        <SelectItem value="Autism Spectrum Disorders">Autism Spectrum Disorders</SelectItem>
+                                        <SelectItem value="Dyslexia">Dyslexia</SelectItem>
+                                        <SelectItem value="Other">Other</SelectItem>
+                                    </SelectContent>
+                                </Select>
+
+                                {(!["Low vision", "Blind", "Deaf", "Mobility", "Autism Spectrum Disorders", "Dyslexia"].includes(field.value)) && (
+                                    <Input
+                                        className="mt-2"
+                                        placeholder="Please specify your disability"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(e.target.value)}
+                                    />
+                                )}
+                            </>
                         </FormControl>
 
                         <FormMessage />
                     </FormItem>
-                )
-                }
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="region"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Region</FormLabel> *
+
+                        <FormControl>
+                            <Select value={field.value} onValueChange={field.onChange}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select your region" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Greater Accra">Greater Accra</SelectItem>
+                                    <SelectItem value="Ashanti">Ashanti</SelectItem>
+                                    <SelectItem value="Central">Central</SelectItem>
+                                    <SelectItem value="Western">Western</SelectItem>
+                                    <SelectItem value="Eastern">Eastern</SelectItem>
+                                    <SelectItem value="Volta">Volta</SelectItem>
+                                    <SelectItem value="Northern">Northern</SelectItem>
+                                    <SelectItem value="Upper East">Upper East</SelectItem>
+                                    <SelectItem value="Upper West">Upper West</SelectItem>
+                                    <SelectItem value="Bono">Bono</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </FormControl>
+
+                        <FormMessage />
+                    </FormItem>
+                )}
             />
             <FormField
                 control={form.control}
                 name="address"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Address</FormLabel> *
+                        <FormLabel>City</FormLabel> *
                         <FormControl>
                             <Input
-                                placeholder="City, Region"
+                                placeholder="City"
                                 type={"text"}
                                 value={field.value}
                                 onChange={(e) => {
@@ -256,7 +316,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                         <FormLabel>Phone number</FormLabel> *
                         <FormControl>
                             <Input
-                                placeholder="+233 123 123 123"
+                                placeholder="0456720123"
                                 type={"tel"}
                                 value={field.value}
                                 onChange={(e) => {
@@ -392,7 +452,7 @@ export function MultiStepViewer({ form }: { form: any }) {
             // Define the fields that should be validated at each step
             const stepFields: { [key: number]: string[] } = {
                 0: ["firstname", "lastname", "email", "password", "confirm_password"],
-                1: ["disabilityType", "address", "phone", "preferredLocation"]
+                1: ["disabilityType", "region","address", "phone", "preferredLocation"]
             };
             // Get the fields for the current step
             const fieldsToValidate = stepFields[currentStep - 1];
@@ -448,6 +508,7 @@ const JobSeekerSignUp: React.FC = () => {
             lastname: "",
             email: "",
             password: "",
+            region:"",
             confirm_password: "",
             phone: "",
             address: "",
@@ -461,8 +522,9 @@ const JobSeekerSignUp: React.FC = () => {
         try {
             console.log('submitting')
             values["name"] = `${values.firstname} ${values.lastname}`;
+            values["address"] = `${values.address}, ${values.region}`;
             console.log(values)
-    
+
             /*const formData = new FormData();
             formData.append("name", values.name);
             formData.append("email", values.email);
@@ -484,7 +546,7 @@ const JobSeekerSignUp: React.FC = () => {
 */
 
             const jsonData = {
-                    name: values.name,
+                name: values.name,
                 email: values.email,
                 password: values.password,
                 confirmPassword: values.confirm_password,
@@ -501,15 +563,15 @@ const JobSeekerSignUp: React.FC = () => {
                 `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
                 jsonData
             );
-            
-            
+
+
             console.log("submitted: ", response.data);
             localStorage.setItem('data', response.data)
             navigate('/')
         } catch (error: any) {
             console.error("error:", error.response.data);
         }
-    }    
+    }
 
     return (
         <div>
