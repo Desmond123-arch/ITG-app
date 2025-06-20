@@ -7,7 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import EditableField from './EditableField';
 import MultiSelectSearch from '../ProfileTabUI/MultiSelectSearch';
-import TagList from '../ProfileTabUI/TagList';
+import { skills } from '@/data/skills';
+import { locations } from '@/data/location';
 
 const ProfileTab: React.FC = () => {
     const user = useSelector((state: RootState) => state.auth.user);
@@ -26,13 +27,6 @@ const ProfileTab: React.FC = () => {
         jobLocationPreferences: ['Remote', 'Accra'],
         skills: ['Construction', 'Programming'],
     });
-
-    const handleRemoveItem = (field: 'skills' | 'jobLocationPreferences', valueToRemove: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            [field]: prev[field].filter((v) => v !== valueToRemove),
-        }));
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -93,12 +87,7 @@ const ProfileTab: React.FC = () => {
                         onSelectionChange={(values) =>
                             setFormData((prev) => ({ ...prev, jobLocationPreferences: values }))
                         }
-                        options={[
-                            { value: "Remote", label: "Remote" },
-                            { value: "Accra", label: "Accra" },
-                            { value: "Kumasi", label: "Kumasi" },
-                            { value: "Tamale", label: "Tamale" },
-                        ]}
+                        options={locations}
                         placeholder="Select job locations..."
                         icon={<MapPin className="w-4 h-4" />}
                         searchPlaceholder="Search locations..."
@@ -113,12 +102,7 @@ const ProfileTab: React.FC = () => {
                         onSelectionChange={(values) =>
                             setFormData((prev) => ({ ...prev, skills: values }))
                         }
-                        options={[
-                            { value: "Construction", label: "Construction" },
-                            { value: "Programming", label: "Programming" },
-                            { value: "Design", label: "Design" },
-                            { value: "Writing", label: "Writing" },
-                        ]}
+                        options={skills}
                         placeholder="Select skills..."
                         icon={<Hammer className="w-4 h-4" />}
                         searchPlaceholder="Search skills..."
