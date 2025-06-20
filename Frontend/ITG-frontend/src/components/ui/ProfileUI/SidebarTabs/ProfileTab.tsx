@@ -19,11 +19,11 @@ const ProfileTab: React.FC = () => {
         lastName: user?.name?.split(' ')[1] || '',
         email: user?.email || '',
         phone: user?.phone || '',
-        disabilityType: 'Something',
-        location: 'Accra, Ghana',
-        employmentStatus: 'Unemployed',
-        university: 'Dropout',
-        degree: '---',
+        disabilityType: '',
+        location: '',
+        employmentStatus: '',
+        university: '',
+        degree: '',
         jobLocationPreferences: ['Remote', 'Accra'],
         skills: ['Construction', 'Programming'],
     });
@@ -55,12 +55,12 @@ const ProfileTab: React.FC = () => {
                     }
                 </header>
                 <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <EditableField type='text' title="First Name" name="firstName" value={formData.firstName} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Last Name" name="lastName" value={formData.lastName} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='email' title="Email" name="email" value={formData.email} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='number' minLength={10} maxLength={10} title="Phone Number" name="phone" value={formData.phone} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Disability Type" name="disabilityType" value={formData.disabilityType} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Location" name="location" value={formData.location} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="First Name" name="firstName" placeholder='John' value={formData.firstName} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="Last Name" name="lastName" placeholder='Opoku' value={formData.lastName} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='email' title="Email" name="email" placeholder='opokujohn@example.com' value={formData.email} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='number' minLength={10} maxLength={10} title="Phone Number" name="phone" placeholder='0123456789' value={formData.phone} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="Disability Type" name="disabilityType" placeholder='None' value={formData.disabilityType} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="Location" name="location" placeholder='Accra, Ghana' value={formData.location} isEditing={isEditing} onChange={handleChange} />
                 </main>
             </section>
 
@@ -69,9 +69,9 @@ const ProfileTab: React.FC = () => {
                     <h1 className="font-semibold text-xl">Education & Employment</h1>
                 </header>
                 <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <EditableField type='text' title="Employment Status" name="employmentStatus" value={formData.employmentStatus} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="University or College" name="university" value={formData.university} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Degree Type" name="degree" value={formData.degree} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' placeholder='Employed' title="Employment Status" name="employmentStatus" value={formData.employmentStatus} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="University or College" name="university" placeholder='University of Ghana' value={formData.university} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="Degree Type" name="degree" placeholder="Bachelor Degree" value={formData.degree} isEditing={isEditing} onChange={handleChange} />
                 </main>
             </section>
 
