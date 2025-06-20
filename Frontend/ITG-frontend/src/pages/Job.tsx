@@ -95,10 +95,10 @@ const JobDescription = () => {
 
             {/* RELATED JOBS */}
             <div className='lg:mr-1 lg:w-[30%] w-full'>
-                <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baselin md:ml-0 relative md:left-6'>Related jobs</h3>
+                <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline md:ml-0'>Related jobs</h3>
                 <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
                     {jobs.slice(0, 3).map((job, index) => (
-                        <JobItem key={index} job={job} />
+                        <JobItem key={index} job={job} page="job" />
                     ))}
                 </div>
             </div>
