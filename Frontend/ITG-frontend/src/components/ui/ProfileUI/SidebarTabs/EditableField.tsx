@@ -17,7 +17,7 @@ const EditableField: React.FC<EditableFieldProps> = ({ title, name, value, isEdi
             <h2 className="text-sm">{title}</h2>
             {isEditing ? (
                 <input
-                    className="text-[17px] p-1 pb-0 text-black border-black/50 border-b-[1px] w-full focus-visible:outline-none"
+                    className="text-[17px] p-1 pb-0 text-black border-black/50 border-b-[1px] w-fit focus-visible:outline-none"
                     name={name}
                     value={value}
                     onChange={onChange}

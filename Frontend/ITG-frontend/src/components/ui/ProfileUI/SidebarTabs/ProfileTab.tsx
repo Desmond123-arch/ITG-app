@@ -67,7 +67,7 @@ const ProfileTab: React.FC = () => {
                         )
                     }
                 </header>
-                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
                     <EditableField type='text' title="First Name" name="firstName" value={formData.firstName} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='text' title="Last Name" name="lastName" value={formData.lastName} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='email' title="Email" name="email" value={formData.email} isEditing={isEditing} onChange={handleChange} />
@@ -81,7 +81,7 @@ const ProfileTab: React.FC = () => {
                 <header className="px-5 py-3">
                     <h1 className="font-semibold text-xl">Education & Employment</h1>
                 </header>
-                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
                     <EditableField type='text' title="Employment Status" name="employmentStatus" value={formData.employmentStatus} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='text' title="University or College" name="university" value={formData.university} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='text' title="Degree Type" name="degree" value={formData.degree} isEditing={isEditing} onChange={handleChange} />
@@ -92,7 +92,7 @@ const ProfileTab: React.FC = () => {
                 <header className="px-5 py-3">
                     <h1 className="font-semibold text-xl">Job Preferences & Skills</h1>
                 </header>
-                <main className="flex flex-col w-full gap-6 px-5 py-3 border-b-[1px] pb-5">
+                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
                     <ProfileSection title="Job Location Preference">
                         <TagList
                             items={formData.jobLocationPreferences}
@@ -133,7 +133,7 @@ const ProfileTab: React.FC = () => {
                 </main>
             </section>
 
-            <section className="flex flex-col w-full gap-6 px-5 py-3">
+            <section className="flex flex-col gap-6 px-5 py-3">
                 <h1 className="font-semibold text-xl">My Resume</h1>
                 <p>Pre-fill job applications when you add a resume.</p>
                 <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
