@@ -1,12 +1,13 @@
-import { Pencil, X } from 'lucide-react';
+import { Pencil, X, MapPin, Hammer } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../../button';
 import ProfileSection from '../ProfileTabUI/ProfileSection';
 import ResumeCard from '../ProfileTabUI/ResumeCard';
-import TagList from '../ProfileTabUI/TagList';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import EditableField from './EditableField';
+import MultiSelectSearch from '../ProfileTabUI/MultiSelectSearch';
+import TagList from '../ProfileTabUI/TagList';
 
 const ProfileTab: React.FC = () => {
     const user = useSelector((state: RootState) => state.auth.user);
@@ -25,14 +26,6 @@ const ProfileTab: React.FC = () => {
         jobLocationPreferences: ['Remote', 'Accra'],
         skills: ['Construction', 'Programming'],
     });
-
-    const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>, field: 'skills' | 'jobLocationPreferences') => {
-        const selected = Array.from(e.target.selectedOptions, (option) => option.value);
-        setFormData((prev) => ({
-            ...prev,
-            [field]: [...new Set([...prev[field], ...selected])],
-        }));
-    };
 
     const handleRemoveItem = (field: 'skills' | 'jobLocationPreferences', valueToRemove: string) => {
         setFormData((prev) => ({
@@ -94,43 +87,46 @@ const ProfileTab: React.FC = () => {
                 </header>
                 <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
                     <ProfileSection title="Job Location Preference">
-                        <TagList
-                            items={formData.jobLocationPreferences}
-                            onRemove={isEditing ? (item) => handleRemoveItem('jobLocationPreferences', item) : undefined}
+                        <MultiSelectSearch
+                        isEditing={isEditing}
+                        selectedValues={formData.jobLocationPreferences}
+                        onSelectionChange={(values) =>
+                            setFormData((prev) => ({ ...prev, jobLocationPreferences: values }))
+                        }
+                        options={[
+                            { value: "Remote", label: "Remote" },
+                            { value: "Accra", label: "Accra" },
+                            { value: "Kumasi", label: "Kumasi" },
+                            { value: "Tamale", label: "Tamale" },
+                        ]}
+                        placeholder="Select job locations..."
+                        icon={<MapPin className="w-4 h-4" />}
+                        searchPlaceholder="Search locations..."
+                        emptyText="No locations found."
                         />
-                        {isEditing && (
-                            <select
-                                multiple
-                                className="border border-gray-300 p-2 rounded mt-2"
-                                onChange={(e) => handleMultiSelectChange(e, 'jobLocationPreferences')}
-                            >
-                                <option value="Remote">Remote</option>
-                                <option value="Accra">Accra</option>
-                                <option value="Kumasi">Kumasi</option>
-                                <option value="Tamale">Tamale</option>
-                            </select>
-                        )}
                     </ProfileSection>
 
                     <ProfileSection title="Skills">
-                        <TagList
-                            items={formData.skills}
-                            onRemove={isEditing ? (item) => handleRemoveItem('skills', item) : undefined}
+                        <MultiSelectSearch
+                        isEditing={isEditing}
+                        selectedValues={formData.skills}
+                        onSelectionChange={(values) =>
+                            setFormData((prev) => ({ ...prev, skills: values }))
+                        }
+                        options={[
+                            { value: "Construction", label: "Construction" },
+                            { value: "Programming", label: "Programming" },
+                            { value: "Design", label: "Design" },
+                            { value: "Writing", label: "Writing" },
+                        ]}
+                        placeholder="Select skills..."
+                        icon={<Hammer className="w-4 h-4" />}
+                        searchPlaceholder="Search skills..."
+                        emptyText="No skills found."
                         />
-                        {isEditing && (
-                            <select
-                                multiple
-                                className="border border-gray-300 p-2 rounded mt-2"
-                                onChange={(e) => handleMultiSelectChange(e, 'skills')}
-                            >
-                                <option value="Construction">Construction</option>
-                                <option value="Programming">Programming</option>
-                                <option value="Design">Design</option>
-                                <option value="Writing">Writing</option>
-                            </select>
-                        )}
                     </ProfileSection>
-                </main>
+                    </main>
+
             </section>
 
             <section className="flex flex-col gap-6 px-5 py-3">
