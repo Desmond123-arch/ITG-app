@@ -11,7 +11,7 @@ import { MultiSelect } from "../multi-select";
 import { CheckCircleIcon, Eye, EyeOff, FileIcon, UploadIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { programmingSkills } from "@/store/options";
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../select";
 

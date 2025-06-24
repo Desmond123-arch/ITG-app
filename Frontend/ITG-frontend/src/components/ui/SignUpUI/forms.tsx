@@ -190,7 +190,7 @@ export const JobSeekerForms = () => {
                 <FormField
                     control={form.control}
                     name="skills"
-                    render={({ field }) => (
+                    render={() => (
                         <FormItem>
                             <FormLabel>Skills</FormLabel>
                             <FormControl>
@@ -317,7 +317,7 @@ type EmployerFormValues = z.input<typeof baseEmployerSchema>;
 type EmployerSubmitValues = z.output<typeof employerSchema>;
 
 export const EmployerForms = () => {
-    const form = useForm<EmployerFormValues>({
+    const form = useForm<EmployerSubmitValues>({
         resolver: zodResolver(employerSchema),
         defaultValues: {
             password: "",
@@ -329,7 +329,7 @@ export const EmployerForms = () => {
             company_email: "",
             company_description: "",
             company_web_url: "",
-            company_logo: null,
+            company_logo: undefined,
         },
     });
 

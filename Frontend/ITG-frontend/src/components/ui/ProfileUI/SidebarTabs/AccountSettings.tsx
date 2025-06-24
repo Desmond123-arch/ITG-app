@@ -13,24 +13,24 @@ type FormDataType = z.infer<typeof editAccountSettingSchema>
 
 const AccountSettings: React.FC = () => {
     const [editData, setEditData] = useState<boolean>(false)
-    const [userData, setTempUserData] = useState<{email:string, password: string}>({
+    const userData: {email:string, password: string} = {
         email:'johndoeagain@gmail.com',
         password: 'someone'
-    })
-    const [tempData, setTempData] = useState<FormDataType>({
+    }
+    const tempData: FormDataType = {
         email:'johndoeagain@gmail.com',
         oldPassword: '',
         confirmPassword: '',
         newPassword: ''
-    })
+    }
 
-    const {register, handleSubmit, formState: {errors}} = useForm<FormDataType>({
+    const { handleSubmit } = useForm<FormDataType>({
         resolver: zodResolver(editAccountSettingSchema)
-    })
+    });
 
     const onSubmit = handleSubmit((data) => {
-        console.log('submitting data')
-    })
+        console.log('submitting data: ', data);
+    });
 
     return (
         <div className="bg-white shadow-sm rounded-md h-min">
