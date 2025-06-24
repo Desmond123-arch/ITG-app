@@ -190,7 +190,7 @@ export const JobSeekerForms = () => {
                 <FormField
                     control={form.control}
                     name="skills"
-                    render={({ field }) => (
+                    render={() => (
                         <FormItem>
                             <FormLabel>Skills</FormLabel>
                             <FormControl>

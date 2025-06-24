@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { LogOut, Pencil } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DialogTrigger } from '@/components/ui/dialog'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { logout } from '@/store/authSlice'
