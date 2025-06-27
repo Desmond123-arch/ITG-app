@@ -12,6 +12,7 @@ import { locations } from '@/data/location';
 
 const ProfileTab: React.FC = () => {
     const user = useSelector((state: RootState) => state.auth.user);
+    console.log('user: ', user);
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -19,11 +20,11 @@ const ProfileTab: React.FC = () => {
         lastName: user?.name?.split(' ')[1] || '',
         email: user?.email || '',
         phone: user?.phone || '',
-        disabilityType: '',
-        location: '',
-        employmentStatus: '',
-        university: '',
-        degree: '',
+        disabilityType: user?.disabilityType || '',
+        location: user?.location || '',
+        employmentStatus: user?.employmentStatus || '',
+        university: user?.university || '',
+        degree: user?.degree || '',
         jobLocationPreferences: ['Remote', 'Accra'],
         skills: ['Construction', 'Programming'],
     });

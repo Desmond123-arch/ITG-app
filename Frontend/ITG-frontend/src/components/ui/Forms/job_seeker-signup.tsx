@@ -561,7 +561,7 @@ const JobSeekerSignUp: React.FC = () => {
             disabilityType: values.disabilityType,
             preferredLocation: values.preferredLocation,
             skills: values.skills,
-            resume: resumeUrl,
+            resumeUrl,
         };
 
         const response = await axios.post(
