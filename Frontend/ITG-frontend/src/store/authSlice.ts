@@ -32,6 +32,7 @@ export const authSlice = createSlice({
             localStorage.removeItem("user");
         },
         loadAuthFromStorage: (state) => {
+            console.log("Loading auth from storage");
             const storedUser = localStorage.getItem("user");
             const storedToken = localStorage.getItem("accessToken");
             if (storedUser && storedToken) {

@@ -3,7 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../form";
 import { Input } from "../input";
-
+import { useDispatch } from 'react-redux';
+import { login } from "@/store/authSlice";
 import { useMultiStepForm } from "@/hooks/use-multistep";
 import { Button } from "../button";
 import { motion, AnimatePresence } from 'framer-motion'
@@ -184,6 +185,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                                     <Input
                                         type={showPassword.confirm_password ? "text" : "password"}
                                         placeholder="Confirm your password"
+                                        autoComplete="new-password"
                                         {...field}
                                     />
                                     <Button
@@ -500,6 +502,7 @@ export function MultiStepViewer({ form }: { form: any }) {
 }
 
 const JobSeekerSignUp: React.FC = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -519,59 +522,63 @@ const JobSeekerSignUp: React.FC = () => {
         },
     });
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            console.log('submitting')
-            values["name"] = `${values.firstname} ${values.lastname}`;
-            values["address"] = `${values.address}, ${values.region}`;
-            console.log(values)
+    try {
+        console.log('submitting');
+        values["name"] = `${values.firstname} ${values.lastname}`;
+        values["address"] = `${values.address}, ${values.region}`;
 
-            /*const formData = new FormData();
-            formData.append("name", values.name);
-            formData.append("email", values.email);
-            formData.append("password", values.password);
-            formData.append("confirmPassword", values.confirm_password);
-            formData.append("phone", values.phone);
-            formData.append("address", values.address);
-            formData.append("role", "job_seeker");
-            formData.append("disabilityType", values.disabilityType);
-            formData.append("preferredLocation", values.preferredLocation);
-            formData.append("resume", values.resume); // This is the file
-    
-            // Append each skill (if API expects array via multiple values)
-            values.skills.forEach(skill => {
-                formData.append("skills[]", skill);
-            });
-            console.log('form data: ', formData)
-    
-*/
+        let resumeUrl = "";
 
-            const jsonData = {
-                name: values.name,
-                email: values.email,
-                password: values.password,
-                confirmPassword: values.confirm_password,
-                phone: values.phone,
-                address: values.address,
-                role: "job_seeker",
-                disabilityType: values.disabilityType,
-                preferredLocation: values.preferredLocation,
-                skills: values.skills, // Array of skills
-                resume: "Hello" //to be fixed later
-            };
+        if (values.resume) {
+            const formData = new FormData();
+            formData.append("file", values.resume);
 
-            const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
-                jsonData
+            const uploadRes = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/upload`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
 
+            const path = uploadRes.data?.data?.path;
+            if (!path) throw new Error("Upload failed: no path returned");
 
-            console.log("submitted: ", response.data);
-            localStorage.setItem('data', response.data)
-            navigate('/')
+            resumeUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/file-upload/${path}`;
+        }
+
+        const jsonData = {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirm_password,
+            phone: values.phone,
+            address: values.address,
+            role: "job_seeker",
+            disabilityType: values.disabilityType,
+            preferredLocation: values.preferredLocation,
+            skills: values.skills,
+            resume: resumeUrl,
+        };
+
+        const response = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
+            jsonData
+        );
+
+        console.log("submitted: ", response.data);
+        const { user, token } = response.data;
+        dispatch(login({ user, token }));
+        localStorage.setItem("data", JSON.stringify(response.data));
+
+        navigate('/');
         } catch (error: any) {
-            console.error("error:", error.response.data);
+            console.error("Signup error:", error.response?.data || error.message);
         }
     }
+
 
     return (
         <div>
