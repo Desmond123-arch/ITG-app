@@ -534,9 +534,10 @@ const JobSeekerSignUp: React.FC = () => {
             formData.append("file", values.resume);
 
             const uploadRes = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/upload`,
+                `${import.meta.env.VITE_BACKEND_URL}/files/upload`,
                 formData,
                 {
+                    params: { email: values.email },
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -575,6 +576,9 @@ const JobSeekerSignUp: React.FC = () => {
 
         navigate('/');
         } catch (error: any) {
+            if(error.response?.status === 409){
+                navigate('/login')
+            }
             console.error("Signup error:", error.response?.data || error.message);
         }
     }
