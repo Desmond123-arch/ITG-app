@@ -48,6 +48,7 @@ const formSchema = z
         // address: z.string().min(1, "Address is required"),
         region: z.string().min(1, "Region is required"),
         country: z.string().min(1, "Country is required"),
+        industry: z.string().min(1, "Industry is required"),
         founded: z.string().min(1, "Date founded is required"),
         specialties: z.array(z.string()).min(1, "At least one specialty is required"),
         password: z.string()
@@ -495,12 +496,44 @@ const EmployerSignUp = () => {
             console.log("Submitting data")
             const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
             const address = `${values.region}, ${values.country}`
+
+            let logoUrl = "";
+            if (values.company_logo) {
+                const formData = new FormData();
+                formData.append("file", values.company_logo);
+                const uploadRes = await axios.post(
+                    `${import.meta.env.VITE_BACKEND_URL}/images/upload`,
+                    formData,
+                    {
+                        params: { bucketName: "company_logos" },
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                const path = uploadRes.data?.data?.path;
+                if (!path) throw new Error("Upload failed: no path returned");
+                logoUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/file-upload/${path}`;
+            }
+
+
             const updatedValues = {
-                ...values,
                 name: values.company_name,
                 email: values.company_email,
-                address,
-                description,
+                phone: values.phone,
+                address: address,
+                // imageUrl: values.imageUrl,
+                password: values.password,
+                confirmPassword: values.confirm_password,
+                company_name: values.company_name,
+                company_email: values.company_email,
+                company_logo: logoUrl,
+                company_description: description,
+                company_website_url: values.company_web_url,
+                founded_year: values.founded,
+                industry: values.industry,
+                specialties: values.specialties,
+                role: "employer"
             }
             const response = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,

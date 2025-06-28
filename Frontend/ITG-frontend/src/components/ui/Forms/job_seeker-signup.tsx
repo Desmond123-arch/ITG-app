@@ -537,7 +537,7 @@ const JobSeekerSignUp: React.FC = () => {
                 `${import.meta.env.VITE_BACKEND_URL}/files/upload`,
                 formData,
                 {
-                    params: { email: values.email },
+                    params: { email: values.email, bucketName: "resumes" },
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -553,15 +553,15 @@ const JobSeekerSignUp: React.FC = () => {
         const jsonData = {
             name: values.name,
             email: values.email,
-            password: values.password,
-            confirmPassword: values.confirm_password,
             phone: values.phone,
             address: values.address,
-            role: "job_seeker",
+            password: values.password,
+            confirmPassword: values.confirm_password,
             disabilityType: values.disabilityType,
             preferredLocation: values.preferredLocation,
             skills: values.skills,
             resumeUrl,
+            role: "job_seeker",
         };
 
         const response = await axios.post(
