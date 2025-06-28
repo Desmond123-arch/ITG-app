@@ -23,6 +23,7 @@ const fetchCompanyData = async () => {
         employee_count: "50-100",
         industry: "Education & Training",
         specialties: ["GIS Training", "Cartography", "Spatial Analysis", "Remote Sensing"],
+        founded: "Some random name",
     }
 }
 
