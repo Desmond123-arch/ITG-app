@@ -502,7 +502,7 @@ export function MultiStepViewer({ form }: { form: any }) {
 }
 
 const JobSeekerSignUp: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

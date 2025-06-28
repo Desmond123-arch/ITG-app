@@ -10,6 +10,10 @@ import { CheckCircleIcon, Eye, EyeOff, FileIcon, UploadIcon } from "lucide-react
 import { useState, ChangeEvent } from "react";
 import { programmingSkills } from "@/store/options";
 import { MultiSelect } from "../multi-select";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { login } from "@/store/authSlice";
 
 
 const formSchema = z
@@ -464,6 +468,9 @@ export function MultiStepViewer({ form }: { form: any }) {
     )
 }
 const EmployerSignUp = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -483,18 +490,37 @@ const EmployerSignUp = () => {
         },
         shouldUnregister: false
     })
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Success")
-        const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
-        const address = `${values.region}, ${values.country}`
-        const updatedValues = {
-            ...values,
-            name: values.company_name,
-            email: values.company_email,
-            address,
-            description,
-        };
-        console.log(updatedValues)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try{
+            console.log("Submitting data")
+            const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
+            const address = `${values.region}, ${values.country}`
+            const updatedValues = {
+                ...values,
+                name: values.company_name,
+                email: values.company_email,
+                address,
+                description,
+            }
+            const response = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
+                updatedValues,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+            console.log("submitted: ", response.data);
+            const {user, token} = response.data;
+            dispatch(login({user, token}))
+            localStorage.setItem("data", JSON.stringify(response.data));
+        } catch(error: any) {
+            if(error.response?.status === 409){
+                navigate('/login')
+            }
+            console.error("Error submitting form:", error);
+        }
     }
 
     return (
