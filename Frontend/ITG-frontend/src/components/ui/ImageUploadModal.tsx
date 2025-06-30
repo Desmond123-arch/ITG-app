@@ -1,8 +1,7 @@
 import { UploadCloud } from 'lucide-react'
+import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
-import { RootState } from '@/store'
 import { updateImage } from '@/store/authSlice';
-import { useDispatch, useSelector } from 'react-redux'
 import React, { useRef, useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
@@ -22,7 +21,6 @@ const ImageUploadModal: React.FC<Props> = ({
   title = 'Update Profile Picture'
 }) => {
   const dispatch = useDispatch()
-  const user = useSelector((state: RootState) => state.auth.user)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [tempImage, setTempImage] = useState<string | null>(null)
 
