@@ -1,6 +1,5 @@
 import { Bell, Menu, Play, Search, X } from "lucide-react";
 import { Input } from "./ui/input";
-import { ProfilePic } from "@/assets/images";
 import { Link, useLocation } from "react-router-dom";
 import toTitle from "@/utils/ToTitle";
 import { RootState, AppDispatch } from "@/store";
@@ -47,7 +46,7 @@ const Header = () => {
                         <div className="absolute top-[-3px] right-[-1px] w-3 h-3 border-2 border-[#f1f2f4] bg-green-700 rounded-full"></div>
                     </div>
                     <Link to="/sign-up" className="rounded-full overflow-hidden w-7 h-7">
-                        <img className="w-full h-full object-cover" src={ProfilePic} alt="Profile Picture" />
+                        <img className="w-full h-full object-cover" src={user?.imageUrl} alt="Profile Picture" />
                     </Link>
                     <h1 className="font-semibold text-sm">{user?.name}</h1>
                     <div className="rotate-90 cursor-pointer text-gray-500"><Play size={20}/></div>

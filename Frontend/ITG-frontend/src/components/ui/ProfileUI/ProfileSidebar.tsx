@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { logout } from '@/store/authSlice'
 import classNames from 'classnames'
-import { ProfilePic } from '@/assets/images'
 import ImageUploadModal from '../ImageUploadModal'
 
 interface Props {
@@ -18,7 +17,7 @@ const ProfileSidebar: React.FC<Props> = ({ currentTab, setCurrentTab }) => {
   const dispatch = useDispatch()
   const tabs = ["Profile", "Job activity", "Notifications", "Account Settings"]
 
-  const [previewImage, setPreviewImage] = useState<string>(ProfilePic)
+  const [previewImage, setPreviewImage] = useState<string>(user?.imageUrl ?? "")
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const logoutUser = () => dispatch(logout())

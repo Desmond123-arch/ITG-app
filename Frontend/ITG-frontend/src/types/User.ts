@@ -11,4 +11,5 @@ export interface User {
     jobLocationPreferences: string[];
     skills: string[];
     resumeUrl: string;
+    imageUrl: string;
 }

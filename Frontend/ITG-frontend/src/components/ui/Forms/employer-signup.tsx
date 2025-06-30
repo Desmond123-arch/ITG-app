@@ -565,7 +565,7 @@ const EmployerSignUp = () => {
                     `${import.meta.env.VITE_BACKEND_URL}/images/upload`,
                     formData,
                     {
-                        params: { bucketName: "company-logos" },
+                        params: { email: values.company_email, bucketName: "company-logos" },
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },

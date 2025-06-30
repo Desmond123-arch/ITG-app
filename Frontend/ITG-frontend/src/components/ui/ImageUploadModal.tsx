@@ -1,7 +1,10 @@
+import { UploadCloud } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { RootState } from '@/store'
+import { updateImage } from '@/store/authSlice';
+import { useDispatch, useSelector } from 'react-redux'
 import React, { useRef, useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { UploadCloud } from 'lucide-react'
 
 interface Props {
   open: boolean
@@ -18,6 +21,8 @@ const ImageUploadModal: React.FC<Props> = ({
   onUpdate,
   title = 'Update Profile Picture'
 }) => {
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.auth.user)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [tempImage, setTempImage] = useState<string | null>(null)
 
@@ -41,6 +46,7 @@ const ImageUploadModal: React.FC<Props> = ({
 
   const handleUpdate = () => {
     if (tempImage) {
+      dispatch(updateImage(tempImage))
       onUpdate(tempImage)
       setTempImage(null)
       onOpenChange(false)
@@ -60,7 +66,6 @@ const ImageUploadModal: React.FC<Props> = ({
       >
         <div className="flex flex-col h-full max-h-[90vh]">
 
-          {/* Header */}
           <div className="p-6 border-b">
             <DialogHeader>
               <DialogTitle className="text-xl font-semibold text-gray-800">
@@ -69,7 +74,6 @@ const ImageUploadModal: React.FC<Props> = ({
             </DialogHeader>
           </div>
 
-          {/* Scrollable Middle Section */}
           <div
             className="flex-grow overflow-y-auto p-6"
             onDrop={handleDrop}
@@ -100,7 +104,6 @@ const ImageUploadModal: React.FC<Props> = ({
             />
           </div>
 
-          {/* Footer */}
           <div className="p-4 border-t bg-white flex justify-end gap-3">
             <Button onClick={() => onOpenChange(false)} variant="ghost">
               Cancel
