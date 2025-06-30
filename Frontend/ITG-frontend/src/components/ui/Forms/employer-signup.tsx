@@ -613,7 +613,8 @@ const EmployerSignUp = () => {
             const { user, token } = response.data;
             dispatch(login({ user, token }));
             localStorage.setItem("data", JSON.stringify(response.data));
-
+            
+            navigate('/');
         } catch (error: any) {
             if (error.response?.status === 409) {
                 navigate('/login');
