@@ -22,9 +22,9 @@ const formSchema = z
         // email: z.string().email("Invalid email address entered").optional(),
         company_name: z.string().min(2, "Company name is required"),
         company_email: z.string().email("Invalid email address entered"),
-        company_product: z.string().min(2, "More details is required"),
-        company_mission: z.string().min(2, "More details is required"),
-        company_culture: z.string().min(2, "More details is required"),
+        company_product: z.string().min(2, "More details required"),
+        company_mission: z.string().min(2, "More details required"),
+        company_culture: z.string().min(2, "More details required"),
         company_web_url: z.union([z.literal(""), z.string().trim().url()]),
         company_logo: z
             .any()
@@ -49,7 +49,8 @@ const formSchema = z
         region: z.string().min(1, "Region is required"),
         country: z.string().min(1, "Country is required"),
         industry: z.string().min(1, "Industry is required"),
-        founded: z.string().min(1, "Date founded is required"),
+        founder: z.string().min(1, "Founder is required"),
+        year_founded: z.string().min(1, "Year founded is required"),
         specialties: z.array(z.string()).min(1, "At least one specialty is required"),
         password: z.string()
             .min(8, "Password must be at least 8 characters long")
@@ -59,6 +60,7 @@ const formSchema = z
             .regex(/[0-9]/, "Password must contain at least one number")
             .regex(/[@$!%*?&]/, "Password must contain at least one special character (@$!%*?&)"),
         confirm_password: z.string().min(1, "Confirm password to proceed"),
+        employee_count: z.string().min(1, "Employee count is required")
     }).refine((data) => data.password === data.confirm_password, {
         message: "Passwords must match",
         path: ["confirm_password"]
@@ -146,7 +148,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="company_mission"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>What’s your company’s mission or vision?</FormLabel> *
+                        <FormLabel>What is your company's mission or vision?</FormLabel> *
                         <FormControl>
                             <textarea
                                 {...field}
@@ -163,7 +165,7 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="company_culture"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>What’s your team or company culture like?
+                        <FormLabel>What is your team or company culture like?
                         </FormLabel> *
                         <FormControl>
                             <textarea
@@ -178,7 +180,24 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="founded"
+                name="company_founder"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Company Founder</FormLabel>
+                        <FormControl>
+                            <Input
+                                type="text"
+                                placeholder="Your company founder"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="year_founded"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>Company Founding Date</FormLabel> *
@@ -481,7 +500,7 @@ const EmployerSignUp = () => {
             company_mission: '',
             company_product: '',
             company_web_url: '',
-            founded: '',
+            founder: '',
             region: '',
             country: '',
             phone: '',
@@ -492,6 +511,7 @@ const EmployerSignUp = () => {
         shouldUnregister: false
     })
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("Form submitted with values:", values);
         try{
             console.log("Submitting data")
             const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
@@ -530,9 +550,12 @@ const EmployerSignUp = () => {
                 company_logo: logoUrl,
                 company_description: description,
                 company_website_url: values.company_web_url,
-                founded_year: values.founded,
+                year_founded: values.year_founded,
+                headquarters: address,
+                employee_count: values.employee_count,
                 industry: values.industry,
                 specialties: values.specialties,
+                founder: values.founder,
                 role: "employer"
             }
             const response = await axios.post(
