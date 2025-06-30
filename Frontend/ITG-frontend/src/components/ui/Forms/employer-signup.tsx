@@ -20,11 +20,13 @@ const formSchema = z
     .object({
         // name: z.string().optional(), // type fixing
         // email: z.string().email("Invalid email address entered").optional(),
-        company_name: z.string().min(2, "Company name is required"),
+        company_name: z.string().min(5, "Company name is required"),
         company_email: z.string().email("Invalid email address entered"),
-        company_product: z.string().min(2, "More details required"),
-        company_mission: z.string().min(2, "More details required"),
-        company_culture: z.string().min(2, "More details required"),
+        company_product: z.string().min(10, "More details required"),
+        company_mission: z.string().min(10, "More details required"),
+        company_culture: z.string().min(10, "More details required"),
+        founder: z.string().min(2, "Founder is required"),
+        year_founded: z.string().min(1, "Year founded is required"),
         company_web_url: z.union([z.literal(""), z.string().trim().url()]),
         company_logo: z
             .any()
@@ -49,8 +51,7 @@ const formSchema = z
         region: z.string().min(1, "Region is required"),
         country: z.string().min(1, "Country is required"),
         industry: z.string().min(1, "Industry is required"),
-        founder: z.string().min(1, "Founder is required"),
-        year_founded: z.string().min(1, "Year founded is required"),
+        employee_count: z.string().min(1, "Employee count is required"),
         specialties: z.array(z.string()).min(1, "At least one specialty is required"),
         password: z.string()
             .min(8, "Password must be at least 8 characters long")
@@ -60,7 +61,6 @@ const formSchema = z
             .regex(/[0-9]/, "Password must contain at least one number")
             .regex(/[@$!%*?&]/, "Password must contain at least one special character (@$!%*?&)"),
         confirm_password: z.string().min(1, "Confirm password to proceed"),
-        employee_count: z.string().min(1, "Employee count is required")
     }).refine((data) => data.password === data.confirm_password, {
         message: "Passwords must match",
         path: ["confirm_password"]
@@ -180,7 +180,7 @@ export function MultiStepViewer({ form }: { form: any }) {
             />
             <FormField
                 control={form.control}
-                name="company_founder"
+                name="founder"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>Company Founder</FormLabel>
@@ -312,10 +312,10 @@ export function MultiStepViewer({ form }: { form: any }) {
                 name="region"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>City, Region</FormLabel> *
+                        <FormLabel>Region</FormLabel> *
                         <FormControl>
                             <Input
-                                placeholder="Region, Country"
+                                placeholder="Region"
                                 {...field}
                             />
                         </FormControl>
@@ -332,6 +332,38 @@ export function MultiStepViewer({ form }: { form: any }) {
                         <FormControl>
                             <Input
                                 placeholder="Country"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="industry"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Industry</FormLabel> *
+                        <FormControl>
+                            <Input
+                                placeholder="Industry"
+                                {...field}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="employee_count"
+                render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel>Employee Count</FormLabel> *
+                        <FormControl>
+                            <Input
+                                placeholder="250+"
                                 {...field}
                             />
                         </FormControl>
@@ -434,8 +466,8 @@ export function MultiStepViewer({ form }: { form: any }) {
         initialSteps: steps,
         onStepValidation: async () => {
             const stepFields: { [key: number]: string[] } = {
-                0: ["company_name", "company_email", "company_culture", "company_mission", "company_product"],
-                1: ["phone", "region", "country", "password", "confirm_password"]
+                0: ["company_name", "company_email", "company_product", "company_mission", "company_culture", "founder", "year_founded", "company_web_url", "company_logo"],
+                1: ["phone", "region", "country", "industry", "employee_count", "specialties", "password", "confirm_password"]
             }
             const fieldsToValidate = stepFields[currentStep - 1]
             const isValid = await form.trigger(fieldsToValidate);
@@ -494,48 +526,56 @@ const EmployerSignUp = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            company_name: '',
-            company_email: '',
-            company_culture: '',
-            company_mission: '',
-            company_product: '',
-            company_web_url: '',
-            founder: '',
-            region: '',
-            country: '',
-            phone: '',
-            password: '',
-            confirm_password: '',
-
+            company_name: "",
+            company_email: "",
+            company_product: "",
+            company_mission: "",
+            company_culture: "",
+            year_founded: "",
+            founder: "",
+            company_web_url: "",
+            company_logo: null,
+            phone: "",
+            region: "",
+            country: "",
+            industry: "",
+            specialties: [],
+            employee_count: "",
+            password: "",
+            confirm_password: ""
         },
         shouldUnregister: false
     })
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Form submitted with values:", values);
-        try{
-            console.log("Submitting data")
-            const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`
-            const address = `${values.region}, ${values.country}`
+
+        try {
+            console.log("Submitting data...");
+
+            const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`;
+            const address = `${values.region}, ${values.country}`;
 
             let logoUrl = "";
             if (values.company_logo) {
                 const formData = new FormData();
-                formData.append("file", values.company_logo);
+                formData.append("image", values.company_logo);
+
                 const uploadRes = await axios.post(
                     `${import.meta.env.VITE_BACKEND_URL}/images/upload`,
                     formData,
                     {
-                        params: { bucketName: "company_logos" },
+                        params: { bucketName: "company-logos" },
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
                     }
                 );
+
                 const path = uploadRes.data?.data?.path;
                 if (!path) throw new Error("Upload failed: no path returned");
                 logoUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/file-upload/${path}`;
             }
-
 
             const updatedValues = {
                 name: values.company_name,
@@ -557,7 +597,8 @@ const EmployerSignUp = () => {
                 specialties: values.specialties,
                 founder: values.founder,
                 role: "employer"
-            }
+            };
+
             const response = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
                 updatedValues,
@@ -566,18 +607,24 @@ const EmployerSignUp = () => {
                         "Content-Type": "application/json"
                     }
                 }
-            )
-            console.log("submitted: ", response.data);
-            const {user, token} = response.data;
-            dispatch(login({user, token}))
+            );
+
+            console.log("Submitted successfully:", response.data);
+            const { user, token } = response.data;
+            dispatch(login({ user, token }));
             localStorage.setItem("data", JSON.stringify(response.data));
-        } catch(error: any) {
-            if(error.response?.status === 409){
-                navigate('/login')
+
+        } catch (error: any) {
+            if (error.response?.status === 409) {
+                navigate('/login');
             }
             console.error("Error submitting form:", error);
+            if (error instanceof z.ZodError) {
+                console.error("Zod validation error:", error.flatten());
+            }
         }
     }
+
 
     return (
         <div>
