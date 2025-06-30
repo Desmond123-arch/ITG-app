@@ -30,11 +30,17 @@ export const authSlice = createSlice({
             console.log("Loading auth from storage");
             const storedUser = localStorage.getItem("user");
             const storedToken = localStorage.getItem("accessToken");
-            if (storedUser && storedToken) {
-                state.user = JSON.parse(storedUser);
-                state.token = storedToken;
+            try {
+                if (storedUser && storedToken) {
+                    state.user = JSON.parse(storedUser);
+                    state.token = storedToken;
+                }
+            } catch (err) {
+                console.error("Failed to parse stored user:", err);
+                localStorage.removeItem("user");
+                localStorage.removeItem("accessToken");
             }
-        },
+        }
     },
 });
 
