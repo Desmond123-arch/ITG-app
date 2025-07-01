@@ -5,7 +5,8 @@ const pathConstants = {
     JobDescription:"job/:id",
     SignUp: "sign-up",
     Login: "login",
-    CompanyAbout: 'company/:id'
+    CompanyAbout: 'company/:id',
+    PostJob: "post"
 }
 
 export default pathConstants;
