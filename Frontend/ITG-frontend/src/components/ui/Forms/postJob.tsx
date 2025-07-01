@@ -292,6 +292,7 @@ export function JobForm({ }) {
                         )
                         }
                     />
+                    <Button type="submit" className="w-full text-center mt-6">Submit</Button>
                 </form>
             </Form>
         </div>
