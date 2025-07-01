@@ -26,7 +26,7 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
         throw new Error("Failed to fetch job details");
     }
 
-    console.log("Job details fetched:", response.data.data);
+    console.log("Job details fetched :", response.data);
     return response.data.data;
 }
 
@@ -35,7 +35,7 @@ const JobDescription = () => {
     const {id} = useParams<{id: string}>();
 
     const {data, isLoading, isError} = useQuery({
-        queryKey: ['jobDetail', id, token],
+        queryKey: ['jobDetail', id],
         queryFn: () => fetchJobDetail(token, id),
         enabled: !!token,
     });
@@ -55,15 +55,15 @@ const JobDescription = () => {
                 <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
-                            <img src={data.employer.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
+                            <img src={data.job.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
                         </div>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold mb-2'>{data.job.title}</h2>
                             <dl className='flex gap-x-3 text-sm flex-wrap'>
-                                <div>Omicron</div>
+                                <div>{data.job.companyName}</div>
                                 <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.location}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.jobType}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.experience}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.jobType.replace('_', ' ')}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.yearsOfExperience}</dd></div>
                             </dl>
                         </div>
                     </div>
@@ -106,8 +106,7 @@ const JobDescription = () => {
                     {/* About Company */}
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mt-4'>About Company</h3>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore non amet reprehenderit asperiores accusantium hic, veritatis, pariatur ipsam minus omnis explicabo beatae recusandae aperiam, assumenda iure quaerat? Odio, quae obcaecati?
-                        Fuga voluptatibus dolore numquam mollitia aperiam assumenda libero? Ipsam pariatur eos dolor tempora quisquam officia incidunt voluptatem debitis, accusantium repudiandae quia quasi quas itaque odit esse a neque aspernatur ullam.
+                        {data.job.companyDescription}
                     </section>
                 </div>
             </div>

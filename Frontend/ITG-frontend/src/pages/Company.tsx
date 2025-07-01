@@ -15,7 +15,7 @@ const fetchCompanies = async (token: string | null, search: string, country: str
   if(country) {params.append('country', country)}
 
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/companies?${params.toString()}`,
+    `${import.meta.env.VITE_BACKEND_URL}/employers?${params.toString()}`,
     {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -61,7 +61,7 @@ const Company: React.FC = () => {
       <div className="flex gap-5">
         {isLoading && <p>Loading companies...</p>}
           {isError && <p>Error loading companies.</p>}
-          {data?.data?.companies && <CompaniesGrid companies={data.data.companies} />}
+          {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
       </div>
     </div>
   );
