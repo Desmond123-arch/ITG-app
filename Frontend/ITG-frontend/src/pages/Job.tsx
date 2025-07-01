@@ -26,7 +26,7 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
         throw new Error("Failed to fetch job details");
     }
 
-    console.log(response.data)
+    console.log("Job details fetched:", response.data.data);
     return response.data.data;
 }
 
@@ -55,7 +55,7 @@ const JobDescription = () => {
                 <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
-                            <img src={data.job.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
+                            <img src={data.employer.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
                         </div>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold mb-2'>{data.job.title}</h2>

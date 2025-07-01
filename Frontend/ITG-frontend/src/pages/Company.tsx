@@ -1,16 +1,50 @@
 import { Button } from "@/components/ui/button";
 import CompaniesGrid from "@/components/ui/CompanyUI/CompaniesGrid";
 import { Input } from "@/components/ui/input";
+import { RootState } from "@/store";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+
+const fetchCompanies = async (token: string | null, search: string, country: string) => {
+  if(!token) {throw new Error("No token provided")}
+
+  const params = new URLSearchParams()
+  if(search) {params.append('search', search)}
+  if(country) {params.append('country', country)}
+
+  const response = await axios.get(
+    `${import.meta.env.VITE_BACKEND_URL}/companies?${params.toString()}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    }
+  )
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch companies");
+  }
+
+  console.log("Companies fetched:", response.data);
+  return response.data;
+}
 
 const Company: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
+  const token = useSelector((state: RootState) => state.auth.token)
 
-  const handleSubmit = () => {
-    console.log('submitted data')
-    console.log(search)
-    console.log(country)
+  const {data, isLoading, isError, refetch} = useQuery({
+    queryKey: ['companies', search, country],
+    queryFn: () => fetchCompanies(token, search, country),
+    enabled: !!token,
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    refetch();
   }
 
   return (
@@ -25,7 +59,9 @@ const Company: React.FC = () => {
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
       <div className="flex gap-5">
-        <CompaniesGrid/>
+        {isLoading && <p>Loading companies...</p>}
+          {isError && <p>Error loading companies.</p>}
+          {data?.data?.companies && <CompaniesGrid companies={data.data.companies} />}
       </div>
     </div>
   );
