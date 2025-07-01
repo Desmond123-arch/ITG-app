@@ -1,34 +1,53 @@
-import { ItgIcon } from '@/assets/images'
 import { Button } from '@/components/ui/button';
+import CustomLoader from '@/components/ui/CustomLoader';
 import JobItem from '@/components/ui/HomeUI/JobItem';
 import jobs from '@/data/JobsData';
+import { RootState } from '@/store';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { Bookmark } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-const jobDetail = {
-    "id": 1,
-    "employerId": 42,
-    "title": "Software Engineer",
-    "description": [
-        "Develop and maintain web applications",
-        "Collaborate with cross-functional teams"
-    ],
-    "skills": ["JavaScript", "React", "Node.js"],
-    "requirements": [
-        "Bachelor's degree in Computer Science",
-        "3+ years of experience in software development"
-    ],
-    "experience": "1-3 years experience",
-    "location": "Remote",
-    "salaryRange": "$70,000 - $100,000",
-    "jobType": "Full time",
-    "disabilityFriendly": true,
-    "status": "draft",
-    "createdAt": "2025-03-19T12:00:00Z",
-    "updatedAt": "2025-03-19T12:00:00Z",
-    "deadline": "2025-04-01T23:59:59Z"
+const fetchJobDetail = async(token: string | null, jobId: string | undefined) => {
+    if (!token) throw new Error("No token provided");
+    if (!jobId) throw new Error("No job ID provided");
+
+    const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/jobs/${jobId}`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }
+    );
+
+    if (response.status !== 200) {
+        throw new Error("Failed to fetch job details");
+    }
+
+    console.log(response.data)
+    return response.data.data;
 }
 
 const JobDescription = () => {
+    const token = useSelector((state: RootState) => state.auth.token)
+    const {id} = useParams<{id: string}>();
+
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['jobDetail', id, token],
+        queryFn: () => fetchJobDetail(token, id),
+        enabled: !!token,
+    });
+
+    if (isLoading) {
+        return <CustomLoader/>;
+    }
+
+    if (isError || !data) {
+        return <p className="text-center py-10 text-red-500">Failed to load job details.</p>;
+    }
+
     return (
         <div className="flex justify-between lg:flex-row flex-col">
             {/* JOB DETAIL */}
@@ -36,15 +55,15 @@ const JobDescription = () => {
                 <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
-                            <img src={ItgIcon || "/placeholder.svg"} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
+                            <img src={data.job.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
                         </div>
                         <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold mb-2'>{jobDetail.title}</h2>
+                            <h2 className='text-2xl font-semibold mb-2'>{data.job.title}</h2>
                             <dl className='flex gap-x-3 text-sm flex-wrap'>
                                 <div>Omicron</div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{jobDetail.location}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{jobDetail.jobType}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{jobDetail.experience}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.location}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.jobType}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.job.experience}</dd></div>
                             </dl>
                         </div>
                     </div>
@@ -58,8 +77,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700'>Job Descriptions</h3>
                         <ul className='list-disc ml-4 mt-3' role='list'>
-                            {jobDetail.description.map((job, idx) => (
-                                <li className='flex items-center h-max gap-2' key={idx}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
+                            {data.job.description.map((info: string, index: number) => (
+                                <li className='flex items-center h-max gap-2' key={index}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{info}</li>
                             ))}
                         </ul>
                     </section>
@@ -68,8 +87,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mb-3 mt-3'>Skills</h3>
                         <ul className='flex gap-2 ml-2' role='list'>
-                            {jobDetail.skills.map((skill, idx) => (
-                                <li className='bg-blue-200 rounded-md p-1 px-2 text-[#28246F]' key={idx}>{skill}</li>
+                            {data.job.skills.map((skill: string, index: number) => (
+                                <li className='bg-blue-200 rounded-md p-1 px-2 text-[#28246F]' key={index}>{skill}</li>
                             ))}
                         </ul>
                     </section>
@@ -78,8 +97,8 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mt-4'>Requirements</h3>
                         <ul className='list-disc ml-4 mt-3'>
-                            {jobDetail.description.map((job, idx) => (
-                                <li className='flex items-center h-max gap-2' key={idx}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{job}</li>
+                            {data.job.requirements.map((detail: string, index: number) => (
+                                <li className='flex items-center h-max gap-2' key={index}><span className='bg-gray-500 h-1 w-1 rounded-full '></span>{detail}</li>
                             ))}
                         </ul>
                     </section>

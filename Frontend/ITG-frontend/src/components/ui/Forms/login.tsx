@@ -28,12 +28,10 @@ export const LoginForm = () => {
     })
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try{
-            console.log(values)
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, values)
             const {status, data} = response.data
             if(status === 'success'){
                 const {user, accessToken} = data
-                console.log(user)
                 dispatch(login({user, token:accessToken}))
                 axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
                 navigate('/')

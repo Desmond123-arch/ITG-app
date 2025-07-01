@@ -27,8 +27,6 @@ const fetchJobs = async (token: string | null, search: string, country: string) 
   if (response.status !== 200) {
     throw new Error("Failed to fetch jobs");
   }
-
-  console.log("Jobs fetched :", response.data.data);
   return response.data;
 };
 

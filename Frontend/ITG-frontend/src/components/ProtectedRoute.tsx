@@ -8,7 +8,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const auth = useSelector((state: RootState) => state.auth);
-    console.log(auth)
 
     if (!auth.user) {
         return <Navigate to="/login" replace />;
