@@ -23,7 +23,7 @@ const SignUp = () => {
                         </TabsContent>
                     </div>
                 </Tabs>
-                <p>Already have an account? <Link to={"/login"} className="underline text-blue-950">Log in</Link></p>
+                <p className="mt-2">Already have an account? <Link to={"/login"} className="underline text-blue-950">Log in</Link></p>
             </div>
         </div>
     );
