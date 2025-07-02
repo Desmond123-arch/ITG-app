@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import CompaniesGrid from "@/components/ui/CompanyUI/CompaniesGrid";
+import CustomPagination from "@/components/ui/CustomPagination";
 import { Input } from "@/components/ui/input";
 import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const fetchCompanies = async (token: string | null, search: string, country: string) => {
   if(!token) {throw new Error("No token provided")}
@@ -27,7 +29,6 @@ const fetchCompanies = async (token: string | null, search: string, country: str
     throw new Error("Failed to fetch companies");
   }
 
-  console.log("Companies fetched:", response.data);
   return response.data;
 }
 
@@ -35,6 +36,8 @@ const Company: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
   const token = useSelector((state: RootState) => state.auth.token)
+  const pageParam = useParams().page;
+  const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
 
   const {data, isLoading, isError, refetch} = useQuery({
     queryKey: ['companies', search, country],
@@ -63,6 +66,12 @@ const Company: React.FC = () => {
           {isError && <p>Error loading companies.</p>}
           {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
       </div>
+      {
+        data &&
+        <div className="flex justify-center mt-5 relative">
+          <CustomPagination currentPage={currentPage} totalPages={data?.meta?.totalPages} count={data?.meta?.count} />
+        </div>
+      }
     </div>
   );
 };
