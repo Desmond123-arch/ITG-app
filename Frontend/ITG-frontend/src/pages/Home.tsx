@@ -8,9 +8,15 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import CustomPagination from "@/components/ui/CustomPagination";
-import { useSearchParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useSearchParams } from "react-router-dom";
 
-const fetchJobs = async (token: string | null, search: string, country: string, currentPage: string) => {
+const fetchJobs = async (
+    token: string | null,
+    search: string,
+    country: string,
+    currentPage: string,
+    navigate: NavigateFunction
+  ) => {
   if (!token) throw new Error("No token provided");
 
   const params = new URLSearchParams();
@@ -30,18 +36,22 @@ const fetchJobs = async (token: string | null, search: string, country: string, 
   if (response.status !== 200) {
     throw new Error("Failed to fetch jobs");
   }
+  if(response.data.meta.totalPages < Number(currentPage)) {
+    navigate(`/?page=${response.data.meta.totalPages}`);
+  }
   return response.data;
 };
 
 const Home: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
+  const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
   const currentPage = useSearchParams()[0].get('page') || '1'
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['jobs', search, country, currentPage],
-    queryFn: () => fetchJobs(token, search, country, currentPage),
+    queryFn: () => fetchJobs(token, search, country, currentPage, navigate),
     enabled: !!token,
   });
 

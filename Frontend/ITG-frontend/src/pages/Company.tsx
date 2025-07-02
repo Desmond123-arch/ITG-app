@@ -7,9 +7,15 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useSearchParams } from "react-router-dom";
 
-const fetchCompanies = async (token: string | null, search: string, country: string, currentPage: string) => {
+const fetchCompanies = async (
+    token: string | null,
+    search: string,
+    country: string,
+    currentPage: string,
+    navigate: NavigateFunction
+  ) => {
   if(!token) {throw new Error("No token provided")}
 
   const params = new URLSearchParams()
@@ -30,6 +36,9 @@ const fetchCompanies = async (token: string | null, search: string, country: str
   if (response.status !== 200) {
     throw new Error("Failed to fetch companies");
   }
+  if(response.data.meta.totalPages < Number(currentPage)) {
+    navigate(`/?page=${response.data.meta.totalPages}`);
+  }
 
   console.log("Fetched companies:", response.data);
   return response.data;
@@ -38,12 +47,13 @@ const fetchCompanies = async (token: string | null, search: string, country: str
 const Company: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
+  const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
   const currentPage = useSearchParams()[0].get('page') || '1'
 
   const {data, isLoading, isError, refetch} = useQuery({
     queryKey: ['companies', search, country, currentPage],
-    queryFn: () => fetchCompanies(token, search, country, currentPage),
+    queryFn: () => fetchCompanies(token, search, country, currentPage, navigate),
     enabled: !!token,
   })
 

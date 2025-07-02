@@ -2,7 +2,7 @@ import React from 'react'
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
+  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -16,7 +16,7 @@ interface Props{
   baseUrl: string
 }
 
-const CustomPagination: React.FC<Props> = ({ currentPage, totalPages, count, baseUrl }) => {
+const CustomPagination: React.FC<Props> = ({ currentPage, totalPages, baseUrl }) => {
   return (
     <Pagination>
         <PaginationContent>
