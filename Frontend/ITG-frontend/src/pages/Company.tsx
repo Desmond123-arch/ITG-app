@@ -37,7 +37,7 @@ const fetchCompanies = async (
     throw new Error("Failed to fetch companies");
   }
   if(response.data.meta.totalPages < Number(currentPage)) {
-    navigate(`/?page=${response.data.meta.totalPages}`);
+    navigate(`/company?page=${response.data.meta.totalPages}`);
   }
 
   console.log("Fetched companies:", response.data);
