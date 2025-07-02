@@ -21,12 +21,18 @@ const CustomPagination: React.FC<Props> = ({ currentPage, totalPages, baseUrl })
     <Pagination>
         <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious to={`${baseUrl}?page=${currentPage - 1}`} />
+              <PaginationPrevious
+                to={`${baseUrl}?page=${currentPage - 1}`}
+                className={currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-blue-300'}
+                />
             </PaginationItem>
             {
               Array.from({ length: totalPages }, (_, index) => (
                 <PaginationItem key={index + 1}>
-                  <PaginationLink to={`${baseUrl}?page=${index + 1}`} isActive={currentPage === index + 1}>
+                  <PaginationLink
+                    to={`${baseUrl}?page=${index + 1}`} isActive={currentPage === index + 1}
+                    className={currentPage === index + 1 ? 'pointer-events-none': 'hover:bg-blue-300'}
+                  >
                     {index + 1}
                   </PaginationLink>
                 </PaginationItem>
@@ -36,7 +42,10 @@ const CustomPagination: React.FC<Props> = ({ currentPage, totalPages, baseUrl })
               <PaginationEllipsis />
             </PaginationItem> */}
             <PaginationItem>
-              <PaginationNext to={`${baseUrl}?page=${currentPage + 1}`} />
+              <PaginationNext
+                to={`${baseUrl}?page=${currentPage + 1}`}
+                className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-blue-300'}
+                />
             </PaginationItem>
         </PaginationContent>
         </Pagination>
