@@ -7,16 +7,19 @@ import { useQuery } from '@tanstack/react-query';
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import CustomPagination from "@/components/ui/CustomPagination";
+import { useSearchParams } from "react-router-dom";
 
-const fetchJobs = async (token: string | null, search: string, country: string) => {
+const fetchJobs = async (token: string | null, search: string, country: string, currentPage: string) => {
   if (!token) throw new Error("No token provided");
 
   const params = new URLSearchParams();
   if (search) params.append('search', search);
   if (country) params.append('country', country);
+  params.append('page', currentPage)
 
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/jobs?${params.toString()}`,
+    `${import.meta.env.VITE_BACKEND_URL}/jobs?${params.toString()}&limit=12`,
     {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -34,10 +37,11 @@ const Home: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
   const token = useSelector((state: RootState) => state.auth.token)
+  const currentPage = useSearchParams()[0].get('page') || '1'
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['jobs', search, country],
-    queryFn: () => fetchJobs(token, search, country),
+    queryKey: ['jobs', search, country, currentPage],
+    queryFn: () => fetchJobs(token, search, country, currentPage),
     enabled: !!token,
   });
 
@@ -65,6 +69,12 @@ const Home: React.FC = () => {
           {data?.data?.jobs && <RecommendedJobs jobs={data.data.jobs} />}
         </div>
       </div>
+      {
+        data &&
+        <div className="flex justify-center mt-5 relative">
+          <CustomPagination baseUrl={'/'} currentPage={Number(currentPage)} totalPages={data?.meta?.totalPages} count={data?.meta?.count} />
+        </div>
+      }
     </div>
   );
 };

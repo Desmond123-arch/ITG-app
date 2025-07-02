@@ -7,17 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
-const fetchCompanies = async (token: string | null, search: string, country: string) => {
+const fetchCompanies = async (token: string | null, search: string, country: string, currentPage: string) => {
   if(!token) {throw new Error("No token provided")}
 
   const params = new URLSearchParams()
   if(search) {params.append('search', search)}
   if(country) {params.append('country', country)}
+  params.append('page', currentPage)
+  console.log("Current page:", currentPage)
 
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/employers?${params.toString()}`,
+    `${import.meta.env.VITE_BACKEND_URL}/employers?${params.toString()}&limit=12`,
     {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -29,6 +31,7 @@ const fetchCompanies = async (token: string | null, search: string, country: str
     throw new Error("Failed to fetch companies");
   }
 
+  console.log("Fetched companies:", response.data);
   return response.data;
 }
 
@@ -36,12 +39,11 @@ const Company: React.FC = () => {
   const [search, setSearch] = useState("")
   const [country, setCountry] = useState("")
   const token = useSelector((state: RootState) => state.auth.token)
-  const pageParam = useParams().page;
-  const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
+  const currentPage = useSearchParams()[0].get('page') || '1'
 
   const {data, isLoading, isError, refetch} = useQuery({
-    queryKey: ['companies', search, country],
-    queryFn: () => fetchCompanies(token, search, country),
+    queryKey: ['companies', search, country, currentPage],
+    queryFn: () => fetchCompanies(token, search, country, currentPage),
     enabled: !!token,
   })
 
@@ -69,7 +71,7 @@ const Company: React.FC = () => {
       {
         data &&
         <div className="flex justify-center mt-5 relative">
-          <CustomPagination currentPage={currentPage} totalPages={data?.meta?.totalPages} count={data?.meta?.count} />
+          <CustomPagination baseUrl={'/company'} currentPage={Number(currentPage)} totalPages={data?.meta?.totalPages} count={data?.meta?.count} />
         </div>
       }
     </div>
