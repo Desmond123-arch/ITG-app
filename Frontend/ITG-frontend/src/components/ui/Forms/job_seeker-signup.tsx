@@ -587,7 +587,7 @@ const JobSeekerSignUp: React.FC = () => {
     return (
         <div>
             <Form {...form}>
-                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 py-5" onSubmit={form.handleSubmit(onSubmit)}>
                     <MultiStepViewer form={form} />
                 </form>
             </Form>

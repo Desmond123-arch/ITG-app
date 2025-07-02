@@ -44,7 +44,7 @@ export const LoginForm = () => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}  className="flex flex-col gap-6 bg-slate-50 border-2 shadow-lg rounded-md w-[60%] md:w-[30%] px-2 py-5 mx-auto">
+            <form onSubmit={form.handleSubmit(onSubmit)}  className="flex flex-col gap-6 bg-white border-2 shadow-lg rounded-md w-[60%] md:w-[30%] px-5 py-5 mx-auto">
                 <h2 className="text-center text-2xl underline underline-offset-1">Login into your account</h2>
                 <FormField
                     control={form.control}

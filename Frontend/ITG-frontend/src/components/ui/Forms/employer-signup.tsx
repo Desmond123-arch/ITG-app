@@ -630,7 +630,7 @@ const EmployerSignUp = () => {
     return (
         <div>
             <Form {...form}>
-                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={(e) => {
+                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 py-5" onSubmit={(e) => {
                     form.handleSubmit(onSubmit)(e);
                 }} onKeyDown={(e) => {
                     if (e.key === "Enter") {
