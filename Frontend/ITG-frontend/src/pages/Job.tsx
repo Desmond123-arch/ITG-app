@@ -13,7 +13,7 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
     if (!token) throw new Error("No token provided");
     if (!jobId) throw new Error("No job ID provided");
 
-    const response = await axios.get(
+    const current_job_response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/jobs/${jobId}`,
         {
             headers: {
@@ -22,12 +22,25 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
         }
     );
 
-    if (response.status !== 200) {
+    const jobs_list_response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/jobs?limit=5`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }
+    );
+    console.log("Jobs list fetched :", jobs_list_response.data);
+
+    if (current_job_response.status !== 200) {
         throw new Error("Failed to fetch job details");
     }
 
-    console.log("Job details fetched :", response.data);
-    return response.data.data;
+    console.log("Job details fetched :", current_job_response.data);
+    return {
+        current_job: current_job_response.data.data,
+        jobs_list: jobs_list_response.data.data
+    };
 }
 
 const JobDescription = () => {
