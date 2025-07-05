@@ -2,7 +2,7 @@ type JobTypeEnum = "full_time" | "part_time" | "remote" | "contract";
 type JobStatusEnum = "draft" | "published" | "archived";
 
 export type Job = {
-  id?: number;
+  jobId?: number;
   employerId: number;
   title: string;
   description: Array<string>;
