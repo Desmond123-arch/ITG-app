@@ -23,7 +23,7 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
     );
 
     const jobs_list_response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/jobs?limit=5`,
+        `${import.meta.env.VITE_BACKEND_URL}/jobs?limit=6`,
         {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -75,8 +75,8 @@ const JobDescription = () => {
                             <dl className='flex gap-x-3 text-sm flex-wrap'>
                                 <div>{data.current_job.companyName}</div>
                                 <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.current_job.location}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.current_job.jobType.replace('_', ' ')}</dd></div>
-                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.current_job.yearsOfExperience}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.current_job.jobType.replace('_', ' ').toUpperCase()}</dd></div>
+                                <div className='flex items-center h-max gap-1'><dt className='bg-slate-600 h-1 w-1 rounded-full '></dt><dd>{data.current_job.yearsOfExperience} Year(s) of Experience</dd></div>
                             </dl>
                         </div>
                     </div>
@@ -120,6 +120,7 @@ const JobDescription = () => {
                     <section>
                         <h3 className='text-md font-semibold text-gray-700 mt-4'>About Company</h3>
                         {data.current_job.companyDescription}
+                        {data.current_job.id}
                     </section>
                 </div>
             </div>
@@ -128,7 +129,7 @@ const JobDescription = () => {
             <div className='lg:mr-1 lg:w-[30%] w-full'>
                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline md:ml-0'>Related jobs</h3>
                 <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
-                    {data.jobs_list.slice(0, 5).map((job: Job, index: number) => (
+                    {data.jobs_list.filter((job: Job) => job && job.id !== data.current_job.id).slice(0, 5).map((job: Job, index: number) => (
                         <JobItem key={index} job={job} page="job" />
                     ))}
                 </div>
