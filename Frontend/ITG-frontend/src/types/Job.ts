@@ -16,4 +16,10 @@ export type Job = {
   deadline?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+
+  companyName: string;
+  companyDescription: string;
+  companyEmail: string;
+  companyLogo: string;
+  companyWebsite: string;
 };
