@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 
-const fetchCompanyData = async (id: string, token: string) => {
+const fetchCompanyData = async (id: string, token: string | null) => {
     if (!token) throw new Error("No token provided");
     if (!id) throw new Error("No company ID provided");
 
@@ -34,9 +34,8 @@ const fetchCompanyData = async (id: string, token: string) => {
 }
 
 export default function CompanyAbout() {
-    const [company, setCompany] = useState<any>(null)
     const [activeTab, setActiveTab] = useState("overview")
-    const { id } = useParams<{id: string}>() || ""
+    const { id } = useParams() as {id: string}
     const token = useSelector((state: RootState) => state.auth.token)
 
     const {data, isLoading, isError} = useQuery({
@@ -62,8 +61,8 @@ export default function CompanyAbout() {
                     <div className="flex flex-col md:flex-row gap-4 items-start md:items-center -mt-10 md:-mt-16 mb-6">
                         <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-lg overflow-hidden border-4 border-white bg-blue-500 flex items-center justify-center">
                             <img
-                                src={company.company_logo || "/placeholder.svg"}
-                                alt={`${company.company_name} logo`}
+                                src={data.company_logo || "/placeholder.svg"}
+                                alt={`${data.company_name} logo`}
                                 width={80}
                                 height={80}
                                 className="object-cover"
@@ -71,7 +70,7 @@ export default function CompanyAbout() {
                         </div>
 
                         <div className="flex-1">
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{company.company_name}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{data.company_name}</h1>
                         </div>
 
                         <div className="flex gap-3 mt-4 md:mt-0 w-full md:w-auto">
@@ -79,7 +78,7 @@ export default function CompanyAbout() {
                                 Contact
                             </Button>
                             <Button variant="outline" className="flex-1 md:flex-none" asChild>
-                                <Link to={company.company_website_url} target="_blank" rel="noopener noreferrer">
+                                <Link to={data.company_website_url} target="_blank" rel="noopener noreferrer">
                                     Visit Website <ExternalLink className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>
@@ -106,15 +105,15 @@ export default function CompanyAbout() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <div className="md:col-span-2 space-y-6">
                                     <div>
-                                        <h2 className="text-xl font-semibold mb-3">About {company.company_name}</h2>
-                                        <div className="text-gray-700 whitespace-pre-line">{company.company_description}</div>
+                                        <h2 className="text-xl font-semibold mb-3">About {data.company_name}</h2>
+                                        <div className="text-gray-700 whitespace-pre-line">{data.company_description}</div>
                                     </div>
 
-                                    {company.specialties && company.specialties.length > 0 && (
+                                    {data.specialties && data.specialties.length > 0 && (
                                         <div>
                                             <h2 className="text-xl font-semibold mb-3">Specialties</h2>
                                             <div className="flex flex-wrap gap-2">
-                                                {company.specialties.map((specialty: string, index: number) => (
+                                                {data.specialties.map((specialty: string, index: number) => (
                                                     <span key={index} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
                                                         {specialty}
                                                     </span>
@@ -132,12 +131,12 @@ export default function CompanyAbout() {
                                                 <dt className="text-sm text-gray-500">Website</dt>
                                                 <dd className="text-sm">
                                                     <Link
-                                                        to={company.company_website_url}
+                                                        to={data.company_website_url}
                                                         className="text-blue-600 hover:underline"
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                     >
-                                                        {company.company_website_url.replace(/^https?:\/\//, "")}
+                                                        {data.company_website_url.replace(/^https?:\/\//, "")}
                                                     </Link>
                                                 </dd>
                                             </div>
@@ -145,37 +144,37 @@ export default function CompanyAbout() {
                                             <div>
                                                 <dt className="text-sm text-gray-500">Email</dt>
                                                 <dd className="text-sm">
-                                                    <Link to={`mailto:${company.company_email}`} className="text-blue-600 hover:underline">
-                                                        {company.company_email}
+                                                    <Link to={`mailto:${data.company_email}`} className="text-blue-600 hover:underline">
+                                                        {data.company_email}
                                                     </Link>
                                                 </dd>
                                             </div>
 
-                                            {company.industry && (
+                                            {data.industry && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Industry</dt>
-                                                    <dd className="text-sm">{company.industry}</dd>
+                                                    <dd className="text-sm">{data.industry}</dd>
                                                 </div>
                                             )}
 
-                                            {company.headquarters && (
+                                            {data.headquarters && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Headquarters</dt>
-                                                    <dd className="text-sm">{company.headquarters}</dd>
+                                                    <dd className="text-sm">{data.headquarters}</dd>
                                                 </div>
                                             )}
 
-                                            {company.founded_year && (
+                                            {data.founded_year && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Founded</dt>
-                                                    <dd className="text-sm">{company.founded_year}</dd>
+                                                    <dd className="text-sm">{data.founded_year}</dd>
                                                 </div>
                                             )}
 
-                                            {company.employee_count && (
+                                            {data.employee_count && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Company size</dt>
-                                                    <dd className="text-sm">{company.employee_count} employees</dd>
+                                                    <dd className="text-sm">{data.employee_count} employees</dd>
                                                 </div>
                                             )}
                                         </dl>
