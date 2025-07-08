@@ -49,7 +49,9 @@ const Company: React.FC = () => {
   const [country, setCountry] = useState("")
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
-  const currentPage = useSearchParams()[0].get('page') || '1'
+    const searchParams = useSearchParams()[0];
+    const pageParam = searchParams.get('page');
+    const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
 
   const {data, isLoading, isError, refetch} = useQuery({
     queryKey: ['companies', search, country, currentPage],

@@ -22,7 +22,8 @@ const fetchJobs = async (
   const params = new URLSearchParams();
   if (search) params.append('search', search);
   if (country) params.append('country', country);
-  params.append('page', currentPage)
+  console.log('sending current page: ', currentPage)
+  params.append('page', currentPage || '1');
 
   const response = await axios.get(
     `${import.meta.env.VITE_BACKEND_URL}/jobs?${params.toString()}&limit=12`,
@@ -47,7 +48,9 @@ const Home: React.FC = () => {
   const [country, setCountry] = useState("")
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
-  const currentPage = useSearchParams()[0].get('page') || '1'
+  const searchParams = useSearchParams()[0];
+  const pageParam = searchParams.get('page');
+  const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['jobs', search, country, currentPage],
