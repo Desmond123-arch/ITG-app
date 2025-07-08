@@ -5,50 +5,52 @@ import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import JobItem from "@/components/ui/HomeUI/JobItem"
 import jobs from "@/data/JobsData"
-import { ItgLogo } from "@/assets/images"
+import axios from "axios"
+import { useQuery } from "@tanstack/react-query"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
 
-const fetchCompanyData = async () => {
-    return {
-        company_name: "Map Academy",
-        company_email: "contact@mapacademy.edu",
-        company_logo: ItgLogo,
-        company_description:
-            "Map Academy is a premier educational institution specializing in geographic information systems (GIS), cartography, and spatial data analysis. Founded in 2015, we've trained over 5,000 professionals in mapping technologies and geospatial applications.\n\nOur curriculum combines theoretical knowledge with hands-on practice, preparing students for careers in urban planning, environmental management, logistics, and more. We offer both online and in-person courses, certification programs, and custom corporate training solutions.\n\nAt Map Academy, we believe in the power of location intelligence to solve complex global challenges. Our faculty includes industry veterans and academic experts committed to advancing the field of geospatial science.",
-        company_website_url: "https://mapacademy.edu",
-        founded_year: 2015,
-        headquarters: "Boston, MA",
-        employee_count: "50-100",
-        industry: "Education & Training",
-        specialties: ["GIS Training", "Cartography", "Spatial Analysis", "Remote Sensing"],
-        founded: "Some random name",
+const fetchCompanyData = async (id: string, token: string) => {
+    if (!token) throw new Error("No token provided");
+    if (!id) throw new Error("No company ID provided");
+
+    const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/employers/${id}`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        }
+    )
+    if(response.status !== 200) {
+        throw new Error("Failed to fetch company data");
     }
+    
+    console.log("Company data fetched:", response.data.data)
+    return response.data.data.employer
 }
 
 export default function CompanyAbout() {
     const [company, setCompany] = useState<any>(null)
-    const [loading, setLoading] = useState(true)
     const [activeTab, setActiveTab] = useState("overview")
+    const { id } = useParams<{id: string}>() || ""
+    const token = useSelector((state: RootState) => state.auth.token)
 
-    useEffect(() => {
-        const loadCompany = async () => {
-            try {
-                const data = await fetchCompanyData()
-                setCompany(data)
-            } catch (error) {
-                console.error("Failed to fetch company data:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['company', id],
+        queryFn: () => fetchCompanyData(id, token),
+        enabled: !!id,
+    })
 
-        loadCompany()
-    }, [])
-
-    if (loading) {
+    if (isLoading) {
         return <CompanyOverviewSkeleton />
+    }
+
+    if (isError || !data) {
+        return <div className="max-w-5xl mx-auto p-4 md:p-6">Error loading company data.</div>
     }
 
     return (
