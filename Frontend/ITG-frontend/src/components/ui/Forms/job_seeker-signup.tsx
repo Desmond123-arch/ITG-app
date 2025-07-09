@@ -557,7 +557,7 @@ const JobSeekerSignUp: React.FC = () => {
             address: values.address,
             password: values.password,
             confirmPassword: values.confirm_password,
-            disabilityType: values.disabilityType,
+            disability_type: values.disabilityType,
             preferredLocation: values.preferredLocation,
             skills: values.skills,
             resumeUrl,
