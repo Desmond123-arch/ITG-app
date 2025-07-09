@@ -1,29 +1,32 @@
 import { User } from "@/types/User";
-import { ProfilePic } from "@/assets/images";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
     user: User | null;
     token: string | null;
+    role: string | null
 }
 const initialState: AuthState = {
     user: null,
     token: null,
+    role: null
 };
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        login: (state, action: PayloadAction<{ user: User; token: string }>) => {
+        login: (state, action: PayloadAction<{ user: User; token: string; role: string }>) => {
             state.user = {...action.payload.user};
             state.token = action.payload.token;
+            state.role = action.payload.role;
             localStorage.setItem("accessToken", action.payload.token);
-            localStorage.setItem("user", JSON.stringify({...action.payload.user, imageUrl: ProfilePic}));
+            localStorage.setItem("user", JSON.stringify({...action.payload.user, role: action.payload.role}));
         },
         logout: (state) => {
             state.user = null;
             state.token = null;
+            state.role = null;
             localStorage.removeItem("accessToken");
             localStorage.removeItem("user");
         },
@@ -33,8 +36,9 @@ export const authSlice = createSlice({
             try {
                 if (storedUser && storedToken) {
                     const parsedUser = JSON.parse(storedUser);
-                    state.user = { ...parsedUser, imageUrl: ProfilePic };
+                    state.user = { ...parsedUser };
                     state.token = storedToken;
+                    state.role = parsedUser.role;
                 }
             } catch (err) {
                 console.error("Failed to parse stored user:", err);

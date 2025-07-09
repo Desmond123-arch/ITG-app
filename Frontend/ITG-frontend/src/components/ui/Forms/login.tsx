@@ -31,8 +31,8 @@ export const LoginForm = () => {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, values)
             const {status, data} = response.data
             if(status === 'success'){
-                const {user, accessToken} = data
-                dispatch(login({user, token:accessToken}))
+                const {user, accessToken, role} = data
+                dispatch(login({user, token:accessToken, role}))
                 axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
                 navigate('/')
             }
