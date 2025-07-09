@@ -1,10 +1,11 @@
+import { Role } from "@/types/Role";
 import { User } from "@/types/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
     user: User | null;
     token: string | null;
-    role: string | null
+    role: Role | null
 }
 const initialState: AuthState = {
     user: null,
@@ -16,7 +17,7 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        login: (state, action: PayloadAction<{ user: User; token: string; role: string }>) => {
+        login: (state, action: PayloadAction<{ user: User; token: string; role: Role }>) => {
             state.user = {...action.payload.user};
             state.token = action.payload.token;
             state.role = action.payload.role;
