@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import CustomPagination from "@/components/ui/CustomPagination";
 import { NavigateFunction, useNavigate, useSearchParams } from "react-router-dom";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 
 const fetchJobs = async (
     token: string | null,
@@ -22,7 +23,6 @@ const fetchJobs = async (
   const params = new URLSearchParams();
   if (search) params.append('search', search);
   if (country) params.append('country', country);
-  console.log('sending current page: ', currentPage)
   params.append('page', currentPage || '1');
 
   const response = await axios.get(
@@ -77,7 +77,16 @@ const Home: React.FC = () => {
       <div className="flex gap-5 sm:flex-col lg:flex-row">
         <FiltersDesktop />
         <div className="flex-1">
-          {isLoading && <p>Loading jobs...</p>}
+          {isLoading && (
+            <>
+              <h1 className='text-xl font-semibold mb-2'>Recommended Job</h1>
+              {Array.from({ length: 12 }).map((_, index) => (
+                <div className="flex flex-col gap-5">
+                  <SkeletonCard key={index} />
+                </div>
+              ))}
+            </>
+          )}
           {isError && <p>Error loading jobs.</p>}
           {data?.data?.jobs && <RecommendedJobs jobs={data.data.jobs} />}
         </div>
