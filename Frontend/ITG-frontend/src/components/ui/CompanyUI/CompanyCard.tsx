@@ -1,4 +1,3 @@
-import { ItgIcon } from '@/assets/images'
 import Company from '@/types/Company'
 import { Bookmark, MapPin } from 'lucide-react'
 import React from 'react'
@@ -10,10 +9,10 @@ interface Props{
 
 const CompanyCard: React.FC<Props> = ({company}) => {
   return (
-    <Link to={`/company/${company.id}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 w-full min-h-[170px] hover:shadow-lg transition-all justify-between'>
+    <Link to={`/company/${company.company_uuid}`} className='group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 w-full min-h-[170px] hover:shadow-lg transition-all justify-between'>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
-                <img className='w-full h-full object-cover' src={ItgIcon} alt="company Image" />
+                <img className='w-full h-full object-cover' src={company.company_logo} alt="company Image" />
             </div>
             <div className='flex flex-col'>
                 <h1 className='font-semibold group-hover:text-blue-600 transition-colors'>{company.company_name}</h1>

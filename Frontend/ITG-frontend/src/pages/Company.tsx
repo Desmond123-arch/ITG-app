@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import CompaniesGrid from "@/components/ui/CompanyUI/CompaniesGrid";
 import CustomPagination from "@/components/ui/CustomPagination";
 import { Input } from "@/components/ui/input";
+import SkeletonCard from "@/components/ui/SkeletonCard";
 import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -49,7 +50,9 @@ const Company: React.FC = () => {
   const [country, setCountry] = useState("")
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
-  const currentPage = useSearchParams()[0].get('page') || '1'
+  const searchParams = useSearchParams()[0];
+  const pageParam = searchParams.get('page');
+  const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
 
   const {data, isLoading, isError, refetch} = useQuery({
     queryKey: ['companies', search, country, currentPage],
@@ -74,9 +77,18 @@ const Company: React.FC = () => {
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
       <div className="flex gap-5">
-        {isLoading && <p>Loading companies...</p>}
-          {isError && <p>Error loading companies.</p>}
-          {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
+        {isLoading && (
+          <>
+            <h1 className='text-xl font-semibold mb-2'>Recommended Job</h1>
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div className="flex flex-col gap-5">
+                <SkeletonCard key={index} />
+              </div>
+            ))}
+          </>
+        )}
+        {isError && <p>Error loading companies.</p>}
+        {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
       </div>
       {
         data &&

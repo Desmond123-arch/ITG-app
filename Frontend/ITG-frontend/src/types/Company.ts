@@ -1,7 +1,7 @@
 interface Company {
   id: number;
   user_id: number;
-  uuid: string;
+  company_uuid: string;
   company_name: string;
   company_email: string;
   company_logo: string;
