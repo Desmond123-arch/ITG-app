@@ -571,7 +571,7 @@ const JobSeekerSignUp: React.FC = () => {
 
         console.log("submitted: ", response.data);
         const { user, token, role } = response.data;
-        dispatch(login({ user, token, role }));
+        dispatch(login({ user, token, role.roleName }));
         localStorage.setItem("data", JSON.stringify(response.data));
 
         navigate('/');
