@@ -23,7 +23,6 @@ import { logout } from '@/store/authSlice';
 
 const CustomSidebar: React.FC = () => {
   const role = useSelector((state: RootState) => state.auth.role);
-  console.log("user role: ", role)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

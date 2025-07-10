@@ -3,13 +3,13 @@ export interface User {
     name: string;
     email: string;
     phone: string;
-    disabilityType: string;
+    disability_type: string;
     location: string;
-    employmentStatus: string;
+    employment_status: string;
     university: string;
     degree: string;
-    jobLocationPreferences: string[];
+    job_location_preferences: string[];
     skills: string[];
-    resumeUrl: string;
-    imageUrl: string;
+    resume_url: string;
+    image_url: string;
 }
