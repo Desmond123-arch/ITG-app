@@ -3,13 +3,16 @@ export interface User {
     name: string;
     email: string;
     phone: string;
-    disability_type: string;
-    location: string;
-    employment_status: string;
-    university: string;
-    degree: string;
-    job_location_preferences: string[];
-    skills: string[];
-    resume_url: string;
-    image_url: string;
+    address: string;
+    imageUrl: string;
+    verificationStatus: string;
+    // employment_status: string;
+    // university: string;
+    // degree: string;
+    job_seeker?: {
+        disability_type: string;
+        skills: Array<string>;
+        resume_url: string;
+        preferred_job_location: string[];
+    }
 }
