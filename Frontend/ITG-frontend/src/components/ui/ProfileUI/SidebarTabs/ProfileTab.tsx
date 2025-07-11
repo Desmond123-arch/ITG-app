@@ -20,13 +20,15 @@ const ProfileTab: React.FC = () => {
         lastName: user?.name?.split(' ')[1] || '',
         email: user?.email || '',
         phone: user?.phone || '',
-        disabilityType: user?.disabilityType || '',
-        location: user?.location || '',
-        employmentStatus: user?.employmentStatus || '',
-        university: user?.university || '',
-        degree: user?.degree || '',
-        jobLocationPreferences: ['Remote', 'Accra'],
-        skills: ['Construction', 'Programming'],
+        address: user?.address || '',
+        // employmentStatus: user?.employmentStatus || '',
+        // university: user?.university || '',
+        // degree: user?.degree || '',
+        imageUrl: user?.imageUrl,
+        disabilityType: user?.job_seeker?.disability_type || '',
+        preferred_job_location: user?.job_seeker?.preferred_job_location,
+        resume_url: user?.job_seeker?.resume_url,
+        skills: user?.job_seeker?.skills || [],
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +63,7 @@ const ProfileTab: React.FC = () => {
                     <EditableField type='email' title="Email" name="email" placeholder='opokujohn@example.com' value={formData.email} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='number' minLength={10} maxLength={10} title="Phone Number" name="phone" placeholder='0123456789' value={formData.phone} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='text' title="Disability Type" name="disabilityType" placeholder='None' value={formData.disabilityType} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Location" name="location" placeholder='Accra, Ghana' value={formData.location} isEditing={isEditing} onChange={handleChange} />
+                    <EditableField type='text' title="Address" name="address" placeholder='Accra, Ghana' value={formData.address} isEditing={isEditing} onChange={handleChange} />
                 </main>
             </section>
 
@@ -84,9 +86,9 @@ const ProfileTab: React.FC = () => {
                     <ProfileSection title="Job Location Preference">
                         <MultiSelectSearch
                         isEditing={isEditing}
-                        selectedValues={formData.jobLocationPreferences}
+                        selectedValues={formData.preferred_job_location}
                         onSelectionChange={(values) =>
-                            setFormData((prev) => ({ ...prev, jobLocationPreferences: values }))
+                            setFormData((prev) => ({ ...prev, preferred_job_location: values }))
                         }
                         options={locations}
                         placeholder="Select job locations..."
