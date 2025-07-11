@@ -27,7 +27,7 @@ const ProfileTab: React.FC = () => {
       address: user?.address || '',
       imageUrl: user?.imageUrl || '',
       disabilityType: user?.job_seeker?.disability_type || '',
-      preferred_job_location: user?.job_seeker?.preferred_job_location || [],
+      preferred_job_location: user?.job_seeker?.preferred_job_location || '',
       resume_url: user?.job_seeker?.resume_url || '',
       skills: user?.job_seeker?.skills || [],
     }
@@ -44,7 +44,7 @@ const ProfileTab: React.FC = () => {
       skills: data.skills,
       resumeUrl: data.resume_url,
       preferredLocation: data.preferred_job_location,
-      role
+      role: role?.roleName
     };
 
     console.log('Sending body:', JSON.stringify(body, null, 2));
@@ -78,7 +78,7 @@ const ProfileTab: React.FC = () => {
       address: user?.address || '',
       imageUrl: user?.imageUrl || '',
       disabilityType: user?.job_seeker?.disability_type || '',
-      preferred_job_location: user?.job_seeker?.preferred_job_location || [],
+      preferred_job_location: user?.job_seeker?.preferred_job_location || '',
       resume_url: user?.job_seeker?.resume_url || '',
       skills: user?.job_seeker?.skills || [],
     });
@@ -160,7 +160,18 @@ const ProfileTab: React.FC = () => {
           <h1 className="font-semibold text-xl">Job Preferences & Skills</h1>
         </header>
         <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-          <ProfileSection title="Job Location Preference">
+          <div>
+            <p className='text-sm font-semibold text-gray-600'>Preferred Location</p>
+            <EditableField
+              type="text"
+              // title="Preferred Location"
+              value={watch('preferred_job_location')}
+              placeholder="Accra, Ghana"
+              isEditing={isEditing}
+              {...register('preferred_job_location')}
+            />
+          </div>
+          {/* <ProfileSection title="Job Location Preference">
             <Controller
               name="preferred_job_location"
               control={control}
@@ -177,7 +188,7 @@ const ProfileTab: React.FC = () => {
                 />
               )}
             />
-          </ProfileSection>
+          </ProfileSection> */}
 
           <ProfileSection title="Skills">
             <Controller

@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 interface EditableFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    title: string;
+    title?: string;
     isEditing: boolean;
 }
 
