@@ -67,7 +67,7 @@ const ProfileTab: React.FC = () => {
                 </main>
             </section>
 
-            <section>
+            {/* <section>
                 <header className="px-5 py-3">
                     <h1 className="font-semibold text-xl">Education & Employment</h1>
                 </header>
@@ -76,7 +76,7 @@ const ProfileTab: React.FC = () => {
                     <EditableField type='text' title="University or College" name="university" placeholder='University of Ghana' value={formData.university} isEditing={isEditing} onChange={handleChange} />
                     <EditableField type='text' title="Degree Type" name="degree" placeholder="Bachelor Degree" value={formData.degree} isEditing={isEditing} onChange={handleChange} />
                 </main>
-            </section>
+            </section> */}
 
             <section>
                 <header className="px-5 py-3">
