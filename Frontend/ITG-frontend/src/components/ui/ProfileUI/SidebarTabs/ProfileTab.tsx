@@ -1,5 +1,6 @@
 import { Pencil, X, MapPin, Hammer } from 'lucide-react';
 import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '../../button';
 import ProfileSection from '../ProfileTabUI/ProfileSection';
 import ResumeCard from '../ProfileTabUI/ResumeCard';
@@ -12,169 +13,214 @@ import { locations } from '@/data/location';
 import axios from 'axios';
 
 const ProfileTab: React.FC = () => {
-    const user = useSelector((state: RootState) => state.auth.user);
-    const token = useSelector((state: RootState) => state.auth.token)
-    const role = useSelector((state: RootState) => state.auth.role)
+  const user = useSelector((state: RootState) => state.auth.user);
+  const token = useSelector((state: RootState) => state.auth.token);
+  const role = useSelector((state: RootState) => state.auth.role);
+  const [isEditing, setIsEditing] = useState(false);
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        firstName: user?.name?.split(' ')[0] || '',
-        lastName: user?.name?.split(' ')[1] || '',
-        email: user?.email || '',
-        phone: user?.phone || '',
-        address: user?.address || '',
-        // employmentStatus: user?.employmentStatus || '',
-        // university: user?.university || '',
-        // degree: user?.degree || '',
-        imageUrl: user?.imageUrl,
-        disabilityType: user?.job_seeker?.disability_type || '',
-        preferred_job_location: user?.job_seeker?.preferred_job_location || [],
-        resume_url: user?.job_seeker?.resume_url,
-        skills: user?.job_seeker?.skills || [],
-    });
+  const { register, handleSubmit, control, reset, watch } = useForm({
+    defaultValues: {
+      firstName: user?.name?.split(' ')[0] || '',
+      lastName: user?.name?.split(' ')[1] || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      address: user?.address || '',
+      imageUrl: user?.imageUrl || '',
+      disabilityType: user?.job_seeker?.disability_type || '',
+      preferred_job_location: user?.job_seeker?.preferred_job_location || [],
+      resume_url: user?.job_seeker?.resume_url || '',
+      skills: user?.job_seeker?.skills || [],
+    }
+  });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+  const onSubmit = async (data: any) => {
+    const body = {
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      imageUrl: data.imageUrl,
+      disability_type: data.disabilityType,
+      skills: data.skills,
+      resumeUrl: data.resume_url,
+      preferredLocation: data.preferred_job_location,
+      role
     };
 
-    const handleSubmit = async () => {
-        const body = {
-            name: `${formData.firstName} ${formData.lastName}`,
-            email: formData.email,
-            phone: formData.phone,
-            address: formData.address,
-            imageUrl: formData.imageUrl,
-            disability_type: formData.disabilityType,
-            skills: formData.skills,
-            resumeUrl: formData.resume_url,
-            preferredLocation: formData.preferred_job_location,
-            role: role
-        };
-
-        console.log('Sending body:', JSON.stringify(body, null, 2));
-        try {
-            const response = await axios.patch(
-                `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
-                body,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );
-            if (response.status !== 200) {
-                throw new Error('Failed to update user');
-            }
-
-            setIsEditing(false);
-        } catch (err) {
-            console.error('Error updating user:', err);
+    console.log('Sending body:', JSON.stringify(body, null, 2));
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-    };
+      );
 
+      if (response.status !== 200) {
+        throw new Error('Failed to update user');
+      }
 
-    return (
-        <div className="bg-white shadow-sm rounded-md">
-            <section>
-                <header className="flex justify-between items-center px-5 py-3 border-b-[1px]">
-                    <h1 className="font-semibold text-xl">Personal Information</h1>
-                    {
-                        isEditing ? (
-                            <Button variant="destructive" onClick={() => setIsEditing(false)}>
-                                <X /> Cancel
-                            </Button>
-                        ) : (
-                            <Button variant="default" onClick={() => setIsEditing(true)}>
-                                <Pencil /> Edit
-                            </Button>
-                        )
-                    }
-                </header>
-                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <EditableField type='text' title="First Name" name="firstName" placeholder='John' value={formData.firstName} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Last Name" name="lastName" placeholder='Opoku' value={formData.lastName} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='email' title="Email" name="email" placeholder='opokujohn@example.com' value={formData.email} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='number' minLength={10} maxLength={10} title="Phone Number" name="phone" placeholder='0123456789' value={formData.phone} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Disability Type" name="disabilityType" placeholder='None' value={formData.disabilityType} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Address" name="address" placeholder='Accra, Ghana' value={formData.address} isEditing={isEditing} onChange={handleChange} />
-                </main>
-            </section>
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Error updating user:', err);
+    }
+  };
 
-            {/* <section>
-                <header className="px-5 py-3">
-                    <h1 className="font-semibold text-xl">Education & Employment</h1>
-                </header>
-                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <EditableField type='text' placeholder='Employed' title="Employment Status" name="employmentStatus" value={formData.employmentStatus} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="University or College" name="university" placeholder='University of Ghana' value={formData.university} isEditing={isEditing} onChange={handleChange} />
-                    <EditableField type='text' title="Degree Type" name="degree" placeholder="Bachelor Degree" value={formData.degree} isEditing={isEditing} onChange={handleChange} />
-                </main>
-            </section> */}
+  const handleCancel = () => {
+    reset({
+      firstName: user?.name?.split(' ')[0] || '',
+      lastName: user?.name?.split(' ')[1] || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      address: user?.address || '',
+      imageUrl: user?.imageUrl || '',
+      disabilityType: user?.job_seeker?.disability_type || '',
+      preferred_job_location: user?.job_seeker?.preferred_job_location || [],
+      resume_url: user?.job_seeker?.resume_url || '',
+      skills: user?.job_seeker?.skills || [],
+    });
+    setIsEditing(false);
+  };
 
-            <section>
-                <header className="px-5 py-3">
-                    <h1 className="font-semibold text-xl">Job Preferences & Skills</h1>
-                </header>
-                <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
-                    <ProfileSection title="Job Location Preference">
-                        <MultiSelectSearch
-                        isEditing={isEditing}
-                        selectedValues={formData.preferred_job_location}
-                        onSelectionChange={(values) =>
-                            setFormData((prev) => ({ ...prev, preferred_job_location: values }))
-                        }
-                        options={locations}
-                        placeholder="Select job locations..."
-                        icon={<MapPin className="w-4 h-4" />}
-                        searchPlaceholder="Search locations..."
-                        emptyText="No locations found."
-                        />
-                    </ProfileSection>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-sm rounded-md">
+      <section>
+        <header className="flex justify-between items-center px-5 py-3 border-b-[1px]">
+          <h1 className="font-semibold text-xl">Personal Information</h1>
+          {isEditing ? (
+            <Button variant="destructive" type="button" onClick={handleCancel}>
+              <X /> Cancel
+            </Button>
+          ) : (
+            <Button variant="default" type="button" onClick={() => setIsEditing(true)}>
+              <Pencil /> Edit
+            </Button>
+          )}
+        </header>
 
-                    <ProfileSection title="Skills">
-                        <MultiSelectSearch
-                        isEditing={isEditing}
-                        selectedValues={formData.skills}
-                        onSelectionChange={(values) =>
-                            setFormData((prev) => ({ ...prev, skills: values }))
-                        }
-                        options={skills}
-                        placeholder="Select skills..."
-                        icon={<Hammer className="w-4 h-4" />}
-                        searchPlaceholder="Search skills..."
-                        emptyText="No skills found."
-                        />
-                    </ProfileSection>
-                    </main>
+        <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
+          <EditableField
+            type="text"
+            title="First Name"
+            placeholder="John"
+            value={watch('firstName')}
+            isEditing={isEditing}
+            {...register('firstName')}
+          />
+          <EditableField
+            type="text"
+            title="Last Name"
+            placeholder="Opoku"
+            value={watch('lastName')}
+            isEditing={isEditing}
+            {...register('lastName')}
+          />
+          <EditableField
+            type="email"
+            title="Email"
+            value={watch('email')}
+            placeholder="opokujohn@example.com"
+            isEditing={isEditing}
+            {...register('email')}
+          />
+          <EditableField
+            type="number"
+            title="Phone Number"
+            value={watch('phone')}
+            placeholder="0123456789"
+            minLength={10}
+            maxLength={10}
+            isEditing={isEditing}
+            {...register('phone')}
+          />
+          <EditableField
+            type="text"
+            title="Disability Type"
+            placeholder="None"
+            isEditing={isEditing}
+            value={watch('disabilityType')}
+            {...register('disabilityType')}
+          />
+          <EditableField
+            type="text"
+            title="Address"
+            value={watch('address')}
+            placeholder="Accra, Ghana"
+            isEditing={isEditing}
+            {...register('address')}
+          />
+        </main>
+      </section>
 
-            </section>
+      <section>
+        <header className="px-5 py-3">
+          <h1 className="font-semibold text-xl">Job Preferences & Skills</h1>
+        </header>
+        <main className="flex flex-col gap-6 px-5 py-3 border-b-[1px] pb-5">
+          <ProfileSection title="Job Location Preference">
+            <Controller
+              name="preferred_job_location"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectSearch
+                  isEditing={isEditing}
+                  selectedValues={field.value}
+                  onSelectionChange={field.onChange}
+                  options={locations}
+                  placeholder="Select job locations..."
+                  icon={<MapPin className="w-4 h-4" />}
+                  searchPlaceholder="Search locations..."
+                  emptyText="No locations found."
+                />
+              )}
+            />
+          </ProfileSection>
 
-            <section className="flex flex-col gap-6 px-5 py-3">
-                <h1 className="font-semibold text-xl">My Resume</h1>
+          <ProfileSection title="Skills">
+            <Controller
+              name="skills"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectSearch
+                  isEditing={isEditing}
+                  selectedValues={field.value}
+                  onSelectionChange={field.onChange}
+                  options={skills}
+                  placeholder="Select skills..."
+                  icon={<Hammer className="w-4 h-4" />}
+                  searchPlaceholder="Search skills..."
+                  emptyText="No skills found."
+                />
+              )}
+            />
+          </ProfileSection>
+        </main>
+      </section>
 
-                <p>Pre-fill job applications when you add a resume.</p>
-                <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
-                {
-                    user?.job_seeker?.resume_url ?
-                    <>
-                        <ResumeCard user={user}/>
-                    </>: isEditing &&
-                    <Button>Upload a Resume</Button>
-                }
-                
-            </section>
+      <section className="flex flex-col gap-6 px-5 py-3">
+        <h1 className="font-semibold text-xl">My Resume</h1>
+        <p>Pre-fill job applications when you add a resume.</p>
+        <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
+        {user?.job_seeker?.resume_url ? (
+          <ResumeCard user={user} />
+        ) : (
+          isEditing && <Button>Upload a Resume</Button>
+        )}
+      </section>
 
-            {isEditing && (
-                <div className="flex justify-end px-5 py-3 gap-2">
-                    <Button onClick={handleSubmit}>Submit</Button>
-                    <Button variant="destructive" onClick={() => setIsEditing(false)}>
-                        <X /> Cancel
-                    </Button>
-                </div>
-            )}
+      {isEditing && (
+        <div className="flex justify-end px-5 py-3 gap-2">
+          <Button type="submit">Submit</Button>
+          <Button type="button" variant="destructive" onClick={handleCancel}>
+            <X /> Cancel
+          </Button>
         </div>
-    );
+      )}
+    </form>
+  );
 };
 
 export default ProfileTab;
