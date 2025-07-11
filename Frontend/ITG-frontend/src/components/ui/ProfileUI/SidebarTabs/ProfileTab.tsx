@@ -9,10 +9,11 @@ import EditableField from './EditableField';
 import MultiSelectSearch from '../ProfileTabUI/MultiSelectSearch';
 import { skills } from '@/data/skills';
 import { locations } from '@/data/location';
+import axios from 'axios';
 
 const ProfileTab: React.FC = () => {
     const user = useSelector((state: RootState) => state.auth.user);
-    console.log('user: ', user);
+    const token = useSelector((state: RootState) => state.auth.token)
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const ProfileTab: React.FC = () => {
         // degree: user?.degree || '',
         imageUrl: user?.imageUrl,
         disabilityType: user?.job_seeker?.disability_type || '',
-        preferred_job_location: user?.job_seeker?.preferred_job_location,
+        preferred_job_location: user?.job_seeker?.preferred_job_location || [],
         resume_url: user?.job_seeker?.resume_url,
         skills: user?.job_seeker?.skills || [],
     });
@@ -36,7 +37,21 @@ const ProfileTab: React.FC = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        console.log('form data: ', formData)
+        const response = await axios.patch(
+            `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
+            formData,
+            {
+                headers: {
+                    'Authentication': `Bearer ${token}`
+                }
+            }
+        )
+
+        if (response.status !== 200){
+            throw new Error('Failed to update user')
+        }
         setIsEditing(false);
     };
 
@@ -125,15 +140,18 @@ const ProfileTab: React.FC = () => {
                     user?.job_seeker?.resume_url ?
                     <>
                         <ResumeCard user={user}/>
-                    </>:
+                    </>: isEditing &&
                     <Button>Upload a Resume</Button>
                 }
                 
             </section>
 
             {isEditing && (
-                <div className="flex justify-end px-5 py-3">
+                <div className="flex justify-end px-5 py-3 gap-2">
                     <Button onClick={handleSubmit}>Submit</Button>
+                    <Button variant="destructive" onClick={() => setIsEditing(false)}>
+                        <X /> Cancel
+                    </Button>
                 </div>
             )}
         </div>

@@ -29,7 +29,7 @@ const fetchCompanies = async (
     `${import.meta.env.VITE_BACKEND_URL}/employers?${params.toString()}&limit=12`,
     {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${token}`,
       }
     }
   )

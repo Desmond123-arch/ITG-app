@@ -548,11 +548,7 @@ const EmployerSignUp = () => {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Form submitted with values:", values);
-
         try {
-            console.log("Submitting data...");
-
             const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`;
             const address = `${values.region}, ${values.country}`;
 

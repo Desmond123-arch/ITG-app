@@ -13,6 +13,6 @@ export interface User {
         disability_type: string;
         skills: Array<string>;
         resume_url: string;
-        preferred_job_location: string[];
+        preferred_job_location: Array<string>;
     }
 }
