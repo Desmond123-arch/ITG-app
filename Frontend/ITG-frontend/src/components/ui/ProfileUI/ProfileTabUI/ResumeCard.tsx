@@ -1,7 +1,12 @@
+import { User } from '@/types/User';
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover';
 import { FileBadge, Eye, Ellipsis } from 'lucide-react';
 
-const ResumeCard = () => (
+interface Props{
+    user: User|null
+}
+
+const ResumeCard: React.FC<Props> = ({user}) => (
     <div className="border rounded-md w-full p-5 md:min-w-[450px] sm:w-max">
         <div className="grid grid-cols-[20px_1fr_20px] w-full gap-5">
             <div className="relative top-1">

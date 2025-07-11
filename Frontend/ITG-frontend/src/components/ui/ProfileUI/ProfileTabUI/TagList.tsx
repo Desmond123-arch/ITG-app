@@ -9,7 +9,7 @@ interface TagListProps {
 
 const TagList: React.FC<TagListProps> = ({ items, onRemove, icon }) => (
   <div className="flex flex-wrap gap-2">
-    {items.map((item, index) => (
+    {items?.map((item, index) => (
       <span
         key={index}
         className="px-3 py-1 text-sm font-medium text-blue-700 shadow-sm hover:shadow-md transition-shadow bg-blue-100 rounded-full flex items-center gap-2"

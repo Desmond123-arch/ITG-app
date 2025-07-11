@@ -118,9 +118,17 @@ const ProfileTab: React.FC = () => {
 
             <section className="flex flex-col gap-6 px-5 py-3">
                 <h1 className="font-semibold text-xl">My Resume</h1>
+
                 <p>Pre-fill job applications when you add a resume.</p>
                 <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
-                <ResumeCard />
+                {
+                    user?.job_seeker?.resume_url ?
+                    <>
+                        <ResumeCard user={user}/>
+                    </>:
+                    <Button>Upload a Resume</Button>
+                }
+                
             </section>
 
             {isEditing && (
