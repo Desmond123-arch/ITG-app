@@ -14,6 +14,7 @@ import axios from 'axios';
 const ProfileTab: React.FC = () => {
     const user = useSelector((state: RootState) => state.auth.user);
     const token = useSelector((state: RootState) => state.auth.token)
+    const role = useSelector((state: RootState) => state.auth.role)
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -38,22 +39,40 @@ const ProfileTab: React.FC = () => {
     };
 
     const handleSubmit = async () => {
-        console.log('form data: ', formData)
-        const response = await axios.patch(
-            `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
-            formData,
-            {
-                headers: {
-                    'Authentication': `Bearer ${token}`
-                }
-            }
-        )
+        const body = {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            phone: formData.phone,
+            address: formData.address,
+            imageUrl: formData.imageUrl,
+            disability_type: formData.disabilityType,
+            skills: formData.skills,
+            resumeUrl: formData.resume_url,
+            preferredLocation: formData.preferred_job_location,
+            role: role
+        };
 
-        if (response.status !== 200){
-            throw new Error('Failed to update user')
+        console.log('Sending body:', JSON.stringify(body, null, 2));
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
+                body,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            if (response.status !== 200) {
+                throw new Error('Failed to update user');
+            }
+
+            setIsEditing(false);
+        } catch (err) {
+            console.error('Error updating user:', err);
         }
-        setIsEditing(false);
     };
+
 
     return (
         <div className="bg-white shadow-sm rounded-md">
