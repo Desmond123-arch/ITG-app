@@ -1,9 +1,10 @@
+import React, { useRef, useState, useEffect } from 'react'
+import axios from 'axios'
 import { UploadCloud } from 'lucide-react'
 import { useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
-import { updateImage } from '@/store/authSlice';
-import React, { useRef, useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { updateImage } from '@/store/authSlice'
 
 interface Props {
   open: boolean
@@ -22,38 +23,68 @@ const ImageUploadModal: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [tempImage, setTempImage] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const handleFileChange = (file: File) => {
+    setFile(file)
     const reader = new FileReader()
     reader.onload = () => {
-      if (reader.result) {
-        setTempImage(reader.result as string)
-      }
+      if (reader.result) setPreview(reader.result as string)
     }
     reader.readAsDataURL(file)
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
-    const file = e.dataTransfer.files[0]
-    if (file && file.type.startsWith('image/')) {
-      handleFileChange(file)
+    const droppedFile = e.dataTransfer.files[0]
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
+      handleFileChange(droppedFile)
     }
   }
 
-  const handleUpdate = () => {
-    if (tempImage) {
-      dispatch(updateImage(tempImage))
-      onUpdate(tempImage)
-      setTempImage(null)
+  const handleUpdate = async () => {
+    if (!file) return
+    setIsUploading(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/images/upload?isUpdate=true`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+
+      const publicUrl = res?.data?.data?.publicUrl
+
+      if (!publicUrl) {
+        throw new Error('Upload succeeded but no public URL returned.')
+      }
+
+      dispatch(updateImage(publicUrl))
+      onUpdate(publicUrl)
+
+      setFile(null)
+      setPreview(null)
       onOpenChange(false)
+    } catch (error) {
+      console.error('Image upload failed:', error)
+    } finally {
+      setIsUploading(false)
     }
   }
 
   useEffect(() => {
     if (!open) {
-      setTempImage(null)
+      setFile(null)
+      setPreview(null)
     }
   }, [open])
 
@@ -80,7 +111,7 @@ const ImageUploadModal: React.FC<Props> = ({
           >
             <div className="w-full mb-3 rounded overflow-hidden border bg-gray-50 max-h-[300px]">
               <img
-                src={tempImage || initialImage}
+                src={preview || initialImage}
                 alt="Preview"
                 className="w-full object-contain max-h-[300px]"
               />
@@ -96,8 +127,8 @@ const ImageUploadModal: React.FC<Props> = ({
               ref={fileInputRef}
               className="hidden"
               onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) handleFileChange(file)
+                const selectedFile = e.target.files?.[0]
+                if (selectedFile) handleFileChange(selectedFile)
               }}
             />
           </div>
@@ -106,8 +137,8 @@ const ImageUploadModal: React.FC<Props> = ({
             <Button onClick={() => onOpenChange(false)} variant="ghost">
               Cancel
             </Button>
-            <Button onClick={handleUpdate} disabled={!tempImage}>
-              Update
+            <Button onClick={handleUpdate} disabled={!file || isUploading}>
+              {isUploading ? 'Uploading...' : 'Update'}
             </Button>
           </div>
 
