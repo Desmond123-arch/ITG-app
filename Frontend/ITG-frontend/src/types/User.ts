@@ -1,11 +1,11 @@
 export interface User {
-    uuid: string;
+    uuid?: string;
     name: string;
     email: string;
     phone: string;
     address: string;
     imageUrl: string;
-    verificationStatus: string;
+    verificationStatus?: string;
     // employment_status: string;
     // university: string;
     // degree: string;

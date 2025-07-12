@@ -4,18 +4,24 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button } from '../../button';
 import ProfileSection from '../ProfileTabUI/ProfileSection';
 import ResumeCard from '../ProfileTabUI/ResumeCard';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import EditableField from './EditableField';
 import MultiSelectSearch from '../ProfileTabUI/MultiSelectSearch';
 import { skills } from '@/data/skills';
+import cn from 'classnames'
 // import { locations } from '@/data/location';
 import axios from 'axios';
+import { update } from '@/store/authSlice';
+import { User } from '@/types/User';
 
 const ProfileTab: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const token = useSelector((state: RootState) => state.auth.token);
   const role = useSelector((state: RootState) => state.auth.role);
+  console.log('user: ', user)
+  const dispatch = useDispatch()
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -61,14 +67,30 @@ const ProfileTab: React.FC = () => {
       );
 
       if (response.status !== 200) {
-        setIsLoading(false);
         throw new Error('Failed to update user');
       }
 
       setIsEditing(false);
-      setIsLoading(false);
+      const updatedUser: User = {
+        uuid: user?.uuid,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        address: body.address,
+        imageUrl: body.imageUrl,
+        verificationStatus: user?.verificationStatus,
+        job_seeker: {
+            disability_type: body.disability_type,
+            skills: body.skills,
+            resume_url: body.resumeUrl,
+            preferred_job_location: body.preferredLocation,
+        }
+      }
+      dispatch(update({user: {...updatedUser}, role}))
+      console.log('updated user')
     } catch (err) {
       console.error('Error updating user:', err);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -95,7 +117,17 @@ const ProfileTab: React.FC = () => {
         <header className="flex justify-between items-center px-5 py-3 border-b-[1px]">
           <h1 className="font-semibold text-xl">Personal Information</h1>
           {isEditing ? (
-            <Button variant="destructive" type="button" onClick={handleCancel}>
+            <Button
+              className={
+                cn(
+                  "flex justify-end px-5 py-3 gap-2",
+                  isLoading && 'pointer-events-none opacity-50'
+                )
+              }
+              variant="destructive"
+              type="button"
+              onClick={handleCancel}
+            >
               <X /> Cancel
             </Button>
           ) : (
@@ -222,13 +254,28 @@ const ProfileTab: React.FC = () => {
         {user?.job_seeker?.resume_url ? (
           <ResumeCard user={user} />
         ) : (
-          isEditing && <Button>Upload a Resume</Button>
+          isEditing && <Button className={
+            cn(
+              isLoading && 'pointer-events-none opacity-50'
+            )
+          }>Upload a Resume</Button>
         )}
       </section>
 
       {isEditing && (
-        <div className="flex justify-end px-5 py-3 gap-2">
-          <Button type="submit">Submit</Button>
+        <div className={
+            cn(
+              "flex justify-end px-5 py-3 gap-2",
+              isLoading && 'pointer-events-none opacity-50'
+            )
+          }>
+          <Button type="submit">
+            {
+              isLoading
+              ? <div className="w-5 h-5 border-2 border-t-white border-gray-400 rounded-full animate-spin"></div>
+              : <p>Submit</p>
+            }
+          </Button>
           <Button type="button" variant="destructive" onClick={handleCancel}>
             <X /> Cancel
           </Button>
