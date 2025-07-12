@@ -1,4 +1,4 @@
-import { Pencil, X, MapPin, Hammer } from 'lucide-react';
+import { Pencil, X, Hammer } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '../../button';
@@ -9,14 +9,15 @@ import { RootState } from '@/store';
 import EditableField from './EditableField';
 import MultiSelectSearch from '../ProfileTabUI/MultiSelectSearch';
 import { skills } from '@/data/skills';
-import { locations } from '@/data/location';
+// import { locations } from '@/data/location';
 import axios from 'axios';
 
 const ProfileTab: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const token = useSelector((state: RootState) => state.auth.token);
   const role = useSelector((state: RootState) => state.auth.role);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { register, handleSubmit, control, reset, watch } = useForm({
     defaultValues: {
@@ -34,6 +35,7 @@ const ProfileTab: React.FC = () => {
   });
 
   const onSubmit = async (data: any) => {
+    setIsLoading(true)
     const body = {
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
@@ -47,7 +49,6 @@ const ProfileTab: React.FC = () => {
       role: role?.roleName
     };
 
-    console.log('Sending body:', JSON.stringify(body, null, 2));
     try {
       const response = await axios.patch(
         `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
@@ -60,12 +61,15 @@ const ProfileTab: React.FC = () => {
       );
 
       if (response.status !== 200) {
+        setIsLoading(false);
         throw new Error('Failed to update user');
       }
 
       setIsEditing(false);
+      setIsLoading(false);
     } catch (err) {
       console.error('Error updating user:', err);
+      setIsLoading(false);
     }
   };
 
