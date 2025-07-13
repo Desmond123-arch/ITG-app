@@ -177,16 +177,20 @@ export function JobForm({ }) {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Job Type</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select job type" />
-                  </SelectTrigger>
-                  <SelectContent>
+                <FormControl>
+                  <select
+                    className="w-full rounded-md border px-3 py-2 text-base font-normal md:text-sm"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <option value="" disabled>Select job type</option>
                     {jobTypeOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </select>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -197,16 +201,20 @@ export function JobForm({ }) {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Status</FormLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
+                <FormControl>
+                  <select
+                    className="w-full rounded-md border px-3 py-2 text-base font-normal md:text-sm"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <option value="" disabled>Select status</option>
                     {statusOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </select>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
