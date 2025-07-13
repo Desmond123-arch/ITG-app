@@ -13,6 +13,7 @@ const Login = React.lazy(() => import("../pages/Login"))
 const Profile = React.lazy(() => import("../pages/Profile"))
 const CompanyAbout = React.lazy(() => import("../pages/CompanyAbout"))
 const PostJob = React.lazy(() => import("../pages/PostJob"))
+const AdminVerify = React.lazy(() => import("../pages/AdminVerify"))
 const protectedRoutes: RouteObject[] = [
     { path: pathConstants.Home, element: <Home /> },
     { path: "/home", element: <Home /> },
@@ -22,7 +23,8 @@ const protectedRoutes: RouteObject[] = [
     { path: "/profile", element: <Profile /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> },
-    { path: pathConstants.PostJob, element: <PostJob/>}
+    { path: pathConstants.PostJob, element: <PostJob/>},
+    { path: pathConstants.AdminVerify, element: <AdminVerify/>}
 ];
 
 const routes: RouteObject[] = protectedRoutes.map(route => ({
