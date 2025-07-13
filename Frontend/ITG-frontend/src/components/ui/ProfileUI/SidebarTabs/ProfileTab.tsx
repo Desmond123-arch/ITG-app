@@ -304,7 +304,9 @@ const ProfileTab: React.FC = () => {
         <p>Pre-fill job applications when you add a resume.</p>
         <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
         {user?.job_seeker?.resume_url ? (
-          <ResumeCard user={user} />
+          <ResumeCard
+            user={user}
+          />
         ) : (
           isEditing && (
             <>
