@@ -19,9 +19,9 @@ const ProfileTab: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const token = useSelector((state: RootState) => state.auth.token);
   const role = useSelector((state: RootState) => state.auth.role);
-  console.log('user: ', user)
   const dispatch = useDispatch()
 
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -254,11 +254,31 @@ const ProfileTab: React.FC = () => {
         {user?.job_seeker?.resume_url ? (
           <ResumeCard user={user} />
         ) : (
-          isEditing && <Button className={
-            cn(
-              isLoading && 'pointer-events-none opacity-50'
-            )
-          }>Upload a Resume</Button>
+          isEditing && (
+            <>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                id="resume-upload"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    setResumeFile(e.target.files[0]);
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                onClick={() => document.getElementById('resume-upload')?.click()}
+                className={cn(isLoading && 'pointer-events-none opacity-50')}
+              >
+                Upload a Resume
+              </Button>
+              {resumeFile && (
+                <p className="text-sm text-gray-600">Selected: {resumeFile.name}</p>
+              )}
+            </>
+          )
         )}
       </section>
 

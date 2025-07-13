@@ -6,7 +6,7 @@ interface Props{
     user: User|null
 }
 
-const ResumeCard: React.FC<Props> = ({user}) => (
+const ResumeCard: React.FC<Props> = () => (
     <div className="border rounded-md w-full p-5 md:min-w-[450px] sm:w-max">
         <div className="grid grid-cols-[20px_1fr_20px] w-full gap-5">
             <div className="relative top-1">
