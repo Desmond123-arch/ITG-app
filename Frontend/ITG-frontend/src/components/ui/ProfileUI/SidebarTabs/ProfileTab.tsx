@@ -86,7 +86,7 @@ const ProfileTab: React.FC = () => {
             preferred_job_location: body.preferredLocation,
         }
       }
-      dispatch(update({user: {...updatedUser}, role}))
+      dispatch(update({user: {...updatedUser}}))
       console.log('updated user')
     } catch (err) {
       console.error('Error updating user:', err);

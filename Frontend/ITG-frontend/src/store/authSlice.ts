@@ -17,10 +17,9 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        update: (state, action: PayloadAction<{user: User, role: Role|null}>) => {
+        update: (state, action: PayloadAction<{user: User}>) => {
             state.user = {...action.payload.user}
-            localStorage.setItem("user", JSON.stringify({...action.payload.user, role: action.payload.role}));
-            console.log('done updating user')
+            localStorage.setItem("user", JSON.stringify({...action.payload.user, role: state.role}));
         },
         login: (state, action: PayloadAction<{ user: User; token: string; role: Role }>) => {
             state.user = {...action.payload.user};
@@ -55,7 +54,7 @@ export const authSlice = createSlice({
         updateImage: (state, action: PayloadAction<string>) => {
             if (state.user) {
                 state.user.imageUrl = action.payload;
-                localStorage.setItem("user", JSON.stringify(state.user));
+                localStorage.setItem("user", JSON.stringify({...state.user, role: state.role}));
             }
         },
     },

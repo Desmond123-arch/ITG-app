@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react'
 import axios from 'axios'
 import { UploadCloud } from 'lucide-react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { updateImage } from '@/store/authSlice'
+import { RootState } from '@/store'
 
 interface Props {
   open: boolean
@@ -26,6 +27,7 @@ const ImageUploadModal: React.FC<Props> = ({
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const user = useSelector((state: RootState) => state.auth.user)
 
   const handleFileChange = (file: File) => {
     setFile(file)
@@ -50,10 +52,10 @@ const ImageUploadModal: React.FC<Props> = ({
 
     try {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('image', file)
 
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/images/upload?isUpdate=true`,
+        `${import.meta.env.VITE_BACKEND_URL}/images/upload?isUpdate=true&email=${user?.email}&bucketName=profile-images`,
         formData,
         {
           headers: {
