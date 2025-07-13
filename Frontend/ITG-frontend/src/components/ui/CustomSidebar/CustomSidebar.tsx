@@ -44,7 +44,7 @@ const CustomSidebar: React.FC = () => {
     employer: [
       { title: "Home", url: "/", icon: LayoutDashboard },
       { title: "Company", url: "/company", icon: Building2 },
-      { title: "Post a Job", url: "/post_job", icon: PlusCircle },
+      { title: "Post a Job", url: "/post", icon: PlusCircle },
       { title: "Job Listings", url: "/job_listings", icon: ListOrdered },
       { title: "Applicants", url: "/applicants", icon: UserCheck },
       { title: "Messages", url: "/messages", icon: MessageCircle },
