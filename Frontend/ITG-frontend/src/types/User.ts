@@ -1,15 +1,18 @@
 export interface User {
-    uuid: string;
+    uuid?: string;
     name: string;
     email: string;
     phone: string;
-    disabilityType: string;
-    location: string;
-    employmentStatus: string;
-    university: string;
-    degree: string;
-    jobLocationPreferences: string[];
-    skills: string[];
-    resumeUrl: string;
+    address: string;
     imageUrl: string;
+    verificationStatus?: string;
+    // employment_status: string;
+    // university: string;
+    // degree: string;
+    job_seeker?: {
+        disability_type: string;
+        skills: Array<string>;
+        resume_url: string;
+        preferred_job_location: string;
+    }
 }
