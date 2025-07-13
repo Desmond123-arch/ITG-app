@@ -80,7 +80,7 @@ const ProfileTab: React.FC = () => {
         formData.append('file', resumeFile);
 
         const uploadResponse = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/files/upload`,
+          `${import.meta.env.VITE_BACKEND_URL}/files/upload?isUpdate=true&email=${user?.email}&bucketName=resumes`,
           formData,
           {
             headers: {
@@ -90,8 +90,7 @@ const ProfileTab: React.FC = () => {
           }
         );
 
-        console.log('file uploaded succesfully: ', uploadResponse.data)
-        uploadedResumeUrl = uploadResponse.data.publicUrl;
+        uploadedResumeUrl = uploadResponse.data.data.publicUrl;
       }
 
       const body = {
@@ -141,7 +140,6 @@ const ProfileTab: React.FC = () => {
       };
 
       dispatch(update({ user: { ...updatedUser } }));
-      console.log('updated user');
     } catch (err) {
       console.error('Error updating user:', err);
     } finally {
@@ -301,7 +299,7 @@ const ProfileTab: React.FC = () => {
         </main>
       </section>
 
-      <section className="flex flex-col gap-6 px-5 py-3">
+      <section className="flex flex-col gap-5 px-5 py-3">
         <h1 className="font-semibold text-xl">My Resume</h1>
         <p>Pre-fill job applications when you add a resume.</p>
         <p>Your resume can be visible to hiring employers or you can keep it hidden.</p>
@@ -321,16 +319,19 @@ const ProfileTab: React.FC = () => {
                   }
                 }}
               />
-              <Button
-                type="button"
-                onClick={() => document.getElementById('resume-upload')?.click()}
-                className={cn(isLoading && 'pointer-events-none opacity-50')}
-              >
-                Upload a Resume
-              </Button>
-              {resumeFile && (
-                <p className="text-sm text-gray-600">Selected: {resumeFile.name}</p>
-              )}
+              
+              <div className='w-full flex flex-col gap-1'>
+                <Button
+                  type="button"
+                  onClick={() => document.getElementById('resume-upload')?.click()}
+                  className={cn(isLoading && 'pointer-events-none opacity-50', 'w-full')}
+                >
+                  Upload a Resume
+                </Button>
+                {resumeFile && (
+                  <p className="text-md text-black">{resumeFile.name}</p>
+                )} 
+              </div>
             </>
           )
         )}
