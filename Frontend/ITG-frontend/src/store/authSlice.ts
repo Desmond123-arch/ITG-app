@@ -57,12 +57,6 @@ export const authSlice = createSlice({
                 localStorage.setItem("user", JSON.stringify({...state.user, role: state.role}));
             }
         },
-        updateResume: (state, action: PayloadAction<string>) => {
-            if (state.user && state.user.job_seeker) {
-                state.user.job_seeker.resume_url = action.payload;
-                localStorage.setItem("user", JSON.stringify({...state.user, role: state.role}));
-            }
-        },
     },
 });
 

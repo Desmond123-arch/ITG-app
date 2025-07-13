@@ -41,28 +41,79 @@ const ProfileTab: React.FC = () => {
   });
 
   const onSubmit = async (data: any) => {
-    setIsLoading(true)
-    const body = {
-      name: `${data.firstName} ${data.lastName}`,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      imageUrl: data.imageUrl,
-      disability_type: data.disabilityType,
-      skills: data.skills,
-      resumeUrl: data.resume_url,
-      preferredLocation: data.preferred_job_location,
-      role: role?.roleName
-    };
+    const isSameAsCurrent = () => {
+      const currentData = {
+        firstName: user?.name?.split(' ')[0] || '',
+        lastName: user?.name?.split(' ')[1] || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        address: user?.address || '',
+        imageUrl: user?.imageUrl || '',
+        disabilityType: user?.job_seeker?.disability_type || '',
+        preferred_job_location: user?.job_seeker?.preferred_job_location || '',
+        resume_url: user?.job_seeker?.resume_url || '',
+        skills: JSON.stringify(user?.job_seeker?.skills || []),
+      };
 
+      const formValues = {
+        ...data,
+        skills: JSON.stringify(data.skills),
+      };
+      type CurrentDataKeys = keyof typeof currentData;
+
+      return (Object.keys(currentData) as CurrentDataKeys[]).every(
+        (key) => currentData[key] === formValues[key]
+      ) && !resumeFile;
+    };
+    
+    if (isSameAsCurrent()) {
+      setIsEditing(false);
+      return;
+    }
+
+    setIsLoading(true)
     try {
+      let uploadedResumeUrl = data.resume_url;
+
+      if (resumeFile) {
+        const formData = new FormData();
+        formData.append('file', resumeFile);
+
+        const uploadResponse = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/files/upload`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        console.log('file uploaded succesfully: ', uploadResponse.data)
+        uploadedResumeUrl = uploadResponse.data.publicUrl;
+      }
+
+      const body = {
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        imageUrl: data.imageUrl,
+        disability_type: data.disabilityType,
+        skills: data.skills,
+        resumeUrl: uploadedResumeUrl,
+        preferredLocation: data.preferred_job_location,
+        role: role?.roleName,
+      };
+
       const response = await axios.patch(
         `${import.meta.env.VITE_BACKEND_URL}/auth/update`,
         body,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -71,6 +122,8 @@ const ProfileTab: React.FC = () => {
       }
 
       setIsEditing(false);
+      setResumeFile(null);
+
       const updatedUser: User = {
         uuid: user?.uuid,
         name: body.name,
@@ -80,14 +133,15 @@ const ProfileTab: React.FC = () => {
         imageUrl: body.imageUrl,
         verificationStatus: user?.verificationStatus,
         job_seeker: {
-            disability_type: body.disability_type,
-            skills: body.skills,
-            resume_url: body.resumeUrl,
-            preferred_job_location: body.preferredLocation,
-        }
-      }
-      dispatch(update({user: {...updatedUser}}))
-      console.log('updated user')
+          disability_type: body.disability_type,
+          skills: body.skills,
+          resume_url: body.resumeUrl,
+          preferred_job_location: body.preferredLocation,
+        },
+      };
+
+      dispatch(update({ user: { ...updatedUser } }));
+      console.log('updated user');
     } catch (err) {
       console.error('Error updating user:', err);
     } finally {
