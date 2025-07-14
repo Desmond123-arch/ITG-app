@@ -8,6 +8,7 @@ const pathConstants = {
     Company: "company",
     CompanyAbout: 'company/:id',
     PostJob: "post",
+    JobListings: "job_listings",
     AdminVerify: "admin/verify"
 }
 

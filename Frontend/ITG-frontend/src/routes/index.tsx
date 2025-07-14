@@ -2,6 +2,7 @@ import React from "react";
 import pathConstants from "./pathConstants";
 import { RouteObject } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
+import JobListings from "@/pages/JobListings";
 
 const Home = React.lazy(() => import("../pages/Home"))
 const Company = React.lazy(() => import("../pages/Company"))
@@ -22,6 +23,7 @@ const protectedRoutes: RouteObject[] = [
     { path: pathConstants.Company, element: <Company /> },
     { path: "/settings", element: <Settings /> },
     { path: "/profile", element: <Profile /> },
+    { path: "/job_listings", element: <JobListings /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> },
     { path: pathConstants.PostJob, element: <PostJob/>},
