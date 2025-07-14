@@ -176,7 +176,9 @@ export default function CompanyAbout() {
                             <div className='lg:mr-1 w-full'>
                                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline ml-4 md:ml-0'>Related jobs</h3>
                                 <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
+                                    {console.log(data.jobs)}
                                     {
+                                        
                                         data.jobs.length > 0 ?
                                         data.jobs.map((job: Job, index: number) => (
                                             <JobItem key={index} job={job} />

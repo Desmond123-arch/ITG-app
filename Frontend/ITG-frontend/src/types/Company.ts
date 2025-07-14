@@ -1,4 +1,8 @@
 interface Company {
+  employee_count: ReactNode;
+  headquarters: ReactNode;
+  employee_count: ReactNode;
+  headquarters: ReactNode;
   id: number;
   user_id: number;
   uuid: string;

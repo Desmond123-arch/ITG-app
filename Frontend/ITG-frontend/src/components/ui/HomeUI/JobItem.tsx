@@ -9,6 +9,7 @@ interface Props{
 }
 
 const JobItem: React.FC<Props> = ({job, page}) => {
+    // console.log(job.jobId)
   return (
     <Link to={`/job/${job.id}`} className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${page == "job" ? "" : "lg:w-[calc(33.33333%-12px)]"} hover:shadow-lg transition-all justify-between`}>
         <div className='flex gap-2'>
