@@ -1,41 +1,49 @@
+import { Role } from "@/types/Role";
 import { User } from "@/types/User";
-import { ProfilePic } from "@/assets/images";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
     user: User | null;
     token: string | null;
+    role: Role | null
 }
 const initialState: AuthState = {
     user: null,
     token: null,
+    role: null
 };
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        login: (state, action: PayloadAction<{ user: User; token: string }>) => {
+        update: (state, action: PayloadAction<{user: User}>) => {
+            state.user = {...action.payload.user}
+            localStorage.setItem("user", JSON.stringify({...action.payload.user, role: state.role}));
+        },
+        login: (state, action: PayloadAction<{ user: User; token: string; role: Role }>) => {
             state.user = {...action.payload.user};
             state.token = action.payload.token;
+            state.role = action.payload.role;
             localStorage.setItem("accessToken", action.payload.token);
-            localStorage.setItem("user", JSON.stringify({...action.payload.user, imageUrl: ProfilePic}));
+            localStorage.setItem("user", JSON.stringify({...action.payload.user, role: action.payload.role}));
         },
         logout: (state) => {
             state.user = null;
             state.token = null;
+            state.role = null;
             localStorage.removeItem("accessToken");
             localStorage.removeItem("user");
         },
         loadAuthFromStorage: (state) => {
-            console.log("Loading auth from storage");
             const storedUser = localStorage.getItem("user");
             const storedToken = localStorage.getItem("accessToken");
             try {
                 if (storedUser && storedToken) {
                     const parsedUser = JSON.parse(storedUser);
-                    state.user = { ...parsedUser, imageUrl: ProfilePic };
+                    state.user = { ...parsedUser };
                     state.token = storedToken;
+                    state.role = parsedUser.role;
                 }
             } catch (err) {
                 console.error("Failed to parse stored user:", err);
@@ -46,12 +54,12 @@ export const authSlice = createSlice({
         updateImage: (state, action: PayloadAction<string>) => {
             if (state.user) {
                 state.user.imageUrl = action.payload;
-                localStorage.setItem("user", JSON.stringify(state.user));
+                localStorage.setItem("user", JSON.stringify({...state.user, role: state.role}));
             }
         },
     },
 });
 
-export const { login, logout, loadAuthFromStorage, updateImage } = authSlice.actions;
+export const { update, login, logout, loadAuthFromStorage, updateImage } = authSlice.actions;
 
 export default authSlice.reducer;

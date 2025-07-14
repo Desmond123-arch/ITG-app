@@ -1,8 +1,12 @@
 import React from 'react'
 import CompanyCard from './CompanyCard'
-import companies from '@/data/CompaniesData'
+import Company from '@/types/Company'
 
-const CompaniesGrid: React.FC = () => {
+interface Props{
+    companies: Array<Company>
+}
+
+const CompaniesGrid: React.FC<Props> = ({ companies }) => {
     return (
         <div className='flex flex-col gap-3 w-full'>
             <div className='flex flex-col md:flex-row md:justify-between md:items-center'>

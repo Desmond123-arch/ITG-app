@@ -1,8 +1,13 @@
 import React from 'react'
 import JobsGrid from './JobsGrid'
 import FilterDrawer from './FilterDrawer'
+import { Job } from '@/types/Job'
 
-const RecommendedJobs: React.FC = () => {
+interface Props{
+    jobs: Array<Job>
+}
+
+const RecommendedJobs: React.FC<Props> = ({jobs}) => {
     return (
         <div className='flex flex-col gap-3 w-full'>
             <div className='flex justify-between items-center'>
@@ -12,7 +17,7 @@ const RecommendedJobs: React.FC = () => {
                     <FilterDrawer/>
                 </div>
             </div>
-            <JobsGrid/>
+            <JobsGrid jobs={jobs} />
         </div>
     )
 }

@@ -1,6 +1,4 @@
-import { Job } from "@/types/Job";
-
-const jobs: Job[] = [
+const jobs: any[] = [
     {
         id: 1,
         employerId: 101,

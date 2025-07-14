@@ -1,8 +1,12 @@
 import React from 'react'
 import JobItem from './JobItem'
-import jobs from '@/data/JobsData'
+import { Job } from '@/types/Job'
 
-const JobsGrid: React.FC = () => {
+interface Props{
+    jobs: Array<Job>
+}
+
+const JobsGrid: React.FC<Props> = ({ jobs }) => {
   return (
     <div className='grid grid-cols-1 lg:flex flex-wrap md:grid-cols-2 gap-3'>
       {

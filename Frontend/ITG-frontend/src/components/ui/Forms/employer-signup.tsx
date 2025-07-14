@@ -548,11 +548,7 @@ const EmployerSignUp = () => {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Form submitted with values:", values);
-
         try {
-            console.log("Submitting data...");
-
             const description = `<p>${values.company_mission}</p><p>${values.company_culture}</p><p>${values.company_product}</p>`;
             const address = `${values.region}, ${values.country}`;
 
@@ -610,8 +606,8 @@ const EmployerSignUp = () => {
             );
 
             console.log("Submitted successfully:", response.data);
-            const { user, token } = response.data;
-            dispatch(login({ user, token }));
+            const { user, token, role } = response.data;
+            dispatch(login({ user, token, role }));
             localStorage.setItem("data", JSON.stringify(response.data));
             
             navigate('/');
@@ -630,7 +626,7 @@ const EmployerSignUp = () => {
     return (
         <div>
             <Form {...form}>
-                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={(e) => {
+                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 py-5" onSubmit={(e) => {
                     form.handleSubmit(onSubmit)(e);
                 }} onKeyDown={(e) => {
                     if (e.key === "Enter") {

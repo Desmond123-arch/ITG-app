@@ -557,7 +557,7 @@ const JobSeekerSignUp: React.FC = () => {
             address: values.address,
             password: values.password,
             confirmPassword: values.confirm_password,
-            disabilityType: values.disabilityType,
+            disability_type: values.disabilityType,
             preferredLocation: values.preferredLocation,
             skills: values.skills,
             resumeUrl,
@@ -570,8 +570,8 @@ const JobSeekerSignUp: React.FC = () => {
         );
 
         console.log("submitted: ", response.data);
-        const { user, token } = response.data;
-        dispatch(login({ user, token }));
+        const { user, token, role } = response.data;
+        dispatch(login({ user, token, role }));
         localStorage.setItem("data", JSON.stringify(response.data));
 
         navigate('/');
@@ -587,7 +587,7 @@ const JobSeekerSignUp: React.FC = () => {
     return (
         <div>
             <Form {...form}>
-                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 border" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="flex flex-col p-2 md:p-5 w-full mx-auto rounded-md max-w-3xl gap-2 py-5" onSubmit={form.handleSubmit(onSubmit)}>
                     <MultiStepViewer form={form} />
                 </form>
             </Form>

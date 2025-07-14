@@ -1,6 +1,4 @@
-import Company from "@/types/Company";
-
-const companies: Company[] = [
+const companies: any[] = [
     {
         id: 1,
         name: "Tech Innovators Inc.",

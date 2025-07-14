@@ -17,8 +17,9 @@ const AdminVerify = React.lazy(() => import("../pages/AdminVerify"))
 const protectedRoutes: RouteObject[] = [
     { path: pathConstants.Home, element: <Home /> },
     { path: "/home", element: <Home /> },
-    { path: "/company/", element: <Company /> },
-    { path: "/company/:id", element: <CompanyAbout /> },
+    { path: pathConstants.CompanyAbout, element: <CompanyAbout /> },
+    { path: `${pathConstants.Company}/`, element: <Company /> },
+    { path: pathConstants.Company, element: <Company /> },
     { path: "/settings", element: <Settings /> },
     { path: "/profile", element: <Profile /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
