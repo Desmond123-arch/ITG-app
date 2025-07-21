@@ -77,7 +77,7 @@ const Company: React.FC = () => {
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
       <div className="flex gap-5">
-        {!isLoading && (
+        {isLoading && (
           <div className='flex flex-col gap-3 w-full'>
             <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
                 <h1 className='text-xl font-semibold'>Companies</h1>
@@ -92,7 +92,7 @@ const Company: React.FC = () => {
         </div>
         )}
         {isError && <p>Error loading companies.</p>}
-        {/* {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />} */}
+        {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
       </div>
       {
         data &&
