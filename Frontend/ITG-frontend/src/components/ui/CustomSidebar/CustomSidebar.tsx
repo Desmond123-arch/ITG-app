@@ -9,7 +9,6 @@ import {
   Users2,
   PlusCircle,
   UserCheck,
-  MessageCircle,
   ListOrdered,
   Settings,
   LogOut,
@@ -38,7 +37,6 @@ const CustomSidebar: React.FC = () => {
       { title: "Profile", url: "/profile", icon: UserCircle2 },
       { title: "Saved Jobs", url: "/saved_jobs", icon: Bookmark },
       { title: "Applications", url: "/applications", icon: FileText },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
     employer: [
@@ -47,14 +45,12 @@ const CustomSidebar: React.FC = () => {
       { title: "Post a Job", url: "/post", icon: PlusCircle },
       { title: "Job Listings", url: "/job_listings", icon: ListOrdered },
       { title: "Applicants", url: "/applicants", icon: UserCheck },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
     admin: [
       { title: "Dashboard", url: "/dashboard", icon: BarChart3 },
       { title: "Manage Users", url: "/manage_users", icon: Users2 },
       { title: "Manage Jobs", url: "/manage_jobs", icon: ListOrdered },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
       { title: "Settings", url: "/settings", icon: Settings },
     ]
   }

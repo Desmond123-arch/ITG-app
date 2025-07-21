@@ -42,7 +42,7 @@ const JobListings: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-2xl font-bold mb-4">Your Job Listings</h1>
+      <h1 className='text-xl font-semibold'>Your Job Listings</h1>
       {isLoading && <p>Loading jobs...</p>}
       {isError && <p>Error loading jobs.</p>}
       {data?.data && <JobsGrid jobs={data.data} />}
