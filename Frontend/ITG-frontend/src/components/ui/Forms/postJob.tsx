@@ -89,14 +89,13 @@ export function JobForm({ }) {
     );
 
     console.log("Job created successfully:", response.data);
-    // Handle successful submission (e.g., show success message, redirect, etc.)
-    
+    form.reset()
+    window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error: any) {
     console.error("Error submitting job form:", error);
     if (error.response) {
       console.error("Server responded with:", error.response.data);
     }
-    // Handle error (e.g., show error message to user)
   }
 }  
 
