@@ -65,7 +65,7 @@ const JobDescription = () => {
         <div className="flex justify-between lg:flex-row flex-col">
             {/* JOB DETAIL */}
             <div className='w-full md:w-[90%] mx-auto lg:w-[68%] flex flex-col gap-5'>
-                <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center">
+                <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center border lg:min-h-[90px]">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
                             <img src={data.current_job.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
@@ -127,7 +127,7 @@ const JobDescription = () => {
             {/* RELATED JOBS */}
             <div className='lg:mr-1 lg:w-[30%] w-full'>
                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline md:ml-0'>Related jobs</h3>
-                <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
+                <div className="flex hidden_scrollbar lg:h-[450px] rounded-lg overflow-x-scroll pb-3 lg:pb-0 md:grid sm:grid-cols-3 md:grid-cols-2 lg:flex lg:flex-col lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
                     {data.jobs_list.filter((job: Job) => job && job.id != id).slice(0, 5).map((job: Job, index: number) => (
                         <JobItem key={index} job={job} page="job" />
                     ))}
