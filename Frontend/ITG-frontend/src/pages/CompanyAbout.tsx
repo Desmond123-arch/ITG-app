@@ -58,7 +58,7 @@ export default function CompanyAbout() {
     return (
         <div className="max-w-5xl mx-auto p-4 md:p-6">
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="bg-green-900 h-20 relative"></div>
+                <div className="bg-green-600 h-20 relative"></div>
 
                 <div className="px-4 md:px-6 pb-6 relative">
                     <div className="flex flex-col md:flex-row gap-4 items-start md:items-center -mt-10 md:-mt-16 mb-6">
@@ -175,10 +175,8 @@ export default function CompanyAbout() {
                         <TabsContent value="jobs" className="w-full">
                             <div className='lg:mr-1 w-full'>
                                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline ml-4 md:ml-0'>Related jobs</h3>
-                                <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
-                                    {console.log(data.jobs)}
+                                <div className="flex py-5 hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
                                     {
-                                        
                                         data.jobs.length > 0 ?
                                         data.jobs.map((job: Job, index: number) => (
                                             <JobItem key={index} job={job} />
