@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Bookmark } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 
 const fetchJobDetail = async(token: string | null, jobId: string | undefined) => {
     if (!token) throw new Error("No token provided");
@@ -46,6 +47,7 @@ const fetchJobDetail = async(token: string | null, jobId: string | undefined) =>
 const JobDescription = () => {
     const token = useSelector((state: RootState) => state.auth.token)
     const {id} = useParams<{id: string}>();
+    const [isApplying, setIsApplying] = useState(false);
 
     const {data, isLoading, isError} = useQuery({
         queryKey: ['jobDetail', id],
@@ -53,8 +55,32 @@ const JobDescription = () => {
         enabled: !!token,
     });
 
+    const handleApply = async () => {
+        if (!token || !id) return;
+        try {
+            setIsApplying(true);
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/applications`,
+                { jobId: id },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            console.log("Application response:", res.data);
+            alert("Successfully applied for the job!");
+        } catch (err) {
+            console.error("Failed to apply for the job", err);
+            alert("Failed to apply for the job.");
+        } finally {
+            setIsApplying(false);
+        }
+    };
+
     if (isLoading) {
-        return <CustomLoader/>;
+        return <CustomLoader />;
     }
 
     if (isError || !data) {
@@ -68,7 +94,7 @@ const JobDescription = () => {
                 <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center border lg:min-h-[90px]">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
-                            <img src={data.current_job.companyLogo} className="w-full h-full rounded-full object-center object-cover"  alt='Company logo'/>
+                            <img src={data.current_job.companyLogo} className="w-full h-full rounded-full object-center object-cover" alt='Company logo' />
                         </div>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold mb-2'>{data.current_job.title}</h2>
@@ -81,12 +107,20 @@ const JobDescription = () => {
                         </div>
                     </div>
                     <div className='ml-auto flex items-center gap-2 w-[90%] md:w-[20%]'>
-                        <Bookmark color='gray' size={25} className='hover:cursor-pointer md: order-1 sm:order-2' aria-label="Save job to bookmarks"/>
-                        <Button className='p-5 w-[80%] md:order-2 sm:order-1' aria-label='Apply for job'>Apply</Button>
+                        <Bookmark color='gray' size={25} className='hover:cursor-pointer md:order-1 sm:order-2' aria-label="Save job to bookmarks" />
+                        <Button 
+                            className='p-5 w-[80%] md:order-2 sm:order-1' 
+                            aria-label='Apply for job' 
+                            onClick={handleApply}
+                            disabled={isApplying}
+                        >
+                            {isApplying ? "Applying..." : "Apply"}
+                        </Button>
                     </div>
                 </div>
+
                 <div className='bg-white rounded-md p-5 flex flex-col gap-4'>
-                    {/* Job descriptions */}
+                    {/* Job Descriptions */}
                     <section>
                         <h3 className='text-md font-semibold text-gray-700'>Job Descriptions</h3>
                         <ul className='list-disc ml-4 mt-3' role='list'>
@@ -128,7 +162,7 @@ const JobDescription = () => {
             <div className='lg:mr-1 lg:w-[30%] w-full'>
                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline md:ml-0'>Related jobs</h3>
                 <div className="flex hidden_scrollbar lg:h-[450px] rounded-lg overflow-x-scroll pb-3 lg:pb-0 md:grid sm:grid-cols-3 md:grid-cols-2 lg:flex lg:flex-col lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
-                    {data.jobs_list.filter((job: Job) => job && job.id != id).slice(0, 5).map((job: Job, index: number) => (
+                    {data.jobs_list.filter((job: Job) => job && job.id !== id).slice(0, 5).map((job: Job, index: number) => (
                         <JobItem key={index} job={job} page="job" />
                     ))}
                 </div>
