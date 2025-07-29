@@ -103,7 +103,7 @@ const ProfileTab: React.FC = () => {
         skills: data.skills,
         resumeUrl: uploadedResumeUrl,
         preferredLocation: data.preferred_job_location,
-        role: role?.roleName,
+        role: role,
       };
 
       const response = await axios.patch(

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import CustomPagination from "@/components/ui/CustomPagination";
 import JobsGrid from "@/components/ui/HomeUI/JobsGrid";
 

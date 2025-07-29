@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
-import { Building2 } from "lucide-react"
+
 // You may want to create a dedicated VerifyJobTab component for modularity, but for now, inline UI is used.
 
 // Mock data for unverified jobs

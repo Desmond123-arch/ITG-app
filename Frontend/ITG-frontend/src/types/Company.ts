@@ -1,8 +1,6 @@
 interface Company {
-  employee_count: ReactNode;
-  headquarters: ReactNode;
-  employee_count: ReactNode;
-  headquarters: ReactNode;
+  employee_count: number | string;
+  headquarters: string;
   id: number;
   user_id: number;
   uuid: string;
@@ -16,4 +14,4 @@ interface Company {
   specialties?: string[] | null;
 }
 
-export default Company
+export default Company;
