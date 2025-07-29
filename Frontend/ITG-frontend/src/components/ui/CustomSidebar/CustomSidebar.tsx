@@ -59,8 +59,9 @@ const CustomSidebar: React.FC = () => {
     ]
   }
 
-  const items = role?.roleName == 'admin' ? roleBasedItems.admin : role?.roleName == 'employer' ? roleBasedItems.employer : roleBasedItems.seeker
+  const items = role == 'admin' ? roleBasedItems.admin : role == 'employer' ? roleBasedItems.employer : roleBasedItems.seeker
 
+  console.log(role)
   return (
     <nav className="bg-[#110d59] relative h-screen lg:w-[230px] w-[270px] py-3 px-4 text-white overflow-y-scroll hidden_scrollbar">
       <div className="flex gap-3 items-center mb-5">

@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface AuthState {
     user: User | null;
     token: string | null;
-    role: Role | null
+    role: "job_seeker" | "admin" | "employer" | null;
 }
 const initialState: AuthState = {
     user: null,
@@ -21,10 +21,11 @@ export const authSlice = createSlice({
             state.user = {...action.payload.user}
             localStorage.setItem("user", JSON.stringify({...action.payload.user, role: state.role}));
         },
-        login: (state, action: PayloadAction<{ user: User; token: string; role: Role }>) => {
+        login: (state, action: PayloadAction<{ user: User; token: string; role: "job_seeker" | "admin" | "employer" | null }>) => {
             state.user = {...action.payload.user};
             state.token = action.payload.token;
             state.role = action.payload.role;
+
             localStorage.setItem("accessToken", action.payload.token);
             localStorage.setItem("user", JSON.stringify({...action.payload.user, role: action.payload.role}));
         },
