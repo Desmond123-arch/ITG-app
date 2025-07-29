@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import CompaniesGrid from "@/components/ui/CompanyUI/CompaniesGrid";
 import CustomPagination from "@/components/ui/CustomPagination";
 import { Input } from "@/components/ui/input";
 import SkeletonCard from "@/components/ui/SkeletonCard";
@@ -8,98 +7,115 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { NavigateFunction, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import JobItem from "@/components/ui/HomeUI/JobItem";
 
-const fetchCompanies = async (
-    token: string | null,
-    search: string,
-    country: string,
-    currentPage: string,
-    navigate: NavigateFunction
-  ) => {
-  if(!token) {throw new Error("No token provided")}
+const fetchApplications = async (
+  token: string | null,
+  search: string,
+  page: string
+) => {
+  if (!token) throw new Error("No token provided");
 
-  const params = new URLSearchParams()
-  if(search) {params.append('search', search)}
-  if(country) {params.append('country', country)}
-  params.append('page', currentPage)
-  console.log("Current page:", currentPage)
+  const params = new URLSearchParams();
+  if (search) params.append("search", search);
+  params.append("page", page);
+  params.append("limit", "10");
 
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/employers?${params.toString()}&limit=12`,
+    `${import.meta.env.VITE_BACKEND_URL}/applications?${params.toString()}`,
     {
       headers: {
-        'Authorization': `Bearer ${token}`,
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
-  )
+  );
 
   if (response.status !== 200) {
-    throw new Error("Failed to fetch companies");
-  }
-  if(response.data.meta.totalPages < Number(currentPage)) {
-    navigate(`/company?page=${response.data.meta.totalPages}`);
+    throw new Error("Failed to fetch applications");
   }
 
-  console.log("Fetched companies:", response.data);
+  console.log('reponse data: ', response.data)
   return response.data;
-}
+};
 
 const JobSeekerApplications: React.FC = () => {
-  const [search, setSearch] = useState("")
-  const [country, setCountry] = useState("")
-  const navigate = useNavigate()
-  const token = useSelector((state: RootState) => state.auth.token)
-  const searchParams = useSearchParams()[0];
-  const pageParam = searchParams.get('page');
-  const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const token = useSelector((state: RootState) => state.auth.token);
 
-  const {data, isLoading, isError, refetch} = useQuery({
-    queryKey: ['companies', search, country, currentPage],
-    queryFn: () => fetchCompanies(token, search, country, currentPage, navigate),
+  const searchParams = useSearchParams()[0];
+  const pageParam = searchParams.get("page");
+  const currentPage = pageParam && pageParam !== "0" ? pageParam : "1";
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["applications", search, currentPage],
+    queryFn: () => fetchApplications(token, search, currentPage),
     enabled: !!token,
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    navigate(`/applications?page=1&search=${encodeURIComponent(search)}`);
     refetch();
-  }
+  };
 
   return (
-    <div onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <form className="flex gap-2 sm:gap-3 md:gap-5 flex-col sm:flex-row">
+    <div className="flex flex-col gap-5">
+      <form
+        onSubmit={handleSubmit}
+        className="flex gap-2 sm:gap-3 md:gap-5 flex-col sm:flex-row"
+      >
         <div className="flex-1">
-          <Input onChange={(e) => {setCountry(e.target.value)}} className="bg-white/60" placeholder="Country" type="text"/>
-        </div>
-        <div className="flex-1">
-          <Input onChange={(e) => {setSearch(e.target.value)}} className="bg-white/60" placeholder="Search Company" type="text"/>
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+            className="bg-white/60"
+            placeholder="Search company name"
+            type="text"
+          />
         </div>
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
-      <div className="flex gap-5">
+
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+          <h1 className="text-xl font-semibold">Your Applications</h1>
+        </div>
+
         {isLoading && (
-          <div className='flex flex-col gap-3 w-full'>
-            <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
-                <h1 className='text-xl font-semibold'>Companies</h1>
-            </div>
-            <div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-3'>
-                {Array.from({ length: 12 }).map((_, index) => (
-              <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-3">
-                <SkeletonCard key={index} />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonCard key={index} />
             ))}
-            </div>
-        </div>
+          </div>
         )}
-        {isError && <p>Error loading companies.</p>}
-        {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}
+
+        {isError && <p>Error loading applications.</p>}
+
+        {data?.data?.jobs?.length === 0 && !isLoading && (
+          <p>No applications found.</p>
+        )}
+
+        {data?.data?.jobs && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-3">
+            {data.data.jobs.map((job: any, index: number) => (
+              <JobItem key={index} job={job} page="applications" />
+            ))}
+          </div>
+        )}
       </div>
-      {
-        data &&
+
+      {data?.meta && (
         <div className="flex justify-center mt-5 relative">
-          <CustomPagination baseUrl={'/company'} currentPage={Number(currentPage)} totalPages={data?.meta?.totalPages} count={data?.meta?.count} />
+          <CustomPagination
+            baseUrl={"/applications"}
+            currentPage={Number(currentPage)}
+            totalPages={data.meta.totalPages}
+            count={data.meta.count}
+          />
         </div>
-      }
+      )}
     </div>
   );
 };
