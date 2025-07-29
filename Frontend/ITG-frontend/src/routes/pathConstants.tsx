@@ -10,7 +10,8 @@ const pathConstants = {
     PostJob: "post",
     JobListings: "job_listings",
     ManageUsers: "manage_users",
-    ManageJobs: "manage_jobs"
+    ManageJobs: "manage_jobs",
+    Applicants: "applicants"
 }
 
 export default pathConstants;
