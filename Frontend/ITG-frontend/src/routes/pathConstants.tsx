@@ -5,9 +5,13 @@ const pathConstants = {
     JobDescription:"job/:id",
     SignUp: "sign-up",
     Login: "login",
+    Company: "company",
     CompanyAbout: 'company/:id',
     PostJob: "post",
-    AdminVerify: "admin/verify"
+    JobListings: "job_listings",
+    ManageUsers: "manage_users",
+    ManageJobs: "manage_jobs",
+    Applicants: "applicants"
 }
 
 export default pathConstants;

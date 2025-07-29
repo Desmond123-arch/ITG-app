@@ -2,6 +2,7 @@ import React from "react";
 import pathConstants from "./pathConstants";
 import { RouteObject } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
+import JobListings from "@/pages/JobListings";
 
 const Home = React.lazy(() => import("../pages/Home"))
 const Company = React.lazy(() => import("../pages/Company"))
@@ -14,17 +15,23 @@ const Profile = React.lazy(() => import("../pages/Profile"))
 const CompanyAbout = React.lazy(() => import("../pages/CompanyAbout"))
 const PostJob = React.lazy(() => import("../pages/PostJob"))
 const AdminVerify = React.lazy(() => import("../pages/AdminVerify"))
+const AdminVerifyJobs = React.lazy(() => import("../pages/AdminVerifyJobs"))
+const Applicants = React.lazy(() => import("../pages/Applicants"))
 const protectedRoutes: RouteObject[] = [
     { path: pathConstants.Home, element: <Home /> },
     { path: "/home", element: <Home /> },
-    { path: "/company/", element: <Company /> },
-    { path: "/company/:id", element: <CompanyAbout /> },
+    { path: pathConstants.CompanyAbout, element: <CompanyAbout /> },
+    { path: `${pathConstants.Company}/`, element: <Company /> },
+    { path: pathConstants.Company, element: <Company /> },
     { path: "/settings", element: <Settings /> },
     { path: "/profile", element: <Profile /> },
+    { path: "/job_listings", element: <JobListings /> },
     { path: pathConstants.JobDescription, element: <JobDescription /> },
     { path: pathConstants.About, element: <About /> },
     { path: pathConstants.PostJob, element: <PostJob/>},
-    { path: pathConstants.AdminVerify, element: <AdminVerify/>}
+    { path: pathConstants.ManageUsers, element: <AdminVerify /> },
+    { path: pathConstants.ManageJobs, element: <AdminVerifyJobs /> },
+    { path: pathConstants.Applicants, element: <Applicants /> }
 ];
 
 const routes: RouteObject[] = protectedRoutes.map(route => ({

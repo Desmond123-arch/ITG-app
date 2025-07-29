@@ -9,8 +9,9 @@ interface Props{
 }
 
 const JobItem: React.FC<Props> = ({job, page}) => {
+    // console.log(job.jobId)
   return (
-    <Link to={`/job/${job.jobId}`} className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${page == "job" ? "" : "lg:w-[calc(33.33333%-12px)]"} hover:shadow-lg transition-all justify-between`}>
+    <Link to={`/job/${job.id}`} className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${page == "job" ? "" : "lg:w-[calc(33.33333%-12px)]"} hover:shadow-lg transition-all justify-between`}>
         <div className='flex gap-2'>
             <div className='rounded-full overflow-hidden w-12 h-12'>
                 <img className='w-full h-full object-cover' src={job.companyLogo} alt="Job Image" />
@@ -20,7 +21,9 @@ const JobItem: React.FC<Props> = ({job, page}) => {
                 <p className='text-gray-500 text-sm'>{job.companyName}</p>
             </div>
         </div>
-        <p className='text-gray-800 text-[16px]'>{job.description}</p>
+        <p className='text-gray-800 text-[16px]'>
+          {Array.isArray(job.description) ? job.description.join(', ') : job.description}
+        </p>
         <div className='flex justify-between'>
             <div className='flex gap-2'>
                 <div className='flex items-center gap-[2px]'>

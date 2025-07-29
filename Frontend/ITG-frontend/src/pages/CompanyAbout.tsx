@@ -16,7 +16,7 @@ import { Job } from "@/types/Job"
 const fetchCompanyData = async (id: string, token: string | null) => {
     if (!token) throw new Error("No token provided");
     if (!id) throw new Error("No company ID provided");
-
+    console.log("Fetching company data for ID:", id)
     const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/employers/${id}?getJobs=true`,
         {
@@ -31,8 +31,8 @@ const fetchCompanyData = async (id: string, token: string | null) => {
     
     console.log("Company data fetched:", response)
     return {
-        company: response.data.data,
-        jobs: response.data.meta.jobs
+        company: response.data.data || response.data,
+        jobs: response.data.meta?.jobs || []
     }
 }
 
@@ -52,7 +52,7 @@ export default function CompanyAbout() {
     }
 
     if (isError || !data) {
-        return <div className="max-w-5xl mx-auto p-4 md:p-6">Error loading company data.company.</div>
+        return <div className="max-w-5xl mx-auto p-4 md:p-6">Error loading company data.</div>
     }
 
     return (
@@ -112,7 +112,7 @@ export default function CompanyAbout() {
                                         <div className="text-gray-700 whitespace-pre-line">{data.company.company_description}</div>
                                     </div>
 
-                                    {data.company.specialties && data.company.specialties.length > 0 && (
+                                    {data.company.specialties && Array.isArray(data.company.specialties) && data.company.specialties.length > 0 && (
                                         <div>
                                             <h2 className="text-xl font-semibold mb-3">Specialties</h2>
                                             <div className="flex flex-wrap gap-2">
@@ -153,31 +153,17 @@ export default function CompanyAbout() {
                                                 </dd>
                                             </div>
 
-                                            {data.company.industry && (
+                                            {data.company.industry && data.company.industry !== "None" && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Industry</dt>
                                                     <dd className="text-sm">{data.company.industry}</dd>
                                                 </div>
                                             )}
 
-                                            {data.company.headquarters && (
-                                                <div>
-                                                    <dt className="text-sm text-gray-500">Headquarters</dt>
-                                                    <dd className="text-sm">{data.company.headquarters}</dd>
-                                                </div>
-                                            )}
-
-                                            {data.company.founded_year && (
+                                            {data.company.founded && data.company.founded !== "None" && (
                                                 <div>
                                                     <dt className="text-sm text-gray-500">Founded</dt>
-                                                    <dd className="text-sm">{data.company.founded_year}</dd>
-                                                </div>
-                                            )}
-
-                                            {data.company.employee_count && (
-                                                <div>
-                                                    <dt className="text-sm text-gray-500">Company size</dt>
-                                                    <dd className="text-sm">{data.company.employee_count} employees</dd>
+                                                    <dd className="text-sm">{data.company.founded}</dd>
                                                 </div>
                                             )}
                                         </dl>
@@ -190,7 +176,9 @@ export default function CompanyAbout() {
                             <div className='lg:mr-1 w-full'>
                                 <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0 self-baseline ml-4 md:ml-0'>Related jobs</h3>
                                 <div className="flex hidden_scrollbar rounded-lg overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
+                                    {console.log(data.jobs)}
                                     {
+                                        
                                         data.jobs.length > 0 ?
                                         data.jobs.map((job: Job, index: number) => (
                                             <JobItem key={index} job={job} />
