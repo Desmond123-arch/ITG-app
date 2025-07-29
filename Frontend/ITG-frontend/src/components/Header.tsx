@@ -28,7 +28,7 @@ const Header = () => {
                         showSidebar ? <X/> : <Menu/>
                         }
                     </div>
-                    <h1 className="text-2xl font-semibold">{pageName}</h1>
+                    <h1 className="text-2xl font-semibold">{pageName.replace(/_/g, " ")}</h1>
                 </div>
                 <div className="cursor-pointer relative md:hidden block">
                     <Bell size={20}/>

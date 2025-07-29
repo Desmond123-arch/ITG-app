@@ -36,7 +36,7 @@ const CustomSidebar: React.FC = () => {
       { title: "Company", url: "/company", icon: Building2 },
       { title: "Profile", url: "/profile", icon: UserCircle2 },
       { title: "Saved Jobs", url: "/saved_jobs", icon: Bookmark },
-      { title: "Applications", url: "/applications", icon: FileText },
+      { title: "Applications", url: "/job_seeker_applications", icon: FileText },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
     employer: [
