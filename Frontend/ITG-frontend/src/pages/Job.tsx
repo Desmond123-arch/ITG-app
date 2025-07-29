@@ -94,7 +94,7 @@ const JobDescription = () => {
                 <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center border lg:min-h-[90px]">
                     <div className='flex items-center gap-4'>
                         <div className="w-14 h-14 flex-shrink-0">
-                            <img src={data.current_job.companyLogo} className="w-full h-full rounded-full object-center object-cover" alt='Company logo' />
+                            <img src={data.current_job.companyLogo} className="w-full h-full shadow rounded-sm object-center object-cover" alt='Company logo' />
                         </div>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold mb-2'>{data.current_job.title}</h2>
