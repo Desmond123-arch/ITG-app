@@ -32,7 +32,7 @@ const ResumeCard: React.FC<Props> = ({ user, onRefresh }) => {
     if (!user?.email) return;
     setIsLoading(true);
     try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/files`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/files/${user.job_seeker?.resume_url}`, {
         params: { email: user.email, bucketName: BUCKET_NAME },
       });
 
