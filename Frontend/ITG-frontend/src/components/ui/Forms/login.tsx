@@ -37,6 +37,7 @@ export const LoginForm = () => {
                 const { user, accessToken, role } = data;
                 dispatch(login({ user, token: accessToken, role }));
                 axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+                console.log('logged in successfully')
 
                 const [savedJobsRes, applicationsRes] = await Promise.all([
                     axios.get(`${import.meta.env.VITE_BACKEND_URL}/jobseeker/saved`, {
@@ -47,8 +48,13 @@ export const LoginForm = () => {
                     })
                 ]);
 
-                const savedJobIds = savedJobsRes.data.data.jobs.map((job: any) => job.id.toString());
-                const appliedJobIds = applicationsRes.data.data.applications.map((app: any) => app.jobId.toString());
+                console.log('gotten all data')
+                console.log("saved jobs: ", savedJobsRes.data.data)
+                console.log("saved applications: ", applicationsRes.data)
+                const savedJobIds = savedJobsRes.data.data.map((job: any) => job.job.id.toString());
+                console.log('done mapping jobs: ', savedJobIds)
+                const appliedJobIds = applicationsRes.data.data.jobs.map((app: any) => app.id.toString());
+                console.log('done mapping appliactions', appliedJobIds)
 
                 dispatch(setSavedJobs(savedJobIds));
                 dispatch(setAppliedJobs(appliedJobIds));

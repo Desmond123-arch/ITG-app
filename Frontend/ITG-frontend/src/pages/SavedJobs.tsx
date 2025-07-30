@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import JobItem from "@/components/ui/HomeUI/JobItem";
 
-const fetchApplications = async (
+const fetchSavedJobs = async (
   token: string | null,
   search: string,
   page: string
@@ -23,7 +23,7 @@ const fetchApplications = async (
   params.append("limit", "10");
 
   const response = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/applications?${params.toString()}`,
+    `${import.meta.env.VITE_BACKEND_URL}/jobseeker/saved?${params.toString()}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -32,15 +32,15 @@ const fetchApplications = async (
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to fetch applications");
+    throw new Error("Failed to fetch saved jobs");
   }
 
+  console.log("got jobs", response.data)
   return response.data;
 };
 
 const SavedJobs: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
-  // const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = searchParams.get("page");
@@ -50,8 +50,8 @@ const SavedJobs: React.FC = () => {
   const [activeSearch, setActiveSearch] = useState("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["applications", activeSearch, currentPage],
-    queryFn: () => fetchApplications(token, activeSearch, currentPage),
+    queryKey: ["savedJobs", activeSearch, currentPage],
+    queryFn: () => fetchSavedJobs(token, activeSearch, currentPage),
     enabled: !!token,
   });
 
@@ -72,7 +72,7 @@ const SavedJobs: React.FC = () => {
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
             className="bg-white/60"
-            placeholder="Search company name"
+            placeholder="Search by company name"
             type="text"
           />
         </div>
@@ -92,16 +92,16 @@ const SavedJobs: React.FC = () => {
           </div>
         )}
 
-        {isError && <p>Error loading applications.</p>}
+        {isError && <p className="text-red-500">Error loading saved jobs.</p>}
 
         {!isLoading && data?.data?.jobs?.length === 0 && (
-          <p>No applications found.</p>
+          <p>No saved jobs found.</p>
         )}
 
         {data?.data?.jobs && (
           <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-3">
             {data.data.jobs.map((job: any, index: number) => (
-              <JobItem key={index} job={job} page="applications" />
+              <JobItem key={index} job={job} page="saved" />
             ))}
           </div>
         )}
@@ -110,7 +110,7 @@ const SavedJobs: React.FC = () => {
       {data?.meta && (
         <div className="flex justify-center mt-5 relative">
           <CustomPagination
-            baseUrl="/applications"
+            baseUrl="/saved-jobs"
             currentPage={Number(currentPage)}
             totalPages={data.meta.totalPages}
             count={data.meta.count}

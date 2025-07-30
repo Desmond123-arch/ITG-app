@@ -1,16 +1,21 @@
-import { Job } from '@/types/Job'
-import { Bookmark, MapPin, CheckCircle, XCircle, PencilLine } from 'lucide-react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Job } from '@/types/Job';
+import { Bookmark, BookmarkCheck, MapPin, CheckCircle, XCircle, PencilLine } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 interface Props {
-  job: Job
+  job: Job;
   page?: string;
 }
 
 const JobItem: React.FC<Props> = ({ job, page }) => {
   const now = new Date();
   const isClosed = new Date(job?.deadline!) < now;
+
+  const savedJobIds = useSelector((state: RootState) => state.savedJobs.jobIds);
+  const isSaved = job.id !== undefined && savedJobIds.includes(job.id.toString());
 
   const getStatusInfo = () => {
     if (isClosed) {
@@ -38,7 +43,12 @@ const JobItem: React.FC<Props> = ({ job, page }) => {
   const statusInfo = getStatusInfo();
 
   return (
-    <Link to={`/job/${job.id}`} className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${page === "job" ? "" : "lg:w-[calc(33.33333%-12px)]"} hover:shadow-lg transition-all justify-between`}>
+    <Link
+      to={`/job/${job.id}`}
+      className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${
+        page === "job" ? "" : "lg:w-[calc(33.33333%-12px)]"
+      } hover:shadow-lg transition-all justify-between`}
+    >
       <div className='flex gap-2'>
         <div className='rounded-full overflow-hidden w-12 h-12'>
           <img className='w-full h-full object-cover' src={job.companyLogo} alt="Job Logo" />
@@ -48,7 +58,7 @@ const JobItem: React.FC<Props> = ({ job, page }) => {
           <p className='text-gray-500 text-sm'>{job.companyName}</p>
         </div>
       </div>
-      
+
       <p className='text-gray-800 text-[16px] line-clamp-2'>
         {Array.isArray(job.description) ? job.description.join(', ') : job.description}
       </p>
@@ -64,7 +74,12 @@ const JobItem: React.FC<Props> = ({ job, page }) => {
             <span className='text-sm'>{job.location}</span>
           </div>
         </div>
-        <Bookmark size={20} className='text-black/50' />
+
+        {isSaved ? (
+          <BookmarkCheck size={20} className="text-green-600" />
+        ) : (
+          <Bookmark size={20} className="text-black/50" />
+        )}
       </div>
     </Link>
   );

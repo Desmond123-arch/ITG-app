@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { addSavedJob, removeSavedJob } from '@/store/savedJobsSlice';
-import { addAppliedJob } from '@/store/seekerApplicationSlice';
+import { addAppliedJob, removeAppliedJob } from '@/store/seekerApplicationSlice';
 
 const fetchJobDetail = async (token: string | null, jobId: string | undefined) => {
   if (!token) throw new Error("No token provided");
@@ -27,10 +27,6 @@ const fetchJobDetail = async (token: string | null, jobId: string | undefined) =
     `${import.meta.env.VITE_BACKEND_URL}/jobs?limit=6`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
-
-  if (current_job_response.status !== 200) {
-    throw new Error("Failed to fetch job details");
-  }
 
   return {
     current_job: current_job_response.data.data.job,
@@ -56,7 +52,6 @@ const JobDescription = () => {
     enabled: !!token,
   });
 
-  // Set initial toggle state from store or fetch endpoint if needed
   useEffect(() => {
     if (id) {
       setIsSaved(savedIds.includes(id));
@@ -65,10 +60,10 @@ const JobDescription = () => {
   }, [id, savedIds, appliedIds]);
 
   const handleApply = async () => {
-    if (!token || !id || isApplied) return;
+    if (!token || !id) return;
     try {
       setIsApplying(true);
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/applications`,
         { jobId: id },
         {
@@ -78,12 +73,19 @@ const JobDescription = () => {
           },
         }
       );
-      setIsApplied(true);
-      dispatch(addAppliedJob(id));
-      toast.success("Successfully applied for the job!");
+      const { applied } = res.data.data;
+
+      setIsApplied(applied);
+      if (applied) {
+        dispatch(addAppliedJob(id));
+        toast.success("Successfully applied for the job!");
+      } else {
+        dispatch(removeAppliedJob(id));
+        toast.success("Application removed.");
+      }
     } catch (err) {
-      console.error("Failed to apply:", err);
-      toast.error("Failed to apply for the job.");
+      console.error("Failed to toggle application:", err);
+      toast.error("Could not update application.");
     } finally {
       setIsApplying(false);
     }
@@ -105,11 +107,7 @@ const JobDescription = () => {
       );
       const newState = res.data.saved;
       setIsSaved(newState);
-      if (newState) {
-        dispatch(addSavedJob(id));
-      } else {
-        dispatch(removeSavedJob(id));
-      }
+      newState ? dispatch(addSavedJob(id)) : dispatch(removeSavedJob(id));
       toast.success(newState ? 'Job saved!' : 'Job removed from saved list');
     } catch (error) {
       console.error("Toggle save failed:", error);
@@ -126,7 +124,6 @@ const JobDescription = () => {
 
   return (
     <div className="flex justify-between lg:flex-row flex-col">
-      {/* JOB DETAIL */}
       <div className='w-full md:w-[90%] mx-auto lg:w-[68%] flex flex-col gap-5'>
         <div className="flex flex-wrap bg-white rounded-md px-5 py-2 gap-6 items-center border lg:min-h-[90px]">
           <div className='flex items-center gap-4'>
@@ -156,9 +153,9 @@ const JobDescription = () => {
               className='p-5 w-[80%] md:order-2 sm:order-1'
               aria-label='Apply for job'
               onClick={handleApply}
-              disabled={isApplying || isApplied}
+              disabled={isApplying}
             >
-              {isApplied ? "Applied" : isApplying ? "Applying..." : "Apply"}
+              {isApplying ? "Processing..." : isApplied ? "Unapply" : "Apply"}
             </Button>
           </div>
         </div>
@@ -167,7 +164,7 @@ const JobDescription = () => {
           <section>
             <h3 className='text-md font-semibold text-gray-700'>Job Descriptions</h3>
             <ul className='list-disc ml-4 mt-3'>
-              {current_job.description.map((info, idx) => (
+              {current_job.description.map((info: string, idx: number) => (
                 <li key={idx} className='flex items-center gap-2'><span className='bg-gray-500 h-1 w-1 rounded-full'/>{info}</li>
               ))}
             </ul>
@@ -176,7 +173,7 @@ const JobDescription = () => {
           <section>
             <h3 className='text-md font-semibold text-gray-700 mb-3 mt-3'>Skills</h3>
             <ul className='flex gap-2 ml-2'>
-              {current_job.skills.map((skill, idx) => (
+              {current_job.skills.map((skill: string, idx: number) => (
                 <li key={idx} className='bg-blue-200 rounded-md p-1 px-2 text-[#28246F]'>{skill}</li>
               ))}
             </ul>
@@ -185,7 +182,7 @@ const JobDescription = () => {
           <section>
             <h3 className='text-md font-semibold text-gray-700 mt-4'>Requirements</h3>
             <ul className='list-disc ml-4 mt-3'>
-              {current_job.requirements.map((detail, idx) => (
+              {current_job.requirements.map((detail: string, idx: number) => (
                 <li key={idx} className='flex items-center gap-2'><span className='bg-gray-500 h-1 w-1 rounded-full'/>{detail}</li>
               ))}
             </ul>
@@ -210,9 +207,12 @@ const JobDescription = () => {
       <div className='lg:mr-1 lg:w-[30%] w-full'>
         <h3 className='text-md font-bold text-gray-700 mt-4 md:mt-0'>Related jobs</h3>
         <div className="flex hidden_scrollbar lg:h-[450px] overflow-x-scroll md:grid sm:grid-cols-3 md:grid-cols-2 lg:flex flex-col lg:grid-cols-1 gap-3 mt-3 mx-auto md:w-full place-items-stretch">
-          {jobs_list.filter((job: Job) => job && job.id !== id).slice(0, 5).map((job, idx) => (
-            <JobItem key={idx} job={job} page="job" />
-          ))}
+          {jobs_list
+            .filter((job: Job) => job && job.id !== id)
+            .slice(0, 5)
+            .map((job: Job, idx: number) => (
+              <JobItem key={idx} job={job} page="job" />
+            ))}
         </div>
       </div>
     </div>

@@ -37,8 +37,8 @@ const Applicants = () => {
   }
 
   return (
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-6">Applicants Management</h2>
+    <div className="">
+      <h2 className="text-xl mb-2">Applicants Management</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {applicants.map(applicant => (
           <Card key={applicant.applicationId} className="p-6 flex flex-col gap-3">
