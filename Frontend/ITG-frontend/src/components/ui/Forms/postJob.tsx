@@ -11,6 +11,9 @@ import { format } from "date-fns"
 import { Button } from "../button"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../calendar"
+import axios from "axios"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
 
 const jobTypeOptions = [
   { value: "full_time", label: "Full Time" },
@@ -39,6 +42,8 @@ const formSchema = z.object({
 })
 
 export function JobForm({ }) {
+  const token = useSelector((state: RootState) => state.auth.token)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,13 +60,44 @@ export function JobForm({ }) {
     }
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      console.log("submitting");
-      console.log(values);
-    } catch (error) {
-      throw error;
+  try {
+    const formattedDeadline = values.deadline.toISOString();
+
+    const jobData = {
+      title: values.title,
+      description: [values.description],
+      skills: values.skills,
+      requirements: values.requirements.split('\n').filter(line => line.trim()),
+      location: values.location,
+      yearsOfExperience: values.yearsOfExperience,
+      salaryRange: values.salaryRange,
+      jobType: values.jobType,
+      status: values.status,
+      deadline: formattedDeadline,
+    };
+    console.log('job data: ', jobData)
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/jobs`,
+      jobData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Job created successfully:", response.data);
+    form.reset()
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (error: any) {
+    console.error("Error submitting job form:", error);
+    if (error.response) {
+      console.error("Server responded with:", error.response.data);
     }
   }
+}  
 
   return (
     <div className="w-full">
@@ -240,7 +276,12 @@ export function JobForm({ }) {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                      />
                     </PopoverContent>
                   </Popover>
                 </FormControl>

@@ -139,6 +139,7 @@ const ProfileTab: React.FC = () => {
         },
       };
 
+      console.log('updatedUser', updatedUser);
       dispatch(update({ user: { ...updatedUser } }));
     } catch (err) {
       console.error('Error updating user:', err);

@@ -78,14 +78,18 @@ const Company: React.FC = () => {
       </form>
       <div className="flex gap-5">
         {isLoading && (
-          <>
-            <h1 className='text-xl font-semibold mb-2'>Recommended Job</h1>
-            {Array.from({ length: 12 }).map((_, index) => (
-              <div className="flex flex-col gap-5">
+          <div className='flex flex-col gap-3 w-full'>
+            <div className='flex flex-col md:flex-row md:justify-between md:items-center'>
+                <h1 className='text-xl font-semibold'>Companies</h1>
+            </div>
+            <div className='grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-3'>
+                {Array.from({ length: 12 }).map((_, index) => (
+              <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-3">
                 <SkeletonCard key={index} />
               </div>
             ))}
-          </>
+            </div>
+        </div>
         )}
         {isError && <p>Error loading companies.</p>}
         {data?.data?.employers && <CompaniesGrid companies={data.data.employers} />}

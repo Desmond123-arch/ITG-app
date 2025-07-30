@@ -9,9 +9,8 @@ import {
   Users2,
   PlusCircle,
   UserCheck,
-  MessageCircle,
   ListOrdered,
-  Settings,
+  // Settings,
   LogOut,
 } from 'lucide-react';
 import LinkItem from './LinkItem';
@@ -37,9 +36,8 @@ const CustomSidebar: React.FC = () => {
       { title: "Company", url: "/company", icon: Building2 },
       { title: "Profile", url: "/profile", icon: UserCircle2 },
       { title: "Saved Jobs", url: "/saved_jobs", icon: Bookmark },
-      { title: "Applications", url: "/applications", icon: FileText },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
-      { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Applications", url: "/job_seeker_applications", icon: FileText },
+      // { title: "Settings", url: "/settings", icon: Settings },
     ],
     employer: [
       { title: "Home", url: "/", icon: LayoutDashboard },
@@ -47,15 +45,15 @@ const CustomSidebar: React.FC = () => {
       { title: "Post a Job", url: "/post", icon: PlusCircle },
       { title: "Job Listings", url: "/job_listings", icon: ListOrdered },
       { title: "Applicants", url: "/applicants", icon: UserCheck },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
-      { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Profile", url: "/profile", icon: UserCircle2 },
+      // { title: "Settings", url: "/settings", icon: Settings },
     ],
     admin: [
       { title: "Dashboard", url: "/dashboard", icon: BarChart3 },
       { title: "Manage Users", url: "/manage_users", icon: Users2 },
       { title: "Manage Jobs", url: "/manage_jobs", icon: ListOrdered },
-      { title: "Messages", url: "/messages", icon: MessageCircle },
-      { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Profile", url: "/profile", icon: UserCircle2 },
+      // { title: "Settings", url: "/settings", icon: Settings },
     ]
   }
 
