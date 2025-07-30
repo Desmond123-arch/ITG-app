@@ -12,7 +12,8 @@ const pathConstants = {
     ManageUsers: "manage_users",
     ManageJobs: "manage_jobs",
     Applicants: "applicants",
-    JobSeekerApplications: "job_seeker_applications"
+    JobSeekerApplications: "job_seeker_applications",
+    SavedJobs: "saved_jobs"
 }
 
 export default pathConstants;

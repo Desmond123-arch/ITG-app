@@ -6,6 +6,8 @@ import { Input } from "../input";
 import { Button } from "../button";
 import {useState} from 'react'
 import axios from 'axios'
+import { setSavedJobs } from "@/store/savedJobsSlice";
+import { setAppliedJobs } from "@/store/seekerApplicationSlice";
 import { login } from "@/store/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -27,19 +29,35 @@ export const LoginForm = () => {
         }
     })
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try{
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, values)
-            const {status, data} = response.data
-            if(status === 'success'){
-                const {user, accessToken, role} = data
-                console.log('User data: ', user)
-                dispatch(login({user, token:accessToken, role}))
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signin`, values);
+            const { status, data } = response.data;
+
+            if (status === 'success') {
+                const { user, accessToken, role } = data;
+                dispatch(login({ user, token: accessToken, role }));
                 axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-                navigate('/')
+
+                const [savedJobsRes, applicationsRes] = await Promise.all([
+                    axios.get(`${import.meta.env.VITE_BACKEND_URL}/jobseeker/saved`, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    }),
+                    axios.get(`${import.meta.env.VITE_BACKEND_URL}/applications`, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    })
+                ]);
+
+                const savedJobIds = savedJobsRes.data.data.jobs.map((job: any) => job.id.toString());
+                const appliedJobIds = applicationsRes.data.data.applications.map((app: any) => app.jobId.toString());
+
+                dispatch(setSavedJobs(savedJobIds));
+                dispatch(setAppliedJobs(appliedJobIds));
+
+                navigate('/');
             }
-        }catch(error: any){
-            setError(error.response.data.message)
-            console.error(error.response.data)
+        } catch (error: any) {
+            setError(error.response?.data?.message || "Login failed");
+            console.error("Login error:", error);
         }
     }
 
