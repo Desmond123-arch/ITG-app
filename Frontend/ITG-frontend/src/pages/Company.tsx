@@ -13,7 +13,6 @@ import { NavigateFunction, useNavigate, useSearchParams } from "react-router-dom
 const fetchCompanies = async (
     token: string | null,
     search: string,
-    country: string,
     currentPage: string,
     navigate: NavigateFunction
   ) => {
@@ -21,7 +20,6 @@ const fetchCompanies = async (
 
   const params = new URLSearchParams()
   if(search) {params.append('search', search)}
-  if(country) {params.append('country', country)}
   params.append('page', currentPage)
   console.log("Current page:", currentPage)
 
@@ -47,7 +45,6 @@ const fetchCompanies = async (
 
 const Company: React.FC = () => {
   const [search, setSearch] = useState("")
-  const [country, setCountry] = useState("")
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
   const searchParams = useSearchParams()[0];
@@ -55,8 +52,8 @@ const Company: React.FC = () => {
   const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
 
   const {data, isLoading, isError, refetch} = useQuery({
-    queryKey: ['companies', search, country, currentPage],
-    queryFn: () => fetchCompanies(token, search, country, currentPage, navigate),
+    queryKey: ['companies', search, currentPage],
+    queryFn: () => fetchCompanies(token, search, currentPage, navigate),
     enabled: !!token,
   })
 
@@ -68,9 +65,6 @@ const Company: React.FC = () => {
   return (
     <div onSubmit={handleSubmit} className="flex flex-col gap-5">
       <form className="flex gap-2 sm:gap-3 md:gap-5 flex-col sm:flex-row">
-        <div className="flex-1">
-          <Input onChange={(e) => {setCountry(e.target.value)}} className="bg-white/60" placeholder="Country" type="text"/>
-        </div>
         <div className="flex-1">
           <Input onChange={(e) => {setSearch(e.target.value)}} className="bg-white/60" placeholder="Search Company" type="text"/>
         </div>

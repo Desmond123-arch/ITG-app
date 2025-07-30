@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import Footer from "./Footer";
 import { Suspense, useEffect } from "react";
 import CustomSidebar from "./ui/CustomSidebar/CustomSidebar";
 import CustomLoader from "./ui/CustomLoader";
@@ -28,7 +27,6 @@ const MainLayout = () => {
                     <Header />
                     <Suspense fallback={<CustomLoader />}>
                         <Outlet />
-                        <Footer />
                     </Suspense>
                 </main>
             </div>

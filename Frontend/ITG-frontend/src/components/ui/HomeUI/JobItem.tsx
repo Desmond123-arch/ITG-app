@@ -1,43 +1,88 @@
-import { Job } from '@/types/Job'
-import { Bookmark, MapPin, UsersRound } from 'lucide-react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Job } from '@/types/Job';
+import { Bookmark, BookmarkCheck, MapPin, CheckCircle, XCircle, PencilLine } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
-interface Props{
-    job: Job
-    page?: string;
+interface Props {
+  job: Job;
+  page?: string;
 }
 
-const JobItem: React.FC<Props> = ({job, page}) => {
+const JobItem: React.FC<Props> = ({ job, page }) => {
+  const now = new Date();
+  const isClosed = new Date(job?.deadline!) < now;
+
+  const savedJobIds = useSelector((state: RootState) => state.savedJobs.jobIds);
+  const isSaved = job.id !== undefined && savedJobIds.includes(job.id.toString());
+
+  const getStatusInfo = () => {
+    if (isClosed) {
+      return {
+        label: 'Closed',
+        icon: <XCircle size={20} className='text-red-500' />
+      };
+    }
+
+    switch (job.status) {
+      case 'published':
+        return {
+          label: 'Published',
+          icon: <CheckCircle size={20} className='text-green-500' />
+        };
+      case 'draft':
+      default:
+        return {
+          label: 'Draft',
+          icon: <PencilLine size={20} className='text-yellow-500' />
+        };
+    }
+  };
+
+  const statusInfo = getStatusInfo();
+
   return (
-    <Link to={`/job/${job.id}`} className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${page == "job" ? "" : "lg:w-[calc(33.33333%-12px)]"} hover:shadow-lg transition-all justify-between`}>
-        <div className='flex gap-2'>
-            <div className='rounded-full overflow-hidden w-12 h-12'>
-                <img className='w-full h-full object-cover' src={job.companyLogo} alt="Job Image" />
-            </div>
-            <div className='flex flex-col'>
-                <h1 className='font-semibold group-hover:text-blue-600 transition-colors leading-4'>{job.title}</h1>
-                <p className='text-gray-500 text-sm'>{job.companyName}</p>
-            </div>
+    <Link
+      to={`/job/${job.id}`}
+      className={`group rounded-md bg-white shadow-sm p-3 flex flex-col gap-4 min-w-[275px] ${
+        page === "job" ? "" : "lg:w-[calc(33.33333%-12px)]"
+      } hover:shadow-lg transition-all justify-between`}
+    >
+      <div className='flex gap-2'>
+        <div className='rounded-full overflow-hidden w-12 h-12'>
+          <img className='w-full h-full object-cover' src={job.companyLogo} alt="Job Logo" />
         </div>
-        <p className='text-gray-800 text-[16px]'>
-          {Array.isArray(job.description) ? job.description.join(', ') : job.description}
-        </p>
-        <div className='flex justify-between'>
-            <div className='flex gap-2'>
-                <div className='flex items-center gap-[2px]'>
-                    <UsersRound size={20} className='text-black/50'/>
-                    <span className='text-sm'>{job.status}</span>
-                </div>
-                <div className='flex items-center gap-1'>
-                    <MapPin size={20} className='text-black/50'/>
-                    <span className='text-sm'>{job.location}</span>
-                </div>
-            </div>
-            <Bookmark size={20} className='text-black/50'/>
+        <div className='flex flex-col'>
+          <h1 className='font-semibold group-hover:text-blue-600 transition-colors leading-4'>{job.title}</h1>
+          <p className='text-gray-500 text-sm'>{job.companyName}</p>
         </div>
-    </Link>
-  )
-}
+      </div>
 
-export default JobItem
+      <p className='text-gray-800 text-[16px] line-clamp-2'>
+        {Array.isArray(job.description) ? job.description.join(', ') : job.description}
+      </p>
+
+      <div className='flex justify-between items-center'>
+        <div className='flex gap-3 items-center'>
+          <div className='flex items-center gap-1'>
+            {statusInfo.icon}
+            <span className='text-sm text-black/70'>{statusInfo.label}</span>
+          </div>
+          <div className='flex items-center gap-1'>
+            <MapPin size={20} className='text-black/50' />
+            <span className='text-sm'>{job.location}</span>
+          </div>
+        </div>
+
+        {isSaved ? (
+          <BookmarkCheck size={20} className="text-green-600" />
+        ) : (
+          <Bookmark size={20} className="text-black/50" />
+        )}
+      </div>
+    </Link>
+  );
+};
+
+export default JobItem;
