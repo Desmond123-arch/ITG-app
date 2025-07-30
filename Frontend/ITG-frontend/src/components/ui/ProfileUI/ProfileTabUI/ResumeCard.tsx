@@ -125,7 +125,7 @@ const ResumeCard: React.FC<Props> = ({ user, onRefresh }) => {
 
                 <a
                   className="rounded-sm px-2 py-1 hover:bg-gray-100 cursor-pointer text-left"
-                  href={resumeUrl}
+                  href={`${import.meta.env.VITE_BACKEND_URL}/files/download?publicUrl=${encodeURIComponent(resumeUrl)}`}
                   download
                 >
                   Download
