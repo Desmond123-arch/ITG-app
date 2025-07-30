@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import JobItem from "@/components/ui/HomeUI/JobItem";
 
 const fetchApplications = async (
@@ -35,29 +35,30 @@ const fetchApplications = async (
     throw new Error("Failed to fetch applications");
   }
 
-  console.log('reponse data: ', response.data)
   return response.data;
 };
 
 const JobSeekerApplications: React.FC = () => {
-  const [search, setSearch] = useState("");
-  const navigate = useNavigate();
   const token = useSelector((state: RootState) => state.auth.token);
+  // const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const searchParams = useSearchParams()[0];
   const pageParam = searchParams.get("page");
   const currentPage = pageParam && pageParam !== "0" ? pageParam : "1";
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["applications", search, currentPage],
-    queryFn: () => fetchApplications(token, search, currentPage),
+  const [searchInput, setSearchInput] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["applications", activeSearch, currentPage],
+    queryFn: () => fetchApplications(token, activeSearch, currentPage),
     enabled: !!token,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(`/applications?page=1&search=${encodeURIComponent(search)}`);
-    refetch();
+    setActiveSearch(searchInput);
+    setSearchParams({ page: "1" });
   };
 
   return (
@@ -68,8 +69,8 @@ const JobSeekerApplications: React.FC = () => {
       >
         <div className="flex-1">
           <Input
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
+            onChange={(e) => setSearchInput(e.target.value)}
+            value={searchInput}
             className="bg-white/60"
             placeholder="Search company name"
             type="text"
@@ -93,7 +94,7 @@ const JobSeekerApplications: React.FC = () => {
 
         {isError && <p>Error loading applications.</p>}
 
-        {data?.data?.jobs?.length === 0 && !isLoading && (
+        {!isLoading && data?.data?.jobs?.length === 0 && (
           <p>No applications found.</p>
         )}
 
@@ -109,7 +110,7 @@ const JobSeekerApplications: React.FC = () => {
       {data?.meta && (
         <div className="flex justify-center mt-5 relative">
           <CustomPagination
-            baseUrl={"/applications"}
+            baseUrl="/applications"
             currentPage={Number(currentPage)}
             totalPages={data.meta.totalPages}
             count={data.meta.count}
