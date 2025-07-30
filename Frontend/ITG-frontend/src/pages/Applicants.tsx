@@ -46,15 +46,16 @@ const fetchApplicants = async (
     }
   )
 
-  if (response.status !== 200) {
-    throw new Error("Failed to fetch applicants")
+  console.log('got applicants', response.data.data.meta, currentPage)
+  console.log('failed', response.status)
+
+
+  if (response.data.data.meta.totalPages < Number(currentPage)) {
+    navigate(`/dashboard/applicants?page=${response.data.data.meta.totalPages}`)
   }
 
-  if (response.data.meta.totalPages < Number(currentPage)) {
-    navigate(`/dashboard/applicants?page=${response.data.meta.totalPages}`)
-  }
-
-  return response.data
+  console.log(response)
+  return response.data.data
 }
 
 const Applicants = () => {
