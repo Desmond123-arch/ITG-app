@@ -12,6 +12,7 @@ interface Company {
   founded?: string | null;
   industry?: string | null;
   specialties?: string[] | null;
+  location?: string;
 }
 
 export default Company;

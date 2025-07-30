@@ -14,7 +14,6 @@ import SkeletonCard from "@/components/ui/SkeletonCard";
 const fetchJobs = async (
     token: string | null,
     search: string,
-    country: string,
     currentPage: string,
     navigate: NavigateFunction
   ) => {
@@ -22,7 +21,6 @@ const fetchJobs = async (
 
   const params = new URLSearchParams();
   if (search) params.append('search', search);
-  if (country) params.append('country', country);
   params.append('page', currentPage || '1');
 
   const response = await axios.get(
@@ -45,7 +43,6 @@ const fetchJobs = async (
 
 const Home: React.FC = () => {
   const [search, setSearch] = useState("")
-  const [country, setCountry] = useState("")
   const navigate = useNavigate()
   const token = useSelector((state: RootState) => state.auth.token)
   const searchParams = useSearchParams()[0];
@@ -53,8 +50,8 @@ const Home: React.FC = () => {
   const currentPage =  pageParam && pageParam !== '0' ? pageParam : '1';
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ['jobs', search, country, currentPage],
-    queryFn: () => fetchJobs(token, search, country, currentPage, navigate),
+    queryKey: ['jobs', search, currentPage],
+    queryFn: () => fetchJobs(token, search, currentPage, navigate),
     enabled: !!token,
   });
 
@@ -67,10 +64,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col gap-5">
       <form onSubmit={handleSubmit} className="flex gap-2 sm:gap-3 md:gap-5 flex-col sm:flex-row">
         <div className="flex-1">
-          <Input onChange={(e) => { setSearch(e.target.value) }} className="bg-white/90" placeholder="Search Keyword" type="text" />
-        </div>
-        <div className="flex-1">
-          <Input onChange={(e) => { setCountry(e.target.value) }} className="bg-white/90" placeholder="Country" type="text" />
+          <Input onChange={(e) => { setSearch(e.target.value) }} className="bg-white/90" placeholder="Search Job Title" type="text" />
         </div>
         <Button className="bg-[#0B5FAE] sm:w-32 w-full">Search</Button>
       </form>
